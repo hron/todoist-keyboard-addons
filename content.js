@@ -48,7 +48,6 @@ function getFocusedTask() {
     try {
       const el = document.querySelector(sel);
       if (el) {
-        LOG("getFocusedTask: matched", sel);
         return el;
       }
     } catch {
@@ -60,7 +59,6 @@ function getFocusedTask() {
   let el = document.activeElement;
   while (el && el !== document.body) {
     if (el.matches && el.matches("li.task_list_item")) {
-      LOG("getFocusedTask: found via activeElement walk-up");
       return el;
     }
     el = el.parentElement;
@@ -69,21 +67,9 @@ function getFocusedTask() {
   // Strategy 3: hovered task (last resort)
   const hovered = document.querySelector("li.task_list_item:hover");
   if (hovered) {
-    LOG("getFocusedTask: found via :hover");
     return hovered;
   }
 
-  WARN("getFocusedTask: no focused task found");
-  // Dump some diagnostic info
-  LOG(
-    "  activeElement:",
-    document.activeElement?.tagName,
-    document.activeElement?.className,
-  );
-  LOG(
-    "  task_list_items on page:",
-    document.querySelectorAll("li.task_list_item").length,
-  );
   return null;
 }
 
@@ -114,21 +100,10 @@ function findDragHandle(task) {
   for (const sel of selectors) {
     const el = task.querySelector(sel);
     if (el) {
-      LOG("findDragHandle: matched", sel);
       return el;
     }
   }
 
-  // Dump child structure for debugging
-  WARN("findDragHandle: no handle found. Task children:");
-  for (const child of task.children) {
-    LOG(
-      "  ",
-      child.tagName,
-      child.className,
-      child.getAttribute("data-testid") || "",
-    );
-  }
   return null;
 }
 
@@ -138,7 +113,6 @@ function findDragHandle(task) {
  */
 async function simulateDrag(task, target, direction) {
   if (dragInProgress) {
-    LOG("simulateDrag: skipped, drag already in progress");
     return;
   }
   dragInProgress = true;
@@ -152,16 +126,11 @@ async function simulateDrag(task, target, direction) {
 
     const handle = findDragHandle(task);
     if (!handle) {
-      WARN("simulateDrag: could not find drag handle, aborting");
       return;
     }
 
     const from = centre(handle);
     const to = centre(target);
-    LOG(
-      "simulateDrag: from y=" + from.y + " to y=" + to.y,
-      "direction=" + direction,
-    );
 
     // We want to land slightly past the target's centre so the drop
     // registers on the correct side.
@@ -222,8 +191,6 @@ async function simulateDrag(task, target, direction) {
     // 5. Clean up hover
     task.dispatchEvent(new PointerEvent("pointerout", { bubbles: true }));
     task.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }));
-
-    LOG("simulateDrag: complete");
   } finally {
     await sleep(50);
     dragInProgress = false;
@@ -266,7 +233,6 @@ function refocusTask(taskId) {
     const body = task.querySelector(".task_list_item__body");
     if (body) {
       body.focus();
-      LOG("refocusTask: re-stole focus to", taskId);
       // Check if focus actually landed on our task and stop
       const newFocusId = document.activeElement
         ?.closest?.("li.task_list_item")
@@ -280,7 +246,6 @@ function refocusTask(taskId) {
   const cleanup = () => {
     done = true;
     document.removeEventListener("focusin", stealFocusBack, true);
-    LOG("refocusTask: done for", taskId);
   };
 
   // Listen for any focus changes and redirect them to our task
@@ -302,29 +267,22 @@ function refocusTask(taskId) {
  * @param {"up"|"down"} direction
  */
 async function moveTask(direction) {
-  LOG("moveTask:", direction);
-
   const task = getFocusedTask();
   if (!task) {
-    WARN("moveTask: no focused task, aborting");
     return;
   }
 
   // Remember the task id so we can re-find it after drag
   const taskId = task.getAttribute("data-item-id");
-  LOG("moveTask: taskId=" + taskId);
 
   const tasks = getTaskList();
   const idx = tasks.indexOf(task);
-  LOG("moveTask: task index=" + idx, "total tasks=" + tasks.length);
   if (idx === -1) {
-    WARN("moveTask: focused task not in task list");
     return;
   }
 
   const targetIdx = direction === "up" ? idx - 1 : idx + 1;
   if (targetIdx < 0 || targetIdx >= tasks.length) {
-    LOG("moveTask: already at boundary");
     return;
   }
 
@@ -336,26 +294,45 @@ async function moveTask(direction) {
 
 // ---- Keyboard event listener ----------------------------------------------
 
+function maybeClick(event, selector) {
+  const element = document.querySelector(selector);
+  if (!element) return;
+  event.preventDefault();
+  element.click();
+}
+
 document.addEventListener("keydown", (event) => {
   // Alt+Shift+Up — move focused task up
-  if (event.altKey && event.shiftKey && event.key === "ArrowUp") {
+  if (
+    event.altKey &&
+    event.shiftKey &&
+    !event.metaKey &&
+    event.key === "ArrowUp"
+  ) {
     event.preventDefault();
-    LOG("shortcut: Alt+Shift+Up");
     moveTask("up");
     return;
   }
 
   // Alt+Shift+Down — move focused task down
-  if (event.altKey && event.shiftKey && event.key === "ArrowDown") {
+  if (
+    event.altKey &&
+    event.shiftKey &&
+    !event.metaKey &&
+    event.key === "ArrowDown"
+  ) {
     event.preventDefault();
-    LOG("shortcut: Alt+Shift+Down");
     moveTask("down");
     return;
   }
 
   // Alt+Up — click breadcrumb link (navigate to parent project)
-  if (event.altKey && !event.shiftKey && event.key === "ArrowUp") {
-    LOG("shortcut: Alt+Up");
+  if (
+    event.altKey &&
+    !event.shiftKey &&
+    !event.metaKey &&
+    event.key === "ArrowUp"
+  ) {
     const link = document.querySelector(
       'div[data-testid="task-detail-breadcrumbs"] > a',
     );
@@ -364,6 +341,5 @@ document.addEventListener("keydown", (event) => {
       link.click();
     }
   }
-});
 
 LOG("content script loaded");
