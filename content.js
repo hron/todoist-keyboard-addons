@@ -354,4 +354,21 @@ document.addEventListener("keydown", (event) => {
       'header[data-component="ModalHeader"] button[aria-label="More actions"]',
     );
   }
+
+  // Alt+k - follow the first link in the task name
+  if (
+    event.altKey &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    event.code === "KeyK"
+  ) {
+    const focusedTask = getFocusedTask();
+    const link = focusedTask.querySelector(
+      ".task_list_item__content a[target=_blank]",
+    );
+    if (link) {
+      event.preventDefault();
+      link.click();
+    }
+  }
 });
