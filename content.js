@@ -342,4 +342,16 @@ document.addEventListener("keydown", (event) => {
     }
   }
 
-LOG("content script loaded");
+  // Alt+o - click on "More actions"
+  if (
+    event.altKey &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    event.code === "KeyO"
+  ) {
+    maybeClick(
+      event,
+      'header[data-component="ModalHeader"] button[aria-label="More actions"]',
+    );
+  }
+});
