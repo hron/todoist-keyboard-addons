@@ -170,6 +170,38 @@ const SHORTCUT_DEFAULTS = [
       label: "Alt+H",
     },
   },
+  {
+    id: "scrollToTop",
+    name: "Scroll to top / first task",
+    description:
+      "In the task detail modal: scroll subtasks to the top. In the task list: move focus to the first task.",
+    section: "taskDetail",
+    shortcut: {
+      key: "Home",
+      code: "Home",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "Home",
+    },
+  },
+  {
+    id: "scrollToBottom",
+    name: "Scroll to bottom / last task",
+    description:
+      "In the task detail modal: scroll subtasks to the bottom. In the task list: move focus to the last task.",
+    section: "taskDetail",
+    shortcut: {
+      key: "End",
+      code: "End",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "End",
+    },
+  },
 ];
 
 // ---------------------------------------------------------------------------

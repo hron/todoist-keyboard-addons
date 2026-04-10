@@ -708,6 +708,22 @@ const DEFAULT_SHORTCUTS = {
     shiftKey: false,
     metaKey: false,
   },
+  scrollToTop: {
+    key: "Home",
+    code: "Home",
+    altKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
+  scrollToBottom: {
+    key: "End",
+    code: "End",
+    altKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
 };
 
 // Live shortcuts — populated on init, updated when storage changes.
@@ -971,8 +987,43 @@ document.addEventListener(
       return;
     }
 
-    // Toggle show/hide completed subtasks in modal
-    if (matchesShortcut(event, "toggleCompleted")) {
+  // Home — modal: scroll subtask list to top; task list: focus first task
+  if (matchesShortcut(event, "scrollToTop")) {
+    const container = getModalScrollContainer();
+    if (container) {
+      event.preventDefault();
+      container.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      if (isEditing()) return;
+      const tasks = getTaskList();
+      if (!tasks.length) return;
+      event.preventDefault();
+      focusTaskListItem(tasks[0]);
+      tasks[0].scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    return;
+  }
+
+  // End — modal: scroll subtask list to bottom; task list: focus last task
+  if (matchesShortcut(event, "scrollToBottom")) {
+    const container = getModalScrollContainer();
+    if (container) {
+      event.preventDefault();
+      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+    } else {
+      if (isEditing()) return;
+      const tasks = getTaskList();
+      if (!tasks.length) return;
+      event.preventDefault();
+      const last = tasks[tasks.length - 1];
+      focusTaskListItem(last);
+      last.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    return;
+  }
+
+  // Toggle show/hide completed subtasks in modal
+  if (matchesShortcut(event, "toggleCompleted")) {
       if (isEditing()) return;
       const modal = getTaskModal();
       if (!modal) return; // only in modal
