@@ -55,3 +55,19 @@ Can be toggled on/off from the extension's options page.
 ## Configuration
 
 Click the extension's **Options** link on the extensions page to customise shortcuts and toggle features. Settings are synced across devices via `chrome.storage.sync`.
+
+## Publishing (maintainer notes)
+
+### Releasing
+
+```bash
+# bump version in manifest.json, then:
+git add manifest.json
+git commit -m "Bump version to X.Y"
+git tag vX.Y
+git push && git push --tags
+```
+
+The workflow (`.github/workflows/release.yml`) will zip the production files and attach `extension.zip` to a GitHub Release.
+
+Download `extension.zip` from the release assets and upload it manually via the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole).
