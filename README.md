@@ -7,23 +7,31 @@ A Chrome extension that adds extra keyboard shortcuts to the [Todoist](https://a
 
 ### Task list
 
-| Shortcut         | Action                                              |
-|------------------|-----------------------------------------------------|
-| Alt+Shift+Up     | Move the focused task up (simulates drag-and-drop)  |
-| Alt+Shift+Down   | Move the focused task down                          |
-| Alt+K            | Open the first external link in the focused task    |
+| Shortcut       | Action                                             |
+|----------------|----------------------------------------------------|
+| Alt+Shift+Up   | Move the focused task up (simulates drag-and-drop) |
+| Alt+Shift+Down | Move the focused task down                         |
+| Alt+K          | Open the first external link in the focused task   |
+| PageUp         | Move keyboard focus up by one page                 |
+| PageDown       | Move keyboard focus down by one page               |
+| Home           | Move keyboard focus to the first task              |
+| End            | Move keyboard focus to the last task               |
 
 ### Task detail (modal)
 
-| Shortcut         | Action                                                                                                            |
-|------------------|-------------------------------------------------------------------------------------------------------------------|
-| Alt+Up           | Navigate to the parent project via the breadcrumb link                                                            |
-| Alt+O            | Open the "More actions" menu                                                                                      |
-| Shift+G          | Navigate to the task's project (extends native Shift+G to work inside the modal)                                  |
-| G                | Quick-complete subtask — shows two-letter hints on every subtask checkbox; type the letters to complete/uncomplete|
-| PageUp           | Scroll the subtask list up by one page                                                                            |
-| PageDown         | Scroll the subtask list down by one page                                                                          |
-| Alt+H            | Toggle show/hide completed sub-tasks                                                                              |
+| Shortcut | Action                                                                                           |
+|----------|--------------------------------------------------------------------------------------------------|
+| Alt+Up   | Navigate to the parent project via the breadcrumb link                                           |
+| Alt+O    | Open the "More actions" menu                                                                     |
+| Shift+G  | Navigate to the task's project (extends native Shift+G to work inside the modal)                 |
+| G        | Hint mode — shows two-letter labels on every subtask; type a label to complete/uncomplete it (G prefix) or open its "More actions" menu (O prefix) |
+| PageUp   | Scroll the subtask list up by one page                                                           |
+| PageDown | Scroll the subtask list down by one page                                                         |
+| Home     | Scroll the subtask list to the top                                                               |
+| End      | Scroll the subtask list to the bottom                                                            |
+| Alt+H    | Toggle show/hide completed sub-tasks                                                             |
+
+> **Note:** PageUp/PageDown and Home/End are context-aware — they scroll the subtask list when the task detail modal is open, and move keyboard focus in the task list otherwise.
 
 ## Installation
 
