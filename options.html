@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todoist Keyboard Add-ons — Settings</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #202020;
+      background: #fff;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 24px 60px;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 6px;
+    }
+
+    p.subtitle {
+      color: #666;
+      margin: 0 0 32px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #888;
+      padding: 0 0 8px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    th:last-child { text-align: right; }
+
+    td {
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: middle;
+    }
+
+    td:last-child { text-align: right; }
+
+    .action-name {
+      font-weight: 500;
+    }
+
+    .action-desc {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .key-input {
+      display: inline-block;
+      min-width: 180px;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #202020;
+      background: #fafafa;
+      cursor: pointer;
+      user-select: none;
+      text-align: center;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .key-input:focus,
+    .key-input.recording {
+      outline: none;
+      border-color: #db4035;
+      background: #fff8f7;
+    }
+
+    .key-input.recording::after {
+      content: " …";
+      color: #db4035;
+    }
+
+    .btn-reset {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: middle;
+      transition: color 0.1s;
+    }
+
+    .btn-reset:hover { color: #db4035; }
+
+    .actions-row {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-save {
+      background: #db4035;
+      color: #fff;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-save:hover { background: #c0392b; }
+
+    .btn-restore {
+      background: none;
+      border: 1px solid #ccc;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #555;
+      transition: border-color 0.15s;
+    }
+
+    .btn-restore:hover { border-color: #999; color: #202020; }
+
+    #status {
+      font-size: 13px;
+      color: #2e7d32;
+      margin-left: 4px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    #status.visible { opacity: 1; }
+  </style>
+</head>
+<body>
+  <h1>Todoist Keyboard Add-ons</h1>
+  <p class="subtitle">Click a shortcut field and press your desired key combination to change it.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Shortcut</th>
+      </tr>
+    </thead>
+    <tbody id="shortcuts-table"></tbody>
+  </table>
+
+  <div class="actions-row">
+    <button class="btn-save" id="btn-save">Save</button>
+    <button class="btn-restore" id="btn-restore">Restore defaults</button>
+    <span id="status">Saved!</span>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

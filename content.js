@@ -5,6 +5,7 @@
 
 const LOG = (...args) => console.log("[todoist-kbd]", ...args);
 const WARN = (...args) => console.warn("[todoist-kbd]", ...args);
+const DBG = (...args) => console.debug("[todoist-kbd]", ...args);
 
 // ---- Drag-and-drop task reordering helpers --------------------------------
 
@@ -292,6 +293,111 @@ async function moveTask(direction) {
   return refocusTask(taskId);
 }
 
+// ---- Keyboard shortcut configuration -------------------------------------
+
+/**
+ * Default shortcuts — kept in sync with options.js SHORTCUT_DEFAULTS.
+ * These are used when the user has not saved any custom settings.
+ *
+ * Matching uses event.code for layout-independent alpha/digit keys and
+ * event.key for everything else (arrows, etc.).
+ */
+const DEFAULT_SHORTCUTS = {
+  moveUp: {
+    key: "ArrowUp",
+    code: "ArrowUp",
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: true,
+    metaKey: false,
+  },
+  moveDown: {
+    key: "ArrowDown",
+    code: "ArrowDown",
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: true,
+    metaKey: false,
+  },
+  goToParent: {
+    key: "ArrowUp",
+    code: "ArrowUp",
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
+  moreActions: {
+    key: "o",
+    code: "KeyO",
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
+  followLink: {
+    key: "k",
+    code: "KeyK",
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
+};
+
+// Live shortcuts — populated on init, updated when storage changes.
+let shortcuts = { ...DEFAULT_SHORTCUTS };
+
+/** Load user's saved shortcuts from chrome.storage.sync (if any). */
+function loadShortcuts() {
+  if (!chrome?.storage?.sync) {
+    WARN(
+      "chrome.storage.sync unavailable — using default shortcuts. Reload the extension after granting the storage permission.",
+    );
+    return;
+  }
+  chrome.storage.sync.get("shortcuts", (data) => {
+    if (data.shortcuts) {
+      // Merge saved values over defaults so any new shortcuts still have a value
+      shortcuts = { ...DEFAULT_SHORTCUTS, ...data.shortcuts };
+      DBG("Shortcuts loaded from storage", shortcuts);
+    }
+  });
+
+  // Re-load whenever the user saves new settings in the options page
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "sync" && changes.shortcuts) {
+      shortcuts = { ...DEFAULT_SHORTCUTS, ...changes.shortcuts.newValue };
+      DBG("Shortcuts updated from storage change", shortcuts);
+    }
+  });
+}
+
+/**
+ * Returns true when `event` matches the stored shortcut for `id`.
+ *
+ * Matching strategy:
+ * - Modifiers must match exactly.
+ * - For alpha/digit keys (code starts with "Key" or "Digit") we compare
+ *   event.code so the shortcut works regardless of keyboard layout.
+ * - For everything else (arrows, special keys) we compare event.key.
+ */
+function matchesShortcut(event, id) {
+  const sc = shortcuts[id];
+  if (!sc) return false;
+
+  if (event.altKey !== sc.altKey) return false;
+  if (event.ctrlKey !== sc.ctrlKey) return false;
+  if (event.shiftKey !== sc.shiftKey) return false;
+  if (event.metaKey !== sc.metaKey) return false;
+
+  // Layout-independent match for letter/digit keys
+  if (sc.code && (sc.code.startsWith("Key") || sc.code.startsWith("Digit"))) {
+    return event.code === sc.code;
+  }
+  return event.key === sc.key;
+}
+
 // ---- Keyboard event listener ----------------------------------------------
 
 function maybeClick(event, selector) {
@@ -302,37 +408,22 @@ function maybeClick(event, selector) {
 }
 
 document.addEventListener("keydown", (event) => {
-  // Alt+Shift+Up — move focused task up
-  if (
-    event.altKey &&
-    event.shiftKey &&
-    !event.metaKey &&
-    event.key === "ArrowUp"
-  ) {
+  // Move focused task up
+  if (matchesShortcut(event, "moveUp")) {
     event.preventDefault();
     moveTask("up");
     return;
   }
 
-  // Alt+Shift+Down — move focused task down
-  if (
-    event.altKey &&
-    event.shiftKey &&
-    !event.metaKey &&
-    event.key === "ArrowDown"
-  ) {
+  // Move focused task down
+  if (matchesShortcut(event, "moveDown")) {
     event.preventDefault();
     moveTask("down");
     return;
   }
 
-  // Alt+Up — click breadcrumb link (navigate to parent project)
-  if (
-    event.altKey &&
-    !event.shiftKey &&
-    !event.metaKey &&
-    event.key === "ArrowUp"
-  ) {
+  // Navigate to parent project via breadcrumb
+  if (matchesShortcut(event, "goToParent")) {
     const link = document.querySelector(
       'div[data-testid="task-detail-breadcrumbs"] > a',
     );
@@ -340,29 +431,22 @@ document.addEventListener("keydown", (event) => {
       event.preventDefault();
       link.click();
     }
+    return;
   }
 
-  // Alt+o - click on "More actions"
-  if (
-    event.altKey &&
-    !event.ctrlKey &&
-    !event.metaKey &&
-    event.code === "KeyO"
-  ) {
+  // Open "More actions" menu in task detail modal
+  if (matchesShortcut(event, "moreActions")) {
     maybeClick(
       event,
       'header[data-component="ModalHeader"] button[aria-label="More actions"]',
     );
+    return;
   }
 
-  // Alt+k - follow the first link in the task name
-  if (
-    event.altKey &&
-    !event.ctrlKey &&
-    !event.metaKey &&
-    event.code === "KeyK"
-  ) {
+  // Follow the first external link in the focused task
+  if (matchesShortcut(event, "followLink")) {
     const focusedTask = getFocusedTask();
+    if (!focusedTask) return;
     const link = focusedTask.querySelector(
       ".task_list_item__content a[target=_blank]",
     );
@@ -370,5 +454,10 @@ document.addEventListener("keydown", (event) => {
       event.preventDefault();
       link.click();
     }
+    return;
   }
 });
+
+// ---- Init -----------------------------------------------------------------
+
+loadShortcuts();
