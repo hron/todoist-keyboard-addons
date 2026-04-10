@@ -244,6 +244,7 @@ const FEATURE_DEFAULTS = [
     name: "Show parent task in filter / search views",
     description:
       "Replaces the project label (e.g. \"Life #\") with \"Life \u203a Parent Task Title\" for subtasks when viewing a filter or search result. Top-level tasks are unaffected.",
+    preview: "docs/gif-parent-label.gif",
     default: true,
   },
 ];
@@ -376,6 +377,15 @@ function renderFeatures() {
     label.appendChild(checkbox);
     label.appendChild(text);
     row.appendChild(label);
+
+    if (feature.preview) {
+      const img = document.createElement("img");
+      img.src = feature.preview;
+      img.alt = feature.name;
+      img.className = "feature-preview";
+      row.appendChild(img);
+    }
+
     container.appendChild(row);
   }
 }

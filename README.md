@@ -7,9 +7,11 @@ A Chrome extension that adds extra keyboard shortcuts and quality-of-life featur
 
 ### Parent task label in filter / search views
 
-When browsing a filter or search result, Todoist shows the project name (e.g. `Life #`) in the bottom-right corner of each task. For subtasks this gives no context about what the parent task is.
+When browsing a filter or search result, Todoist shows the project name (e.g. `Work #`) in the bottom-right corner of each task. For subtasks this gives no context about what the parent task is.
 
 With this feature enabled, the label is replaced with **`Project › Parent Task Title`** for subtasks. Top-level tasks are unaffected. This relies on Todoist's local IndexedDB cache — no extra API calls are made.
+
+![Parent task label demo](docs/gif-parent-label.gif)
 
 Can be toggled on/off from the extension's options page.
 
@@ -29,6 +31,22 @@ Can be toggled on/off from the extension's options page.
 | Home           | Move keyboard focus to the first task              |
 | End            | Move keyboard focus to the last task               |
 
+**Move up / Move down**
+
+![Move task up](docs/gif-move-up.gif) ![Move task down](docs/gif-move-down.gif)
+
+**Move to top / Move to bottom**
+
+![Move task to top](docs/gif-move-to-top.gif) ![Move task to bottom](docs/gif-move-to-bottom.gif)
+
+**Follow link (Alt+K)**
+
+![Follow link in task](docs/gif-follow-link.gif)
+
+**Page navigation (PageUp / PageDown)**
+
+![Page navigation](docs/gif-page-nav.gif)
+
 ### Task detail (modal)
 
 | Shortcut | Action                                                                                           |
@@ -44,6 +62,30 @@ Can be toggled on/off from the extension's options page.
 | Alt+H    | Toggle show/hide completed sub-tasks                                                             |
 
 > **Note:** PageUp/PageDown and Home/End are context-aware — they scroll the subtask list when the task detail modal is open, and move keyboard focus in the task list otherwise.
+
+**Go to parent project (Alt+Up)**
+
+![Go to parent project](docs/gif-go-to-parent.gif)
+
+**More actions menu (Alt+O)**
+
+![More actions menu](docs/gif-more-actions.gif)
+
+**Go to project (Shift+G)**
+
+![Go to project](docs/gif-go-to-project.gif)
+
+**Hint mode (G)**
+
+![Hint mode](docs/gif-hint-mode.gif)
+
+**Scroll subtask list (PageUp / PageDown)**
+
+![Scroll subtasks](docs/gif-scroll-subtasks.gif)
+
+**Toggle completed subtasks (Alt+H)**
+
+![Toggle completed subtasks](docs/gif-toggle-completed.gif)
 
 ## Installation
 
