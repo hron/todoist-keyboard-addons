@@ -86,6 +86,21 @@ const SHORTCUT_DEFAULTS = [
       label: "Alt+K",
     },
   },
+  {
+    id: "goToProject",
+    name: "Go to project (modal)",
+    description:
+      "Navigate to the task's project when the task detail modal is open (extends native Shift+G)",
+    shortcut: {
+      key: "G",
+      code: "KeyG",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: true,
+      metaKey: false,
+      label: "Shift+G",
+    },
+  },
 ];
 
 // ---------------------------------------------------------------------------

@@ -343,6 +343,14 @@ const DEFAULT_SHORTCUTS = {
     shiftKey: false,
     metaKey: false,
   },
+  goToProject: {
+    key: "G",
+    code: "KeyG",
+    altKey: false,
+    ctrlKey: false,
+    shiftKey: true,
+    metaKey: false,
+  },
 };
 
 // Live shortcuts — populated on init, updated when storage changes.
@@ -398,6 +406,20 @@ function matchesShortcut(event, id) {
   return event.key === sc.key;
 }
 
+/**
+ * Returns true when the user is actively editing text (input, textarea,
+ * or contentEditable element is focused).  Used to avoid intercepting
+ * keystrokes that don't use dedicated modifier combos (e.g. Shift+G).
+ */
+function isEditing() {
+  const active = document.activeElement;
+  if (!active) return false;
+  const tag = active.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA") return true;
+  if (active.isContentEditable) return true;
+  return false;
+}
+
 // ---- Keyboard event listener ----------------------------------------------
 
 function maybeClick(event, selector) {
@@ -449,6 +471,23 @@ document.addEventListener("keydown", (event) => {
     if (!focusedTask) return;
     const link = focusedTask.querySelector(
       ".task_list_item__content a[target=_blank]",
+    );
+    if (link) {
+      event.preventDefault();
+      link.click();
+    }
+    return;
+  }
+
+  // Go to project from task detail modal (extends native Shift+G)
+  if (matchesShortcut(event, "goToProject")) {
+    if (isEditing()) return;
+    const modal = document.querySelector(
+      'div[data-testid="task-details-modal"]',
+    );
+    if (!modal) return; // no modal — let native Shift+G handle it
+    const link = modal.querySelector(
+      'div[data-testid="task-detail-default-header"] > a',
     );
     if (link) {
       event.preventDefault();
