@@ -122,7 +122,7 @@ async function simulateDrag(task, target, direction) {
     task.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
     task.dispatchEvent(new PointerEvent("pointerover", { bubbles: true }));
     task.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }));
-    await sleep(100); // give Todoist time to react and render the handle
+    await sleep(20); // give Todoist time to react and render the handle
 
     const handle = findDragHandle(task);
     if (!handle) {
@@ -159,7 +159,7 @@ async function simulateDrag(task, target, direction) {
     handle.dispatchEvent(
       new MouseEvent("mousemove", mouseOpts(from.x, from.y + direction * 2)),
     );
-    await sleep(20);
+    await sleep(10);
 
     // 3. Animated mousemove — interpolate over ~15 frames / ~75 ms.
     const frames = 15;
@@ -192,7 +192,7 @@ async function simulateDrag(task, target, direction) {
     task.dispatchEvent(new PointerEvent("pointerout", { bubbles: true }));
     task.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }));
   } finally {
-    await sleep(50);
+    await sleep(10);
     dragInProgress = false;
   }
 }
