@@ -111,7 +111,7 @@ const SHORTCUT_DEFAULTS = [
   {
     id: "moreActions",
     name: "More actions",
-    description: "Open the \"More actions\" menu in the task detail modal",
+    description: 'Open the "More actions" menu in the task detail modal',
     section: "taskDetail",
     shortcut: {
       key: "o",
@@ -158,7 +158,8 @@ const SHORTCUT_DEFAULTS = [
   {
     id: "scrollSubtasksUp",
     name: "Scroll subtasks up",
-    description: "Scroll the subtask list up by one page in the task detail modal",
+    description:
+      "Scroll the subtask list up by one page in the task detail modal",
     section: "taskDetail",
     shortcut: {
       key: "PageUp",
@@ -173,7 +174,8 @@ const SHORTCUT_DEFAULTS = [
   {
     id: "scrollSubtasksDown",
     name: "Scroll subtasks down",
-    description: "Scroll the subtask list down by one page in the task detail modal",
+    description:
+      "Scroll the subtask list down by one page in the task detail modal",
     section: "taskDetail",
     shortcut: {
       key: "PageDown",
@@ -243,8 +245,8 @@ const FEATURE_DEFAULTS = [
     id: "showParentTask",
     name: "Show parent task in filter / search views",
     description:
-      "Replaces the project label (e.g. \"Life #\") with \"Life \u203a Parent Task Title\" for subtasks when viewing a filter or search result. Top-level tasks are unaffected.",
-    preview: "docs/gif-parent-label.gif",
+      'Replaces the project label (e.g. "Life #") with "Life \u203a Parent Task Title" for subtasks when viewing a filter or search result. Top-level tasks are unaffected.',
+    preview: "docs/screenshot-parent-label.png",
     default: true,
   },
 ];
@@ -302,7 +304,9 @@ function eventToShortcut(e) {
 
 /** Keys that are modifier-only — we skip these as standalone triggers. */
 function isModifierOnly(key) {
-  return ["Alt", "Control", "Shift", "Meta", "AltGraph", "CapsLock"].includes(key);
+  return ["Alt", "Control", "Shift", "Meta", "AltGraph", "CapsLock"].includes(
+    key,
+  );
 }
 
 /** Keys that are not useful as shortcuts. */
@@ -315,10 +319,15 @@ function isIgnored(key) {
 // ---------------------------------------------------------------------------
 
 // Working copy of shortcuts (may differ from saved state until user hits Save)
-let currentShortcuts = SHORTCUT_DEFAULTS.map((s) => ({ ...s, shortcut: { ...s.shortcut } }));
+let currentShortcuts = SHORTCUT_DEFAULTS.map((s) => ({
+  ...s,
+  shortcut: { ...s.shortcut },
+}));
 
 // Working copy of feature flags
-let currentSettings = Object.fromEntries(FEATURE_DEFAULTS.map((f) => [f.id, f.default]));
+let currentSettings = Object.fromEntries(
+  FEATURE_DEFAULTS.map((f) => [f.id, f.default]),
+);
 
 // The input currently recording
 let recordingId = null;
@@ -330,7 +339,10 @@ let recordingId = null;
 function loadFromStorage() {
   return new Promise((resolve) => {
     chrome.storage.sync.get(["shortcuts", "settings"], (data) => {
-      resolve({ shortcuts: data.shortcuts || null, settings: data.settings || null });
+      resolve({
+        shortcuts: data.shortcuts || null,
+        settings: data.settings || null,
+      });
     });
   });
 }
@@ -507,32 +519,36 @@ function stopRecording() {
 // Global keydown handler for recording
 // ---------------------------------------------------------------------------
 
-document.addEventListener("keydown", (e) => {
-  if (!recordingId) return;
+document.addEventListener(
+  "keydown",
+  (e) => {
+    if (!recordingId) return;
 
-  // Modifier-only keystrokes are not valid shortcuts
-  if (isModifierOnly(e.key)) return;
-  // Ignore some system keys
-  if (isIgnored(e.key)) {
-    stopRecording();
-    return;
-  }
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const newShortcut = eventToShortcut(e);
-  const item = currentShortcuts.find((s) => s.id === recordingId);
-  if (item) {
-    item.shortcut = newShortcut;
-    const el = document.querySelector(`.key-input[data-id="${recordingId}"]`);
-    if (el) {
-      el.classList.remove("recording");
-      el.textContent = newShortcut.label;
+    // Modifier-only keystrokes are not valid shortcuts
+    if (isModifierOnly(e.key)) return;
+    // Ignore some system keys
+    if (isIgnored(e.key)) {
+      stopRecording();
+      return;
     }
-  }
-  recordingId = null;
-}, true);
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const newShortcut = eventToShortcut(e);
+    const item = currentShortcuts.find((s) => s.id === recordingId);
+    if (item) {
+      item.shortcut = newShortcut;
+      const el = document.querySelector(`.key-input[data-id="${recordingId}"]`);
+      if (el) {
+        el.classList.remove("recording");
+        el.textContent = newShortcut.label;
+      }
+    }
+    recordingId = null;
+  },
+  true,
+);
 
 // Click anywhere outside a key-input cancels recording
 document.addEventListener("click", (e) => {
@@ -564,7 +580,9 @@ document.getElementById("btn-restore").addEventListener("click", () => {
     ...s,
     shortcut: { ...s.shortcut },
   }));
-  currentSettings = Object.fromEntries(FEATURE_DEFAULTS.map((f) => [f.id, f.default]));
+  currentSettings = Object.fromEntries(
+    FEATURE_DEFAULTS.map((f) => [f.id, f.default]),
+  );
   renderFeatures();
   renderTable();
 });
