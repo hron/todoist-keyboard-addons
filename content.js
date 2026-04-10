@@ -84,6 +84,43 @@ function getTaskList() {
 }
 
 /**
+ * Returns the number of task list items that fit in one viewport height.
+ * Pass in the current task list array to avoid a redundant querySelectorAll.
+ * Falls back to 10 if the list is empty or items have no height.
+ */
+function getTaskListPageSize(tasks) {
+  if (!tasks || tasks.length === 0) return 10;
+  const itemHeight = tasks[0].getBoundingClientRect().height;
+  if (!itemHeight) return 10;
+  return Math.max(1, Math.floor(window.innerHeight / itemHeight));
+}
+
+/**
+ * Find the first task list item that is currently visible in the viewport.
+ * "Visible" means its top edge is at or below 0 and its bottom edge is
+ * above the viewport bottom — i.e. it is at least partially in view.
+ */
+function getFirstVisibleTask(tasks) {
+  const vpBottom = window.innerHeight;
+  for (const task of tasks) {
+    const rect = task.getBoundingClientRect();
+    if (rect.bottom > 0 && rect.top < vpBottom) return task;
+  }
+  return tasks[0] || null;
+}
+
+/**
+ * Move Todoist keyboard-navigation focus to the given task list item.
+ * Focuses the inner body div (role="button") which is what Todoist uses
+ * for its own Up/Down arrow key navigation.
+ */
+function focusTaskListItem(item) {
+  if (!item) return;
+  const body = item.querySelector(".task_list_item__body");
+  if (body) body.focus();
+}
+
+/**
  * Find the drag handle inside a task element.
  * Tries multiple selectors since Todoist may have changed class names.
  */
@@ -405,7 +442,8 @@ function createMenuHintIcon(label) {
 
   // Todoist's native 3-dots SVG icon (24x24, stroke-based)
   const icon = document.createElement("span");
-  icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" transform="translate(3 10)"><circle cx="2" cy="2" r="2"></circle><circle cx="9" cy="2" r="2"></circle><circle cx="16" cy="2" r="2"></circle></g></svg>';
+  icon.innerHTML =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" transform="translate(3 10)"><circle cx="2" cy="2" r="2"></circle><circle cx="9" cy="2" r="2"></circle><circle cx="16" cy="2" r="2"></circle></g></svg>';
   icon.style.cssText = `
     color: #808080;
     display: flex;
@@ -533,8 +571,7 @@ function narrowHints(char) {
           ? h.element.querySelector(".todoist-kbd-hint")
           : h.element;
       if (badge) {
-        badge.innerHTML =
-          `<span style="opacity:0.5">${h.label[0]}</span>${h.label[1]}`;
+        badge.innerHTML = `<span style="opacity:0.5">${h.label[0]}</span>${h.label[1]}`;
       }
     }
   }
@@ -774,138 +811,183 @@ for (const eventType of ["keyup", "keypress"]) {
   );
 }
 
-document.addEventListener("keydown", (event) => {
-  // ---- Hint mode handling (takes priority when active) --------------------
-  if (hintModeActive) {
-    if (event.key === "Escape") {
-      swallowEvent(event);
+document.addEventListener(
+  "keydown",
+  (event) => {
+    // ---- Hint mode handling (takes priority when active) --------------------
+    if (hintModeActive) {
+      if (event.key === "Escape") {
+        swallowEvent(event);
+        exitHintMode();
+        return;
+      }
+      // Only consume single characters (no modifiers except shift for casing)
+      if (
+        event.key.length === 1 &&
+        !event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey
+      ) {
+        swallowEvent(event);
+        handleHintChar(event.key);
+        return;
+      }
+      // Any other key exits hint mode and falls through
       exitHintMode();
+    }
+
+    // Move focused task up
+    if (matchesShortcut(event, "moveUp")) {
+      event.preventDefault();
+      moveTask("up");
       return;
     }
-    // Only consume single characters (no modifiers except shift for casing)
-    if (
-      event.key.length === 1 &&
-      !event.altKey &&
-      !event.ctrlKey &&
-      !event.metaKey
-    ) {
-      swallowEvent(event);
-      handleHintChar(event.key);
+
+    // Move focused task down
+    if (matchesShortcut(event, "moveDown")) {
+      event.preventDefault();
+      moveTask("down");
       return;
     }
-    // Any other key exits hint mode and falls through
-    exitHintMode();
-  }
 
-  // Move focused task up
-  if (matchesShortcut(event, "moveUp")) {
-    event.preventDefault();
-    moveTask("up");
-    return;
-  }
-
-  // Move focused task down
-  if (matchesShortcut(event, "moveDown")) {
-    event.preventDefault();
-    moveTask("down");
-    return;
-  }
-
-  // Navigate to parent project via breadcrumb
-  if (matchesShortcut(event, "goToParent")) {
-    const link = document.querySelector(
-      'div[data-testid="task-detail-breadcrumbs"] > a',
-    );
-    if (link) {
-      event.preventDefault();
-      link.click();
+    // Navigate to parent project via breadcrumb
+    if (matchesShortcut(event, "goToParent")) {
+      const link = document.querySelector(
+        'div[data-testid="task-detail-breadcrumbs"] > a',
+      );
+      if (link) {
+        event.preventDefault();
+        link.click();
+      }
+      return;
     }
-    return;
-  }
 
-  // Open "More actions" menu in task detail modal
-  if (matchesShortcut(event, "moreActions")) {
-    maybeClick(
-      event,
-      'header[data-component="ModalHeader"] button[aria-label="More actions"]',
-    );
-    return;
-  }
-
-  // Follow the first external link in the focused task
-  if (matchesShortcut(event, "followLink")) {
-    const focusedTask = getFocusedTask();
-    if (!focusedTask) return;
-    const link = focusedTask.querySelector(
-      ".task_list_item__content a[target=_blank]",
-    );
-    if (link) {
-      event.preventDefault();
-      link.click();
+    // Open "More actions" menu in task detail modal
+    if (matchesShortcut(event, "moreActions")) {
+      maybeClick(
+        event,
+        'header[data-component="ModalHeader"] button[aria-label="More actions"]',
+      );
+      return;
     }
-    return;
-  }
 
-  // Go to project from task detail modal (extends native Shift+G)
-  if (matchesShortcut(event, "goToProject")) {
-    if (isEditing()) return;
-    const modal = document.querySelector(
-      'div[data-testid="task-details-modal"]',
-    );
-    if (!modal) return; // no modal — let native Shift+G handle it
-    const link = modal.querySelector(
-      'div[data-testid="task-detail-default-header"] > a',
-    );
-    if (link) {
-      event.preventDefault();
-      link.click();
+    // Follow the first external link in the focused task
+    if (matchesShortcut(event, "followLink")) {
+      const focusedTask = getFocusedTask();
+      if (!focusedTask) return;
+      const link = focusedTask.querySelector(
+        ".task_list_item__content a[target=_blank]",
+      );
+      if (link) {
+        event.preventDefault();
+        link.click();
+      }
+      return;
     }
-    return;
-  }
 
-  // Enter hint mode (Vimium-style subtask completion & menu access)
-  if (matchesShortcut(event, "hintMode")) {
-    if (isEditing()) return;
-    const modal = getTaskModal();
-    if (!modal) return; // only in modal
-    event.preventDefault();
-    enterHintMode(); // async — badges appear after a short delay
-    return;
-  }
-
-  // Scroll subtasks up (PageUp) in modal
-  if (matchesShortcut(event, "scrollSubtasksUp")) {
-    const container = getModalScrollContainer();
-    if (!container) return;
-    event.preventDefault();
-    container.scrollBy({ top: -container.clientHeight, behavior: "smooth" });
-    return;
-  }
-
-  // Scroll subtasks down (PageDown) in modal
-  if (matchesShortcut(event, "scrollSubtasksDown")) {
-    const container = getModalScrollContainer();
-    if (!container) return;
-    event.preventDefault();
-    container.scrollBy({ top: container.clientHeight, behavior: "smooth" });
-    return;
-  }
-
-  // Toggle show/hide completed subtasks in modal
-  if (matchesShortcut(event, "toggleCompleted")) {
-    if (isEditing()) return;
-    const modal = getTaskModal();
-    if (!modal) return; // only in modal
-    const toggleBtn = modal.querySelector(
-      'button[aria-label="Hide completed sub-tasks"], button[aria-label="Show completed sub-tasks"]',
-    );
-    if (toggleBtn) {
-      event.preventDefault();
-      toggleBtn.click();
+    // Go to project from task detail modal (extends native Shift+G)
+    if (matchesShortcut(event, "goToProject")) {
+      if (isEditing()) return;
+      const modal = document.querySelector(
+        'div[data-testid="task-details-modal"]',
+      );
+      if (!modal) return; // no modal — let native Shift+G handle it
+      const link = modal.querySelector(
+        'div[data-testid="task-detail-default-header"] > a',
+      );
+      if (link) {
+        event.preventDefault();
+        link.click();
+      }
+      return;
     }
-    return;
-  }
-}, true); // capture phase — run before Todoist's handlers
+
+    // Enter hint mode (Vimium-style subtask completion & menu access)
+    if (matchesShortcut(event, "hintMode")) {
+      if (isEditing()) return;
+      const modal = getTaskModal();
+      if (!modal) return; // only in modal
+      event.preventDefault();
+      enterHintMode(); // async — badges appear after a short delay
+      return;
+    }
+
+    // Scroll subtasks up (PageUp) — modal: scroll subtask list; task list: move focus up one page
+    if (matchesShortcut(event, "scrollSubtasksUp")) {
+      const container = getModalScrollContainer();
+      if (container) {
+        // Modal is open — scroll the subtask container
+        event.preventDefault();
+        container.scrollBy({
+          top: -container.clientHeight,
+          behavior: "smooth",
+        });
+      } else {
+        // Task list view — move keyboard focus up by one page
+        if (isEditing()) return;
+        const tasks = getTaskList();
+        if (!tasks.length) return;
+        event.preventDefault();
+        const pageSize = getTaskListPageSize(tasks);
+        const current = getFocusedTask();
+        const currentIdx = current ? tasks.indexOf(current) : -1;
+        const fromIdx =
+          currentIdx >= 0
+            ? currentIdx
+            : tasks.indexOf(getFirstVisibleTask(tasks));
+        const targetIdx = Math.max(0, fromIdx - pageSize);
+        const target = tasks[targetIdx];
+        focusTaskListItem(target);
+        target.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      return;
+    }
+
+    // Scroll subtasks down (PageDown) — modal: scroll subtask list; task list: move focus down one page
+    if (matchesShortcut(event, "scrollSubtasksDown")) {
+      const container = getModalScrollContainer();
+      if (container) {
+        // Modal is open — scroll the subtask container
+        event.preventDefault();
+        container.scrollBy({ top: container.clientHeight, behavior: "smooth" });
+      } else {
+        // Task list view — move keyboard focus down by one page
+        if (isEditing()) return;
+        const tasks = getTaskList();
+        if (!tasks.length) return;
+        event.preventDefault();
+        const pageSize = getTaskListPageSize(tasks);
+        const current = getFocusedTask();
+        const currentIdx = current ? tasks.indexOf(current) : -1;
+        const fromIdx =
+          currentIdx >= 0
+            ? currentIdx
+            : tasks.indexOf(getFirstVisibleTask(tasks));
+        const targetIdx = Math.min(tasks.length - 1, fromIdx + pageSize);
+        const target = tasks[targetIdx];
+        focusTaskListItem(target);
+        target.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      return;
+    }
+
+    // Toggle show/hide completed subtasks in modal
+    if (matchesShortcut(event, "toggleCompleted")) {
+      if (isEditing()) return;
+      const modal = getTaskModal();
+      if (!modal) return; // only in modal
+      const toggleBtn = modal.querySelector(
+        'button[aria-label="Hide completed sub-tasks"], button[aria-label="Show completed sub-tasks"]',
+      );
+      if (toggleBtn) {
+        event.preventDefault();
+        toggleBtn.click();
+      }
+      return;
+    }
+  },
+  true,
+); // capture phase — run before Todoist's handlers
 
 // ---- Init -----------------------------------------------------------------
 
