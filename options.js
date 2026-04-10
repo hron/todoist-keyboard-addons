@@ -212,6 +212,7 @@ function renderTable() {
 
     // Shortcut cell
     const tdShortcut = document.createElement("td");
+    tdShortcut.className = "shortcut-cell";
 
     const input = document.createElement("span");
     input.className = "key-input";

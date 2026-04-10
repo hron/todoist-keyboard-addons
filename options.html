@@ -53,7 +53,10 @@
       vertical-align: middle;
     }
 
-    td:last-child { text-align: right; }
+    td:last-child {
+      text-align: right;
+      white-space: nowrap;
+    }
 
     .action-name {
       font-weight: 500;
@@ -93,6 +96,13 @@
       color: #db4035;
     }
 
+    .shortcut-cell {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
     .btn-reset {
       background: none;
       border: none;
@@ -102,8 +112,7 @@
       cursor: pointer;
       padding: 4px 6px;
       border-radius: 4px;
-      margin-left: 6px;
-      vertical-align: middle;
+      flex-shrink: 0;
       transition: color 0.1s;
     }
 
