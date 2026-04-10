@@ -11,6 +11,8 @@ A Chrome extension that adds extra keyboard shortcuts to the [Todoist](https://a
 |----------------|----------------------------------------------------|
 | Alt+Shift+Up   | Move the focused task up (simulates drag-and-drop) |
 | Alt+Shift+Down | Move the focused task down                         |
+| Alt+Shift+Home | Move the focused task to the top of the list       |
+| Alt+Shift+End  | Move the focused task to the bottom of the list    |
 | Alt+K          | Open the first external link in the focused task   |
 | PageUp         | Move keyboard focus up by one page                 |
 | PageDown       | Move keyboard focus down by one page               |
