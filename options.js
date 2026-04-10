@@ -16,10 +16,12 @@
  * `label` — human-readable display string
  */
 const SHORTCUT_DEFAULTS = [
+  // -- Task list shortcuts --
   {
     id: "moveUp",
     name: "Move task up",
     description: "Drag the focused task one position up",
+    section: "taskList",
     shortcut: {
       key: "ArrowUp",
       code: "ArrowUp",
@@ -34,6 +36,7 @@ const SHORTCUT_DEFAULTS = [
     id: "moveDown",
     name: "Move task down",
     description: "Drag the focused task one position down",
+    section: "taskList",
     shortcut: {
       key: "ArrowDown",
       code: "ArrowDown",
@@ -45,9 +48,26 @@ const SHORTCUT_DEFAULTS = [
     },
   },
   {
+    id: "followLink",
+    name: "Follow task link",
+    description: "Open the first external link in the focused task",
+    section: "taskList",
+    shortcut: {
+      key: "k",
+      code: "KeyK",
+      altKey: true,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "Alt+K",
+    },
+  },
+  // -- Task detail (modal) shortcuts --
+  {
     id: "goToParent",
     name: "Go to parent",
     description: "Navigate to the parent project via the breadcrumb link",
+    section: "taskDetail",
     shortcut: {
       key: "ArrowUp",
       code: "ArrowUp",
@@ -62,6 +82,7 @@ const SHORTCUT_DEFAULTS = [
     id: "moreActions",
     name: "More actions",
     description: "Open the \"More actions\" menu in the task detail modal",
+    section: "taskDetail",
     shortcut: {
       key: "o",
       code: "KeyO",
@@ -73,24 +94,11 @@ const SHORTCUT_DEFAULTS = [
     },
   },
   {
-    id: "followLink",
-    name: "Follow task link",
-    description: "Open the first external link in the focused task",
-    shortcut: {
-      key: "k",
-      code: "KeyK",
-      altKey: true,
-      ctrlKey: false,
-      shiftKey: false,
-      metaKey: false,
-      label: "Alt+K",
-    },
-  },
-  {
     id: "goToProject",
     name: "Go to project (modal)",
     description:
       "Navigate to the task's project when the task detail modal is open (extends native Shift+G)",
+    section: "taskDetail",
     shortcut: {
       key: "G",
       code: "KeyG",
@@ -99,6 +107,67 @@ const SHORTCUT_DEFAULTS = [
       shiftKey: true,
       metaKey: false,
       label: "Shift+G",
+    },
+  },
+  {
+    id: "hintMode",
+    name: "Quick-complete subtask",
+    description:
+      "Show two-letter hints on subtask checkboxes — type the letters to complete or uncomplete a subtask",
+    section: "taskDetail",
+    shortcut: {
+      key: "g",
+      code: "KeyG",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "G",
+    },
+  },
+  {
+    id: "scrollSubtasksUp",
+    name: "Scroll subtasks up",
+    description: "Scroll the subtask list up by one page in the task detail modal",
+    section: "taskDetail",
+    shortcut: {
+      key: "PageUp",
+      code: "PageUp",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "PageUp",
+    },
+  },
+  {
+    id: "scrollSubtasksDown",
+    name: "Scroll subtasks down",
+    description: "Scroll the subtask list down by one page in the task detail modal",
+    section: "taskDetail",
+    shortcut: {
+      key: "PageDown",
+      code: "PageDown",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "PageDown",
+    },
+  },
+  {
+    id: "toggleCompleted",
+    name: "Toggle completed subtasks",
+    description: "Show or hide completed sub-tasks in the task detail modal",
+    section: "taskDetail",
+    shortcut: {
+      key: "h",
+      code: "KeyH",
+      altKey: true,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "Alt+H",
     },
   },
 ];
@@ -192,6 +261,12 @@ function saveToStorage(shortcuts) {
   });
 }
 
+// Section definitions — order and labels for the settings page
+const SECTIONS = [
+  { id: "taskList", label: "Task list" },
+  { id: "taskDetail", label: "Task detail (modal)" },
+];
+
 // ---------------------------------------------------------------------------
 // DOM rendering
 // ---------------------------------------------------------------------------
@@ -200,64 +275,101 @@ function renderTable() {
   const tbody = document.getElementById("shortcuts-table");
   tbody.innerHTML = "";
 
-  for (const item of currentShortcuts) {
-    const tr = document.createElement("tr");
+  for (const section of SECTIONS) {
+    const sectionItems = currentShortcuts.filter(
+      (s) => s.section === section.id,
+    );
+    if (sectionItems.length === 0) continue;
 
-    // Action cell
-    const tdAction = document.createElement("td");
-    tdAction.innerHTML = `
-      <div class="action-name">${item.name}</div>
-      <div class="action-desc">${item.description}</div>
-    `;
+    // Section header row
+    const headerTr = document.createElement("tr");
+    headerTr.className = "section-header";
+    const headerTd = document.createElement("td");
+    headerTd.colSpan = 2;
+    headerTd.textContent = section.label;
+    headerTr.appendChild(headerTd);
+    tbody.appendChild(headerTr);
 
-    // Shortcut cell
-    const tdShortcut = document.createElement("td");
-    tdShortcut.className = "shortcut-cell";
-
-    const input = document.createElement("span");
-    input.className = "key-input";
-    input.tabIndex = 0;
-    input.dataset.id = item.id;
-    input.textContent = item.shortcut.label;
-
-    const resetBtn = document.createElement("button");
-    resetBtn.className = "btn-reset";
-    resetBtn.title = "Reset to default";
-    resetBtn.textContent = "↺";
-    resetBtn.dataset.id = item.id;
-
-    tdShortcut.appendChild(input);
-    tdShortcut.appendChild(resetBtn);
-
-    tr.appendChild(tdAction);
-    tr.appendChild(tdShortcut);
-    tbody.appendChild(tr);
-
-    // --- Event: start recording when the input is clicked or focused+Enter
-    const startRecording = (e) => {
-      e.preventDefault();
-      stopRecording(); // clear any existing recording first
-      recordingId = item.id;
-      input.classList.add("recording");
-      input.textContent = "Press a key combination";
-    };
-
-    input.addEventListener("click", startRecording);
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        startRecording(e);
-      }
-    });
-
-    // --- Event: reset to default
-    resetBtn.addEventListener("click", () => {
-      const def = SHORTCUT_DEFAULTS.find((d) => d.id === item.id);
-      if (def) {
-        item.shortcut = { ...def.shortcut };
-        input.textContent = item.shortcut.label;
-      }
-    });
+    for (const item of sectionItems) {
+      renderShortcutRow(tbody, item);
+    }
   }
+
+  // Render any uncategorised shortcuts (safety net)
+  const uncategorised = currentShortcuts.filter(
+    (s) => !SECTIONS.some((sec) => sec.id === s.section),
+  );
+  if (uncategorised.length > 0) {
+    const headerTr = document.createElement("tr");
+    headerTr.className = "section-header";
+    const headerTd = document.createElement("td");
+    headerTd.colSpan = 2;
+    headerTd.textContent = "Other";
+    headerTr.appendChild(headerTd);
+    tbody.appendChild(headerTr);
+    for (const item of uncategorised) {
+      renderShortcutRow(tbody, item);
+    }
+  }
+}
+
+function renderShortcutRow(tbody, item) {
+  const tr = document.createElement("tr");
+
+  // Action cell
+  const tdAction = document.createElement("td");
+  tdAction.innerHTML = `
+    <div class="action-name">${item.name}</div>
+    <div class="action-desc">${item.description}</div>
+  `;
+
+  // Shortcut cell
+  const tdShortcut = document.createElement("td");
+  tdShortcut.className = "shortcut-cell";
+
+  const input = document.createElement("span");
+  input.className = "key-input";
+  input.tabIndex = 0;
+  input.dataset.id = item.id;
+  input.textContent = item.shortcut.label;
+
+  const resetBtn = document.createElement("button");
+  resetBtn.className = "btn-reset";
+  resetBtn.title = "Reset to default";
+  resetBtn.textContent = "↺";
+  resetBtn.dataset.id = item.id;
+
+  tdShortcut.appendChild(input);
+  tdShortcut.appendChild(resetBtn);
+
+  tr.appendChild(tdAction);
+  tr.appendChild(tdShortcut);
+  tbody.appendChild(tr);
+
+  // --- Event: start recording when the input is clicked or focused+Enter
+  const startRecording = (e) => {
+    e.preventDefault();
+    stopRecording(); // clear any existing recording first
+    recordingId = item.id;
+    input.classList.add("recording");
+    input.textContent = "Press a key combination";
+  };
+
+  input.addEventListener("click", startRecording);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      startRecording(e);
+    }
+  });
+
+  // --- Event: reset to default
+  resetBtn.addEventListener("click", () => {
+    const def = SHORTCUT_DEFAULTS.find((d) => d.id === item.id);
+    if (def) {
+      item.shortcut = { ...def.shortcut };
+      input.textContent = item.shortcut.label;
+    }
+  });
 }
 
 function stopRecording() {

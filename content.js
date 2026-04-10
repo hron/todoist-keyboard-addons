@@ -293,6 +293,165 @@ async function moveTask(direction) {
   return refocusTask(taskId);
 }
 
+// ---- Subtask hint mode (Vimium-style two-letter labels) ------------------
+
+let hintModeActive = false;
+let hintFirstChar = "";
+let hintOverlays = []; // {element, checkbox, label}
+
+const HINT_CHARS = "abcdefghijklmnopqrstuvwxyz";
+
+/**
+ * Generate two-letter hint labels for up to 676 items.
+ * Returns an array like ["aa","ab","ac",...].
+ */
+function generateHintLabels(count) {
+  const labels = [];
+  for (let i = 0; i < count && i < HINT_CHARS.length * HINT_CHARS.length; i++) {
+    const a = HINT_CHARS[Math.floor(i / HINT_CHARS.length)];
+    const b = HINT_CHARS[i % HINT_CHARS.length];
+    labels.push(a + b);
+  }
+  return labels;
+}
+
+/**
+ * Find the task detail modal, or null if not open.
+ */
+function getTaskModal() {
+  return document.querySelector('div[data-testid="task-details-modal"]');
+}
+
+/**
+ * Get the scrollable subtask container inside the modal.
+ */
+function getModalScrollContainer() {
+  const modal = getTaskModal();
+  if (!modal) return null;
+  return modal.querySelector('div[data-testid="task-main-content-container"]');
+}
+
+/**
+ * Enter hint mode: overlay two-letter labels near every subtask checkbox.
+ * Includes both incomplete and completed subtasks.
+ */
+function enterHintMode() {
+  const modal = getTaskModal();
+  if (!modal) return;
+
+  // Gather all subtask checkboxes (both complete and incomplete)
+  const checkboxes = Array.from(
+    modal.querySelectorAll(
+      'li.task_list_item button[role="checkbox"][data-action-hint="task-complete"]',
+    ),
+  );
+  if (checkboxes.length === 0) return;
+
+  const labels = generateHintLabels(checkboxes.length);
+
+  for (let i = 0; i < checkboxes.length; i++) {
+    const cb = checkboxes[i];
+    const label = labels[i];
+
+    // Create overlay badge
+    const badge = document.createElement("span");
+    badge.className = "todoist-kbd-hint";
+    badge.textContent = label;
+    badge.dataset.hint = label;
+
+    // Position relative to the checkbox's parent
+    const wrapper = cb.parentElement;
+    if (wrapper) {
+      wrapper.style.position = "relative";
+      badge.style.cssText = `
+        position: absolute;
+        left: -2px;
+        top: -6px;
+        z-index: 10000;
+        background: #db4035;
+        color: #fff;
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 2px 4px;
+        border-radius: 3px;
+        pointer-events: none;
+        text-transform: uppercase;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+      `;
+      wrapper.appendChild(badge);
+    }
+
+    hintOverlays.push({ element: badge, checkbox: cb, label });
+  }
+
+  hintModeActive = true;
+  hintFirstChar = "";
+  LOG("Hint mode activated —", checkboxes.length, "hints");
+}
+
+/**
+ * Exit hint mode: remove all overlay labels.
+ */
+function exitHintMode() {
+  for (const { element } of hintOverlays) {
+    element.remove();
+  }
+  hintOverlays = [];
+  hintModeActive = false;
+  hintFirstChar = "";
+  DBG("Hint mode deactivated");
+}
+
+/**
+ * Narrow hints after the first character is typed.
+ * Hides hints that don't match; highlights those that do.
+ */
+function narrowHints(char) {
+  for (const h of hintOverlays) {
+    if (h.label[0] !== char) {
+      h.element.style.display = "none";
+    } else {
+      // Highlight the first character
+      h.element.innerHTML =
+        `<span style="opacity:0.5">${h.label[0]}</span>${h.label[1]}`;
+    }
+  }
+}
+
+/**
+ * Handle a character typed while in hint mode.
+ * Returns true if the event was consumed.
+ */
+function handleHintChar(char) {
+  if (!hintModeActive) return false;
+
+  char = char.toLowerCase();
+  if (!HINT_CHARS.includes(char)) {
+    // Invalid char — exit hint mode
+    exitHintMode();
+    return true;
+  }
+
+  if (hintFirstChar === "") {
+    // First character
+    hintFirstChar = char;
+    narrowHints(char);
+    return true;
+  }
+
+  // Second character — find matching hint and click
+  const target = hintFirstChar + char;
+  const match = hintOverlays.find((h) => h.label === target);
+  if (match) {
+    match.checkbox.click();
+    LOG("Hint activated:", target);
+  }
+  exitHintMode();
+  return true;
+}
+
 // ---- Keyboard shortcut configuration -------------------------------------
 
 /**
@@ -349,6 +508,38 @@ const DEFAULT_SHORTCUTS = {
     altKey: false,
     ctrlKey: false,
     shiftKey: true,
+    metaKey: false,
+  },
+  hintMode: {
+    key: "g",
+    code: "KeyG",
+    altKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
+  scrollSubtasksUp: {
+    key: "PageUp",
+    code: "PageUp",
+    altKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
+  scrollSubtasksDown: {
+    key: "PageDown",
+    code: "PageDown",
+    altKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
+  toggleCompleted: {
+    key: "h",
+    code: "KeyH",
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: false,
     metaKey: false,
   },
 };
@@ -429,7 +620,54 @@ function maybeClick(event, selector) {
   element.click();
 }
 
+/**
+ * Swallow an event completely so Todoist never sees it.
+ * Prevents default behaviour AND stops the event from reaching any other
+ * listeners (including Todoist's own keydown/keyup/keypress handlers).
+ */
+function swallowEvent(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+}
+
+// Block keyup and keypress while hint mode is active so that Todoist's
+// shortcuts (which may listen on those events) don't fire.
+for (const eventType of ["keyup", "keypress"]) {
+  document.addEventListener(
+    eventType,
+    (event) => {
+      if (hintModeActive) {
+        swallowEvent(event);
+      }
+    },
+    true, // capture phase — run before Todoist's handlers
+  );
+}
+
 document.addEventListener("keydown", (event) => {
+  // ---- Hint mode handling (takes priority when active) --------------------
+  if (hintModeActive) {
+    if (event.key === "Escape") {
+      swallowEvent(event);
+      exitHintMode();
+      return;
+    }
+    // Only consume single characters (no modifiers except shift for casing)
+    if (
+      event.key.length === 1 &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      !event.metaKey
+    ) {
+      swallowEvent(event);
+      handleHintChar(event.key);
+      return;
+    }
+    // Any other key exits hint mode and falls through
+    exitHintMode();
+  }
+
   // Move focused task up
   if (matchesShortcut(event, "moveUp")) {
     event.preventDefault();
@@ -495,7 +733,50 @@ document.addEventListener("keydown", (event) => {
     }
     return;
   }
-});
+
+  // Enter hint mode (Vimium-style subtask completion)
+  if (matchesShortcut(event, "hintMode")) {
+    if (isEditing()) return;
+    const modal = getTaskModal();
+    if (!modal) return; // only in modal
+    event.preventDefault();
+    enterHintMode();
+    return;
+  }
+
+  // Scroll subtasks up (PageUp) in modal
+  if (matchesShortcut(event, "scrollSubtasksUp")) {
+    const container = getModalScrollContainer();
+    if (!container) return;
+    event.preventDefault();
+    container.scrollBy({ top: -container.clientHeight, behavior: "smooth" });
+    return;
+  }
+
+  // Scroll subtasks down (PageDown) in modal
+  if (matchesShortcut(event, "scrollSubtasksDown")) {
+    const container = getModalScrollContainer();
+    if (!container) return;
+    event.preventDefault();
+    container.scrollBy({ top: container.clientHeight, behavior: "smooth" });
+    return;
+  }
+
+  // Toggle show/hide completed subtasks in modal
+  if (matchesShortcut(event, "toggleCompleted")) {
+    if (isEditing()) return;
+    const modal = getTaskModal();
+    if (!modal) return; // only in modal
+    const toggleBtn = modal.querySelector(
+      'button[aria-label="Hide completed sub-tasks"], button[aria-label="Show completed sub-tasks"]',
+    );
+    if (toggleBtn) {
+      event.preventDefault();
+      toggleBtn.click();
+    }
+    return;
+  }
+}, true); // capture phase — run before Todoist's handlers
 
 // ---- Init -----------------------------------------------------------------
 
