@@ -1,5 +1,9 @@
+![Extension icon](icons/icon-128.png)
+
 Todoist Keyboard Add-ons
 =========================
+
+A small, focused extension for Todoist.  
 
 A Chrome extension that adds extra keyboard shortcuts and quality-of-life features to the [Todoist](https://app.todoist.com) web app. All shortcuts are configurable via the extension's options page.
 
