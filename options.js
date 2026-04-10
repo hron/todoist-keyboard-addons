@@ -234,6 +234,20 @@ const SHORTCUT_DEFAULTS = [
   },
 ];
 
+/**
+ * Boolean feature flags.
+ * Each entry: { id, name, description, default }
+ */
+const FEATURE_DEFAULTS = [
+  {
+    id: "showParentTask",
+    name: "Show parent task in filter / search views",
+    description:
+      "Replaces the project label (e.g. \"Life #\") with \"Life \u203a Parent Task Title\" for subtasks when viewing a filter or search result. Top-level tasks are unaffected.",
+    default: true,
+  },
+];
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -302,6 +316,9 @@ function isIgnored(key) {
 // Working copy of shortcuts (may differ from saved state until user hits Save)
 let currentShortcuts = SHORTCUT_DEFAULTS.map((s) => ({ ...s, shortcut: { ...s.shortcut } }));
 
+// Working copy of feature flags
+let currentSettings = Object.fromEntries(FEATURE_DEFAULTS.map((f) => [f.id, f.default]));
+
 // The input currently recording
 let recordingId = null;
 
@@ -311,15 +328,15 @@ let recordingId = null;
 
 function loadFromStorage() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get("shortcuts", (data) => {
-      resolve(data.shortcuts || null);
+    chrome.storage.sync.get(["shortcuts", "settings"], (data) => {
+      resolve({ shortcuts: data.shortcuts || null, settings: data.settings || null });
     });
   });
 }
 
-function saveToStorage(shortcuts) {
+function saveToStorage(shortcuts, settings) {
   return new Promise((resolve) => {
-    chrome.storage.sync.set({ shortcuts }, resolve);
+    chrome.storage.sync.set({ shortcuts, settings }, resolve);
   });
 }
 
@@ -332,6 +349,36 @@ const SECTIONS = [
 // ---------------------------------------------------------------------------
 // DOM rendering
 // ---------------------------------------------------------------------------
+
+function renderFeatures() {
+  const container = document.getElementById("features-list");
+  if (!container) return;
+  container.innerHTML = "";
+
+  for (const feature of FEATURE_DEFAULTS) {
+    const row = document.createElement("div");
+    row.className = "feature-row";
+
+    const label = document.createElement("label");
+    label.className = "feature-label";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = `feature-${feature.id}`;
+    checkbox.checked = currentSettings[feature.id] !== false; // default true
+    checkbox.addEventListener("change", () => {
+      currentSettings[feature.id] = checkbox.checked;
+    });
+
+    const text = document.createElement("span");
+    text.innerHTML = `<span class="feature-name">${feature.name}</span><span class="feature-desc">${feature.description}</span>`;
+
+    label.appendChild(checkbox);
+    label.appendChild(text);
+    row.appendChild(label);
+    container.appendChild(row);
+  }
+}
 
 function renderTable() {
   const tbody = document.getElementById("shortcuts-table");
@@ -495,7 +542,7 @@ document.getElementById("btn-save").addEventListener("click", async () => {
   for (const item of currentShortcuts) {
     toSave[item.id] = item.shortcut;
   }
-  await saveToStorage(toSave);
+  await saveToStorage(toSave, { ...currentSettings });
 
   const status = document.getElementById("status");
   status.classList.add("visible");
@@ -507,6 +554,8 @@ document.getElementById("btn-restore").addEventListener("click", () => {
     ...s,
     shortcut: { ...s.shortcut },
   }));
+  currentSettings = Object.fromEntries(FEATURE_DEFAULTS.map((f) => [f.id, f.default]));
+  renderFeatures();
   renderTable();
 });
 
@@ -516,12 +565,20 @@ document.getElementById("btn-restore").addEventListener("click", () => {
 
 (async () => {
   const saved = await loadFromStorage();
-  if (saved) {
+  if (saved.shortcuts) {
     for (const item of currentShortcuts) {
-      if (saved[item.id]) {
-        item.shortcut = saved[item.id];
+      if (saved.shortcuts[item.id]) {
+        item.shortcut = saved.shortcuts[item.id];
       }
     }
   }
+  if (saved.settings) {
+    for (const feature of FEATURE_DEFAULTS) {
+      if (feature.id in saved.settings) {
+        currentSettings[feature.id] = saved.settings[feature.id];
+      }
+    }
+  }
+  renderFeatures();
   renderTable();
 })();

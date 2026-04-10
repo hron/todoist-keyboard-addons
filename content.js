@@ -781,19 +781,27 @@ function loadShortcuts() {
     );
     return;
   }
-  chrome.storage.sync.get("shortcuts", (data) => {
+  chrome.storage.sync.get(["shortcuts", "settings"], (data) => {
     if (data.shortcuts) {
       // Merge saved values over defaults so any new shortcuts still have a value
       shortcuts = { ...DEFAULT_SHORTCUTS, ...data.shortcuts };
       DBG("Shortcuts loaded from storage", shortcuts);
     }
+    if (data.settings) {
+      applySettings(data.settings);
+    }
   });
 
   // Re-load whenever the user saves new settings in the options page
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "sync" && changes.shortcuts) {
+    if (area !== "sync") return;
+    if (changes.shortcuts) {
       shortcuts = { ...DEFAULT_SHORTCUTS, ...changes.shortcuts.newValue };
       DBG("Shortcuts updated from storage change", shortcuts);
+    }
+    if (changes.settings) {
+      applySettings(changes.settings.newValue);
+      onNavigate();
     }
   });
 }
@@ -1098,6 +1106,250 @@ document.addEventListener(
   true,
 ); // capture phase — run before Todoist's handlers
 
+// ---- Parent-task label in filter / search views ---------------------------
+//
+// In filter and search views Todoist shows "ProjectName #" in the bottom-right
+// corner of each task row.  For subtasks that label gives no context about
+// what the parent task is.  This feature replaces it with
+// "ProjectName › ParentTaskTitle" for subtasks, leaving top-level tasks
+// unchanged.
+//
+// Data source: the `todoist.sync` IndexedDB that Todoist keeps locally —
+// no extra API calls are made.
+
+/** Feature flag — toggled via the options page. Default: enabled. */
+let _showParentTask = true;
+
+/**
+ * Apply a settings object from chrome.storage.sync.
+ * Called on initial load and on storage change events.
+ */
+function applySettings(settings) {
+  if (!settings) return;
+  if ("showParentTask" in settings) {
+    _showParentTask = Boolean(settings.showParentTask);
+    DBG("showParentTask =", _showParentTask);
+  }
+}
+
+/** In-memory caches populated from IndexedDB. */
+let _taskById = null;    // Map<id, {content, parent_id, project_id}>
+let _projectById = null; // Map<id, {name}>
+
+/**
+ * Load (or reload) the tasks and projects caches from IndexedDB.
+ * Resolves when both stores have been read.
+ */
+function loadTodoistCache() {
+  return new Promise((resolve) => {
+    const req = indexedDB.open("todoist.sync");
+    req.onerror = () => {
+      WARN("Could not open todoist.sync IndexedDB");
+      resolve();
+    };
+    req.onsuccess = (e) => {
+      const db = e.target.result;
+      let pending = 2;
+      const done = () => { if (--pending === 0) { db.close(); resolve(); } };
+
+      const taskMap = new Map();
+      const projMap = new Map();
+
+      // Read tasks
+      try {
+        const tx1 = db.transaction("tasks", "readonly");
+        const cursor1 = tx1.objectStore("tasks").openCursor();
+        cursor1.onsuccess = (ev) => {
+          const c = ev.target.result;
+          if (!c) { _taskById = taskMap; done(); return; }
+          const t = c.value;
+          taskMap.set(t.id, { content: t.content, parent_id: t.parent_id || null, project_id: t.project_id });
+          c.continue();
+        };
+        cursor1.onerror = done;
+      } catch { done(); }
+
+      // Read projects
+      try {
+        const tx2 = db.transaction("projects", "readonly");
+        const cursor2 = tx2.objectStore("projects").openCursor();
+        cursor2.onsuccess = (ev) => {
+          const c = ev.target.result;
+          if (!c) { _projectById = projMap; done(); return; }
+          const p = c.value;
+          projMap.set(p.id, { name: p.name });
+          c.continue();
+        };
+        cursor2.onerror = done;
+      } catch { done(); }
+    };
+  });
+}
+
+/**
+ * Extract the task object from the React fiber attached to a
+ * `li.task_list_item` element.  Returns null if not found.
+ */
+function getTaskFromFiber(li) {
+  const key = Object.keys(li).find((k) => k.startsWith("__reactFiber"));
+  if (!key) return null;
+  let node = li[key];
+  let depth = 0;
+  while (node && depth < 20) {
+    const props = node.memoizedProps;
+    if (props && props.task && props.task.id) return props.task;
+    node = node.return;
+    depth++;
+  }
+  return null;
+}
+
+/**
+ * Augment the project label of a single task list item.
+ * If the task has a parent, the label becomes "Project › Parent Title".
+ * Top-level tasks are left untouched.
+ * Already-augmented nodes are skipped (idempotent).
+ */
+function augmentTaskLabel(li) {
+  if (!_taskById || !_projectById) return;
+
+  // Skip if already processed
+  if (li.dataset.kbdParentAugmented === "1") return;
+
+  const fiberTask = getTaskFromFiber(li);
+  const taskId = fiberTask ? fiberTask.id : li.getAttribute("data-item-id");
+  if (!taskId) return;
+
+  const task = _taskById.get(taskId);
+  if (!task || !task.parent_id) return; // top-level task — nothing to do
+
+  const parent = _taskById.get(task.parent_id);
+  if (!parent) return; // parent not in cache yet
+
+  // Find the project link element rendered by Todoist
+  // It's an <a> that points to the project page and contains the project name text
+  const projectLink = li.querySelector('a[href*="/app/project/"]');
+  if (!projectLink) return;
+
+  // The link's child structure is typically:
+  //   <div>  ← styled project name (coloured dot/icon + "ProjectName" text)
+  //   <svg>  ← hash "#" icon
+  // We want to insert " › ParentTaskTitle" between the div and the svg.
+
+  // Remove any text nodes we previously injected (idempotency guard is above,
+  // but just in case)
+  for (const node of Array.from(projectLink.childNodes)) {
+    if (node.nodeType === Node.TEXT_NODE) node.remove();
+  }
+
+  const svg = projectLink.querySelector("svg");
+  const separatorText = document.createTextNode(`\u00a0›\u00a0${parent.content}`);
+
+  if (svg) {
+    projectLink.insertBefore(separatorText, svg);
+  } else {
+    projectLink.appendChild(separatorText);
+  }
+
+  // Widen the element so the longer text doesn't get clipped
+  projectLink.style.maxWidth = "none";
+
+  li.dataset.kbdParentAugmented = "1";
+}
+
+/**
+ * Run augmentation on all currently visible task list items.
+ */
+function augmentAllVisibleTasks() {
+  if (!_taskById || !_projectById || !_showParentTask) return;
+  for (const li of document.querySelectorAll("li.task_list_item:not(.reorder_item)")) {
+    augmentTaskLabel(li);
+  }
+}
+
+/**
+ * Returns true when the current page is a filter or search view.
+ */
+function isFilterOrSearchView() {
+  return /\/(filter|search)(\/|$)/.test(window.location.pathname);
+}
+
+/** MutationObserver that watches for new task items being added (virtualised list). */
+let _filterViewObserver = null;
+
+/**
+ * Start observing the task list for new items (virtualised scroll).
+ * Called when we enter a filter/search view.
+ */
+function startFilterViewObserver() {
+  if (_filterViewObserver) return; // already running
+  _filterViewObserver = new MutationObserver((mutations) => {
+    if (!isFilterOrSearchView() || !_showParentTask) return;
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeType !== Node.ELEMENT_NODE) continue;
+        if (node.matches && node.matches("li.task_list_item:not(.reorder_item)")) {
+          augmentTaskLabel(node);
+        }
+        // Also check descendants (in case a whole subtree was added)
+        for (const li of node.querySelectorAll
+          ? node.querySelectorAll("li.task_list_item:not(.reorder_item)")
+          : []) {
+          augmentTaskLabel(li);
+        }
+      }
+    }
+  });
+  _filterViewObserver.observe(document.body, { childList: true, subtree: true });
+  DBG("filter-view observer started");
+}
+
+function stopFilterViewObserver() {
+  if (_filterViewObserver) {
+    _filterViewObserver.disconnect();
+    _filterViewObserver = null;
+    DBG("filter-view observer stopped");
+  }
+}
+
+/**
+ * Called on every SPA navigation (URL change).
+ * Starts or stops the filter-view observer and runs an initial augmentation pass.
+ */
+async function onNavigate() {
+  if (isFilterOrSearchView() && _showParentTask) {
+    // Ensure cache is fresh (re-reads in case new tasks were added since load)
+    if (!_taskById || !_projectById) {
+      await loadTodoistCache();
+    }
+    startFilterViewObserver();
+    // Augment any items already in the DOM (handles hard-reload case)
+    augmentAllVisibleTasks();
+  } else {
+    stopFilterViewObserver();
+  }
+}
+
+/**
+ * Watch for SPA URL changes by intercepting history API and listening to
+ * popstate, plus a fallback polling check.
+ */
+function initNavigationWatcher() {
+  const origPushState = history.pushState.bind(history);
+  const origReplaceState = history.replaceState.bind(history);
+
+  history.pushState = (...args) => { origPushState(...args); onNavigate(); };
+  history.replaceState = (...args) => { origReplaceState(...args); onNavigate(); };
+  window.addEventListener("popstate", onNavigate);
+
+  // Run once immediately for the current page
+  onNavigate();
+}
+
 // ---- Init -----------------------------------------------------------------
 
 loadShortcuts();
+loadTodoistCache().then(() => {
+  DBG("todoist cache loaded: tasks=%d projects=%d", _taskById ? _taskById.size : 0, _projectById ? _projectById.size : 0);
+  initNavigationWatcher();
+});

@@ -1,7 +1,17 @@
 Todoist Keyboard Add-ons
 =========================
 
-A Chrome extension that adds extra keyboard shortcuts to the [Todoist](https://app.todoist.com) web app. All shortcuts are configurable via the extension's options page.
+A Chrome extension that adds extra keyboard shortcuts and quality-of-life features to the [Todoist](https://app.todoist.com) web app. All shortcuts are configurable via the extension's options page.
+
+## Features
+
+### Parent task label in filter / search views
+
+When browsing a filter or search result, Todoist shows the project name (e.g. `Life #`) in the bottom-right corner of each task. For subtasks this gives no context about what the parent task is.
+
+With this feature enabled, the label is replaced with **`Project › Parent Task Title`** for subtasks. Top-level tasks are unaffected. This relies on Todoist's local IndexedDB cache — no extra API calls are made.
+
+Can be toggled on/off from the extension's options page.
 
 ## Keyboard shortcuts
 
@@ -44,4 +54,4 @@ A Chrome extension that adds extra keyboard shortcuts to the [Todoist](https://a
 
 ## Configuration
 
-Click the extension's **Options** link on the extensions page to customise any shortcut. Shortcuts are synced across devices via `chrome.storage.sync`.
+Click the extension's **Options** link on the extensions page to customise shortcuts and toggle features. Settings are synced across devices via `chrome.storage.sync`.

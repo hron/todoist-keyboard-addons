@@ -175,11 +175,68 @@
     }
 
     #status.visible { opacity: 1; }
+
+    /* Feature toggles */
+    .features-section {
+      margin-bottom: 36px;
+    }
+
+    .features-heading {
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #db4035;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5e5e5;
+      margin-bottom: 0;
+    }
+
+    .feature-row {
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .feature-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .feature-label input[type="checkbox"] {
+      margin-top: 2px;
+      flex-shrink: 0;
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+      accent-color: #db4035;
+    }
+
+    .feature-label span {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-name {
+      font-weight: 500;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
   <h1>Todoist Keyboard Add-ons</h1>
   <p class="subtitle">Click a shortcut field and press your desired key combination to change it.</p>
+
+  <div class="features-section">
+    <div class="features-heading">Features</div>
+    <div id="features-list"></div>
+  </div>
 
   <table>
     <thead>
