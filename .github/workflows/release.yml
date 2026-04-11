@@ -16,7 +16,7 @@ jobs:
 
       - name: Build extension zip
         run: |
-          zip -r extension.zip \
+          zip -r "todoist-keyboard-addons-${{ github.ref_name }}.zip" \
             manifest.json \
             content.js \
             options.js \
@@ -26,5 +26,5 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: extension.zip
+          files: "todoist-keyboard-addons-${{ github.ref_name }}.zip"
           generate_release_notes: true
