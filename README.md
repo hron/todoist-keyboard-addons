@@ -42,7 +42,6 @@ Can be toggled on/off from the extension's options page.
 | Alt+Up   | Navigate to the parent project via the breadcrumb link                                           |
 | Alt+O    | Open the "More actions" menu                                                                     |
 | Shift+G  | Navigate to the task's project (extends native Shift+G to work inside the modal)                 |
-| G        | Hint mode — shows two-letter labels on every subtask; type a label to complete/uncomplete it (G prefix) or open its "More actions" menu (O prefix) |
 | PageUp   | Scroll the subtask list up by one page                                                           |
 | PageDown | Scroll the subtask list down by one page                                                         |
 | Home     | Scroll the subtask list to the top                                                               |

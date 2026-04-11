@@ -358,30 +358,7 @@ async function moveTaskToEdge(direction) {
   refocusTask(taskId);
 }
 
-// ---- Subtask hint mode (Vimium-style two-letter labels) ------------------
-
-let hintModeActive = false;
-let hintFirstChar = "";
-let hintOverlays = []; // {element, target, label, type}
-
-const HINT_CHARS = "abcdefghijklmnopqrstuvwxyz";
-
-// Prefix characters for each hint type (first letter of the two-letter label)
-const HINT_PREFIX_CHECKBOX = "g";
-const HINT_PREFIX_MENU = "o";
-
-/**
- * Generate two-letter hint labels with a fixed prefix.
- * E.g. prefix="g", count=3 → ["ga","gb","gc"].
- * Supports up to 26 items per prefix.
- */
-function generateHintLabels(prefix, count) {
-  const labels = [];
-  for (let i = 0; i < count && i < HINT_CHARS.length; i++) {
-    labels.push(prefix + HINT_CHARS[i]);
-  }
-  return labels;
-}
+// ---- Task detail modal helpers -------------------------------------------
 
 /**
  * Find the task detail modal, or null if not open.
@@ -397,253 +374,6 @@ function getModalScrollContainer() {
   const modal = getTaskModal();
   if (!modal) return null;
   return modal.querySelector('div[data-testid="task-main-content-container"]');
-}
-
-/**
- * Create a hint badge DOM element.
- */
-function createHintBadge(label, color) {
-  const badge = document.createElement("span");
-  badge.className = "todoist-kbd-hint";
-  badge.textContent = label;
-  badge.dataset.hint = label;
-  badge.style.cssText = `
-    position: absolute;
-    z-index: 10000;
-    background: ${color};
-    color: #fff;
-    font-family: monospace;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1;
-    padding: 2px 4px;
-    border-radius: 3px;
-    pointer-events: none;
-    text-transform: uppercase;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-  `;
-  return badge;
-}
-
-/**
- * Create a 3-dots icon + hint badge combo element that we inject ourselves,
- * so it's always visible regardless of Todoist's hover state.
- * Uses Todoist's exact SVG icon and matches its native positioning.
- *
- * Returns { container, badge } where container is the DOM node to append
- * and badge is the label span for later manipulation.
- */
-function createMenuHintIcon(label) {
-  const container = document.createElement("span");
-  container.className = "todoist-kbd-hint-menu";
-  container.style.cssText = `
-    position: absolute;
-    right: 12px;
-    top: 6px;
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    pointer-events: none;
-    z-index: 10000;
-  `;
-
-  // Badge label (to the LEFT of the icon)
-  const badge = document.createElement("span");
-  badge.className = "todoist-kbd-hint";
-  badge.textContent = label;
-  badge.dataset.hint = label;
-  badge.style.cssText = `
-    background: #246fe0;
-    color: #fff;
-    font-family: monospace;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1;
-    padding: 2px 4px;
-    border-radius: 3px;
-    pointer-events: none;
-    text-transform: uppercase;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    flex-shrink: 0;
-  `;
-  container.appendChild(badge);
-
-  // Todoist's native 3-dots SVG icon (24x24, stroke-based)
-  const icon = document.createElement("span");
-  icon.innerHTML =
-    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" transform="translate(3 10)"><circle cx="2" cy="2" r="2"></circle><circle cx="9" cy="2" r="2"></circle><circle cx="16" cy="2" r="2"></circle></g></svg>';
-  icon.style.cssText = `
-    color: #808080;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-  `;
-  container.appendChild(icon);
-
-  return { container, badge };
-}
-
-/**
- * Force-render action buttons on a subtask item by dispatching hover events,
- * then click the "More actions" (3-dots) button.
- */
-async function clickMenuForItem(item) {
-  item.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
-  item.dispatchEvent(new PointerEvent("pointerover", { bubbles: true }));
-  item.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }));
-  // Give React a tick to render the buttons
-  await new Promise((r) => setTimeout(r, 80));
-  const btn = item.querySelector(
-    'button[data-action-hint="task-overflow-menu"]',
-  );
-  if (btn) btn.click();
-}
-
-/**
- * Enter hint mode: overlay two-letter labels near every subtask checkbox
- * and inject 3-dots icons with labels on the right side of each row.
- *
- * Checkbox hints use the "g" prefix (ga, gb, gc, ...).
- * Menu hints use the "o" prefix (oa, ob, oc, ...).
- */
-async function enterHintMode() {
-  const modal = getTaskModal();
-  if (!modal) return;
-
-  // Gather all subtask list items
-  const items = Array.from(modal.querySelectorAll("li.task_list_item"));
-  if (items.length === 0) return;
-
-  // Phase 1: collect checkboxes (always present) and prepare labels
-  const cbLabels = generateHintLabels(HINT_PREFIX_CHECKBOX, items.length);
-  const menuLabels = generateHintLabels(HINT_PREFIX_MENU, items.length);
-
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-
-    // -- Checkbox badge (to the LEFT of the checkbox) --
-    const cb = item.querySelector(
-      'button[role="checkbox"][data-action-hint="task-complete"]',
-    );
-    if (cb) {
-      const badge = createHintBadge(cbLabels[i], "#db4035");
-      badge.style.right = "calc(100% + 2px)";
-      badge.style.top = "50%";
-      badge.style.transform = "translateY(-50%)";
-      badge.style.left = "auto";
-      const wrapper = cb.parentElement;
-      if (wrapper) {
-        wrapper.style.position = "relative";
-        wrapper.appendChild(badge);
-      }
-      hintOverlays.push({
-        element: badge,
-        target: cb,
-        label: cbLabels[i],
-        type: "checkbox",
-      });
-    }
-
-    // -- Menu icon + badge (absolute inside task_list_item__body) --
-    const { container, badge: menuBadge } = createMenuHintIcon(menuLabels[i]);
-    const contentRow = item.querySelector(".task_list_item__body") || item;
-    contentRow.appendChild(container);
-
-    hintOverlays.push({
-      element: container, // remove the whole container on exit
-      target: item, // we'll trigger hover+click on the <li>
-      label: menuLabels[i],
-      type: "menu",
-    });
-  }
-
-  hintModeActive = true;
-  hintFirstChar = "";
-  LOG(
-    "Hint mode activated —",
-    items.length,
-    "checkbox +",
-    items.length,
-    "menu hints",
-  );
-}
-
-/**
- * Exit hint mode: remove all overlay labels and injected icons.
- */
-function exitHintMode() {
-  for (const { element } of hintOverlays) {
-    element.remove();
-  }
-  hintOverlays = [];
-  hintModeActive = false;
-  hintFirstChar = "";
-  DBG("Hint mode deactivated");
-}
-
-/**
- * Narrow hints after the first character is typed.
- * Hides hints that don't match; highlights those that do.
- */
-function narrowHints(char) {
-  for (const h of hintOverlays) {
-    if (h.label[0] !== char) {
-      h.element.style.display = "none";
-    } else {
-      // For menu hints the element is the container; find the badge inside
-      const badge =
-        h.type === "menu"
-          ? h.element.querySelector(".todoist-kbd-hint")
-          : h.element;
-      if (badge) {
-        badge.innerHTML = `<span style="opacity:0.5">${h.label[0]}</span>${h.label[1]}`;
-      }
-    }
-  }
-}
-
-/**
- * Handle a character typed while in hint mode.
- * Returns true if the event was consumed.
- */
-function handleHintChar(char) {
-  if (!hintModeActive) return false;
-
-  char = char.toLowerCase();
-  if (!HINT_CHARS.includes(char)) {
-    // Invalid char — exit hint mode
-    exitHintMode();
-    return true;
-  }
-
-  if (hintFirstChar === "") {
-    // First character — must be a valid prefix
-    if (char !== HINT_PREFIX_CHECKBOX && char !== HINT_PREFIX_MENU) {
-      exitHintMode();
-      return true;
-    }
-    hintFirstChar = char;
-    narrowHints(char);
-    return true;
-  }
-
-  // Second character — find matching hint and activate
-  const target = hintFirstChar + char;
-  const match = hintOverlays.find((h) => h.label === target);
-  if (match) {
-    if (match.type === "menu") {
-      // Menu hints need async hover→render→click on the <li> item
-      clickMenuForItem(match.target);
-    } else {
-      match.target.click();
-    }
-    LOG("Hint activated:", target, "(" + match.type + ")");
-  }
-  exitHintMode();
-  return true;
 }
 
 // ---- Keyboard shortcut configuration -------------------------------------
@@ -718,14 +448,6 @@ const DEFAULT_SHORTCUTS = {
     altKey: false,
     ctrlKey: false,
     shiftKey: true,
-    metaKey: false,
-  },
-  hintMode: {
-    key: "g",
-    code: "KeyG",
-    altKey: false,
-    ctrlKey: false,
-    shiftKey: false,
     metaKey: false,
   },
   scrollSubtasksUp: {
@@ -865,45 +587,9 @@ function swallowEvent(event) {
   event.stopImmediatePropagation();
 }
 
-// Block keyup and keypress while hint mode is active so that Todoist's
-// shortcuts (which may listen on those events) don't fire.
-for (const eventType of ["keyup", "keypress"]) {
-  document.addEventListener(
-    eventType,
-    (event) => {
-      if (hintModeActive) {
-        swallowEvent(event);
-      }
-    },
-    true, // capture phase — run before Todoist's handlers
-  );
-}
-
 document.addEventListener(
   "keydown",
   (event) => {
-    // ---- Hint mode handling (takes priority when active) --------------------
-    if (hintModeActive) {
-      if (event.key === "Escape") {
-        swallowEvent(event);
-        exitHintMode();
-        return;
-      }
-      // Only consume single characters (no modifiers except shift for casing)
-      if (
-        event.key.length === 1 &&
-        !event.altKey &&
-        !event.ctrlKey &&
-        !event.metaKey
-      ) {
-        swallowEvent(event);
-        handleHintChar(event.key);
-        return;
-      }
-      // Any other key exits hint mode and falls through
-      exitHintMode();
-    }
-
     // Move focused task up
     if (matchesShortcut(event, "moveUp")) {
       event.preventDefault();
@@ -981,16 +667,6 @@ document.addEventListener(
         event.preventDefault();
         link.click();
       }
-      return;
-    }
-
-    // Enter hint mode (Vimium-style subtask completion & menu access)
-    if (matchesShortcut(event, "hintMode")) {
-      if (isEditing()) return;
-      const modal = getTaskModal();
-      if (!modal) return; // only in modal
-      event.preventDefault();
-      enterHintMode(); // async — badges appear after a short delay
       return;
     }
 

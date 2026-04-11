@@ -140,22 +140,6 @@ const SHORTCUT_DEFAULTS = [
     },
   },
   {
-    id: "hintMode",
-    name: "Quick-complete subtask",
-    description:
-      "Show two-letter hints on subtask checkboxes — type the letters to complete or uncomplete a subtask",
-    section: "taskDetail",
-    shortcut: {
-      key: "g",
-      code: "KeyG",
-      altKey: false,
-      ctrlKey: false,
-      shiftKey: false,
-      metaKey: false,
-      label: "G",
-    },
-  },
-  {
     id: "scrollSubtasksUp",
     name: "Scroll subtasks up",
     description:
