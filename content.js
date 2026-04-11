@@ -330,34 +330,6 @@ async function moveTask(direction) {
   return refocusTask(taskId);
 }
 
-/**
- * Move the focused task all the way to the top or bottom of the list in a
- * single drag operation.  The target item is scrolled into view first so
- * its bounding-rect coordinates are valid before the drag starts.
- * @param {"up"|"down"} direction
- */
-async function moveTaskToEdge(direction) {
-  const task = getFocusedTask();
-  if (!task) return;
-
-  const taskId = task.getAttribute("data-item-id");
-  const tasks = getTaskList();
-  const idx = tasks.indexOf(task);
-  if (idx === -1) return;
-
-  const targetIdx = direction === "up" ? 0 : tasks.length - 1;
-  if (idx === targetIdx) return; // already at the edge
-
-  const target = tasks[targetIdx];
-
-  // Scroll the destination into view so its coordinates are valid
-  target.scrollIntoView({ block: "nearest" });
-  await sleep(80);
-
-  await simulateDrag(task, target, direction === "up" ? -1 : 1);
-  refocusTask(taskId);
-}
-
 // ---- Task detail modal helpers -------------------------------------------
 
 /**
@@ -397,22 +369,6 @@ const DEFAULT_SHORTCUTS = {
   moveDown: {
     key: "ArrowDown",
     code: "ArrowDown",
-    altKey: true,
-    ctrlKey: false,
-    shiftKey: true,
-    metaKey: false,
-  },
-  moveToTop: {
-    key: "Home",
-    code: "Home",
-    altKey: true,
-    ctrlKey: false,
-    shiftKey: true,
-    metaKey: false,
-  },
-  moveToBottom: {
-    key: "End",
-    code: "End",
     altKey: true,
     ctrlKey: false,
     shiftKey: true,
@@ -601,20 +557,6 @@ document.addEventListener(
     if (matchesShortcut(event, "moveDown")) {
       event.preventDefault();
       moveTask("down");
-      return;
-    }
-
-    // Move focused task to top of list
-    if (matchesShortcut(event, "moveToTop")) {
-      event.preventDefault();
-      moveTaskToEdge("up");
-      return;
-    }
-
-    // Move focused task to bottom of list
-    if (matchesShortcut(event, "moveToBottom")) {
-      event.preventDefault();
-      moveTaskToEdge("down");
       return;
     }
 
