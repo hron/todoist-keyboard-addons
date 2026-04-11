@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Todoist Keyboard Add-ons",
-  "version": "1.2",
+  "version": "1.3",
   "description": "Extra keyboard shortcuts for Todoist",
   "permissions": ["storage"],
   "options_ui": {
