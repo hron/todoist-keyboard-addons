@@ -442,6 +442,9 @@ function renderShortcutRow(tbody, item) {
   const tdShortcut = document.createElement("td");
   tdShortcut.className = "shortcut-cell";
 
+  const inner = document.createElement("div");
+  inner.className = "shortcut-cell-inner";
+
   const input = document.createElement("span");
   input.className = "key-input";
   input.tabIndex = 0;
@@ -454,8 +457,9 @@ function renderShortcutRow(tbody, item) {
   resetBtn.textContent = "↺";
   resetBtn.dataset.id = item.id;
 
-  tdShortcut.appendChild(input);
-  tdShortcut.appendChild(resetBtn);
+  inner.appendChild(input);
+  inner.appendChild(resetBtn);
+  tdShortcut.appendChild(inner);
 
   tr.appendChild(tdAction);
   tr.appendChild(tdShortcut);
