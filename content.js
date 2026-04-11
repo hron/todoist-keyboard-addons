@@ -581,8 +581,20 @@ document.addEventListener(
       return;
     }
 
-    // Follow the first external link in the focused task
+    // Follow the first external link in the focused task or modal
     if (matchesShortcut(event, "followLink")) {
+      const modal = getTaskModal();
+      if (modal) {
+        // Modal is open — look for link in the task name content area
+        const link = modal.querySelector(
+          ".task_content a[target=_blank]",
+        );
+        if (link) {
+          event.preventDefault();
+          link.click();
+        }
+        return;
+      }
       const focusedTask = getFocusedTask();
       if (!focusedTask) return;
       const link = focusedTask.querySelector(
