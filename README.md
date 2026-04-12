@@ -3,7 +3,7 @@
 Todoist Keyboard Add-ons
 =========================
 
-![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/lpdfcpglcjmmbfhmfkaaahglopofbfmd)
+[![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/lpdfcpglcjmmbfhmfkaaahglopofbfmd)](https://chromewebstore.google.com/detail/todoist-keyboard-add-ons/lpdfcpglcjmmbfhmfkaaahglopofbfmd)
 
 A small, focused extension for Todoist.  
 
