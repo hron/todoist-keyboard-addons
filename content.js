@@ -626,6 +626,8 @@ document.addEventListener(
 
     // Scroll subtasks up (PageUp) — modal: scroll subtask list; task list: move focus up one page
     if (matchesShortcut(event, "scrollSubtasksUp")) {
+      // Never intercept while the user is typing in any input/textarea/contentEditable
+      if (isEditing()) return;
       const container = getModalScrollContainer();
       if (container) {
         // Modal is open — scroll the subtask container
@@ -636,7 +638,6 @@ document.addEventListener(
         });
       } else {
         // Task list view — move keyboard focus up by one page
-        if (isEditing()) return;
         const tasks = getTaskList();
         if (!tasks.length) return;
         event.preventDefault();
@@ -657,6 +658,8 @@ document.addEventListener(
 
     // Scroll subtasks down (PageDown) — modal: scroll subtask list; task list: move focus down one page
     if (matchesShortcut(event, "scrollSubtasksDown")) {
+      // Never intercept while the user is typing in any input/textarea/contentEditable
+      if (isEditing()) return;
       const container = getModalScrollContainer();
       if (container) {
         // Modal is open — scroll the subtask container
@@ -664,7 +667,6 @@ document.addEventListener(
         container.scrollBy({ top: container.clientHeight, behavior: "smooth" });
       } else {
         // Task list view — move keyboard focus down by one page
-        if (isEditing()) return;
         const tasks = getTaskList();
         if (!tasks.length) return;
         event.preventDefault();
@@ -685,12 +687,13 @@ document.addEventListener(
 
   // Home — modal: scroll subtask list to top; task list: focus first task
   if (matchesShortcut(event, "scrollToTop")) {
+    // Never intercept while the user is typing in any input/textarea/contentEditable
+    if (isEditing()) return;
     const container = getModalScrollContainer();
     if (container) {
       event.preventDefault();
       container.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      if (isEditing()) return;
       const tasks = getTaskList();
       if (!tasks.length) return;
       event.preventDefault();
@@ -702,12 +705,13 @@ document.addEventListener(
 
   // End — modal: scroll subtask list to bottom; task list: focus last task
   if (matchesShortcut(event, "scrollToBottom")) {
+    // Never intercept while the user is typing in any input/textarea/contentEditable
+    if (isEditing()) return;
     const container = getModalScrollContainer();
     if (container) {
       event.preventDefault();
       container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
     } else {
-      if (isEditing()) return;
       const tasks = getTaskList();
       if (!tasks.length) return;
       event.preventDefault();
