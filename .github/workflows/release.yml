@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   release:
@@ -21,7 +21,8 @@ jobs:
             content.js \
             options.js \
             options.html \
-            docs/screenshot-parent-label.png
+            docs/screenshot-parent-label.png \
+            icons/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
