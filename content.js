@@ -594,7 +594,13 @@ document.addEventListener(
       const modal = getTaskModal();
       if (modal) {
         // Modal is open — look for link in the task name content area
-        const link = modal.querySelector(".task_content a[target=_blank]");
+        // Skip .task_content in the header/breadcrumbs (parent task)
+        const contentEl = Array.from(modal.querySelectorAll(".task_content")).find(
+          (el) =>
+            !el.closest('[data-testid="task-detail-default-header"]') &&
+            !el.closest('[data-testid="task-detail-breadcrumbs"]'),
+        );
+        const link = contentEl ? contentEl.querySelector("a[target=_blank]") : null;
         if (link) {
           event.preventDefault();
           link.click();
@@ -620,7 +626,12 @@ document.addEventListener(
 
       if (modal) {
         // Modal is open — look for task content
-        const contentEl = modal.querySelector(".task_content");
+        // Skip .task_content in the header/breadcrumbs (parent task)
+        const contentEl = Array.from(modal.querySelectorAll(".task_content")).find(
+          (el) =>
+            !el.closest('[data-testid="task-detail-default-header"]') &&
+            !el.closest('[data-testid="task-detail-breadcrumbs"]'),
+        );
         if (contentEl) {
           textToCopy = contentEl.textContent;
         }
