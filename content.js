@@ -586,9 +586,7 @@ document.addEventListener(
       const modal = getTaskModal();
       if (modal) {
         // Modal is open — look for link in the task name content area
-        const link = modal.querySelector(
-          ".task_content a[target=_blank]",
-        );
+        const link = modal.querySelector(".task_content a[target=_blank]");
         if (link) {
           event.preventDefault();
           link.click();
@@ -685,45 +683,45 @@ document.addEventListener(
       return;
     }
 
-  // Home — modal: scroll subtask list to top; task list: focus first task
-  if (matchesShortcut(event, "scrollToTop")) {
-    // Never intercept while the user is typing in any input/textarea/contentEditable
-    if (isEditing()) return;
-    const container = getModalScrollContainer();
-    if (container) {
-      event.preventDefault();
-      container.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      const tasks = getTaskList();
-      if (!tasks.length) return;
-      event.preventDefault();
-      focusTaskListItem(tasks[0]);
-      tasks[0].scrollIntoView({ behavior: "smooth", block: "nearest" });
+    // Home — modal: scroll subtask list to top; task list: focus first task
+    if (matchesShortcut(event, "scrollToTop")) {
+      // Never intercept while the user is typing in any input/textarea/contentEditable
+      if (isEditing()) return;
+      const container = getModalScrollContainer();
+      if (container) {
+        event.preventDefault();
+        container.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const tasks = getTaskList();
+        if (!tasks.length) return;
+        event.preventDefault();
+        focusTaskListItem(tasks[0]);
+        tasks[0].scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      return;
     }
-    return;
-  }
 
-  // End — modal: scroll subtask list to bottom; task list: focus last task
-  if (matchesShortcut(event, "scrollToBottom")) {
-    // Never intercept while the user is typing in any input/textarea/contentEditable
-    if (isEditing()) return;
-    const container = getModalScrollContainer();
-    if (container) {
-      event.preventDefault();
-      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
-    } else {
-      const tasks = getTaskList();
-      if (!tasks.length) return;
-      event.preventDefault();
-      const last = tasks[tasks.length - 1];
-      focusTaskListItem(last);
-      last.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    // End — modal: scroll subtask list to bottom; task list: focus last task
+    if (matchesShortcut(event, "scrollToBottom")) {
+      // Never intercept while the user is typing in any input/textarea/contentEditable
+      if (isEditing()) return;
+      const container = getModalScrollContainer();
+      if (container) {
+        event.preventDefault();
+        container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+      } else {
+        const tasks = getTaskList();
+        if (!tasks.length) return;
+        event.preventDefault();
+        const last = tasks[tasks.length - 1];
+        focusTaskListItem(last);
+        last.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      return;
     }
-    return;
-  }
 
-  // Toggle show/hide completed subtasks in modal
-  if (matchesShortcut(event, "toggleCompleted")) {
+    // Toggle show/hide completed subtasks in modal
+    if (matchesShortcut(event, "toggleCompleted")) {
       if (isEditing()) return;
       const modal = getTaskModal();
       if (!modal) return; // only in modal
@@ -767,7 +765,7 @@ function applySettings(settings) {
 }
 
 /** In-memory caches populated from IndexedDB. */
-let _taskById = null;    // Map<id, {content, parent_id, project_id}>
+let _taskById = null; // Map<id, {content, parent_id, project_id}>
 let _projectById = null; // Map<id, {name}>
 
 /**
@@ -784,7 +782,12 @@ function loadTodoistCache() {
     req.onsuccess = (e) => {
       const db = e.target.result;
       let pending = 2;
-      const done = () => { if (--pending === 0) { db.close(); resolve(); } };
+      const done = () => {
+        if (--pending === 0) {
+          db.close();
+          resolve();
+        }
+      };
 
       const taskMap = new Map();
       const projMap = new Map();
@@ -795,13 +798,23 @@ function loadTodoistCache() {
         const cursor1 = tx1.objectStore("tasks").openCursor();
         cursor1.onsuccess = (ev) => {
           const c = ev.target.result;
-          if (!c) { _taskById = taskMap; done(); return; }
+          if (!c) {
+            _taskById = taskMap;
+            done();
+            return;
+          }
           const t = c.value;
-          taskMap.set(t.id, { content: t.content, parent_id: t.parent_id || null, project_id: t.project_id });
+          taskMap.set(t.id, {
+            content: t.content,
+            parent_id: t.parent_id || null,
+            project_id: t.project_id,
+          });
           c.continue();
         };
         cursor1.onerror = done;
-      } catch { done(); }
+      } catch {
+        done();
+      }
 
       // Read projects
       try {
@@ -809,13 +822,19 @@ function loadTodoistCache() {
         const cursor2 = tx2.objectStore("projects").openCursor();
         cursor2.onsuccess = (ev) => {
           const c = ev.target.result;
-          if (!c) { _projectById = projMap; done(); return; }
+          if (!c) {
+            _projectById = projMap;
+            done();
+            return;
+          }
           const p = c.value;
           projMap.set(p.id, { name: p.name });
           c.continue();
         };
         cursor2.onerror = done;
-      } catch { done(); }
+      } catch {
+        done();
+      }
     };
   });
 }
@@ -877,7 +896,9 @@ function augmentTaskLabel(li) {
   }
 
   const svg = projectLink.querySelector("svg");
-  const separatorText = document.createTextNode(`\u00a0›\u00a0${parent.content}`);
+  const separatorText = document.createTextNode(
+    `\u00a0›\u00a0${parent.content}`,
+  );
 
   if (svg) {
     projectLink.insertBefore(separatorText, svg);
@@ -896,7 +917,9 @@ function augmentTaskLabel(li) {
  */
 function augmentAllVisibleTasks() {
   if (!_taskById || !_projectById || !_showParentTask) return;
-  for (const li of document.querySelectorAll("li.task_list_item:not(.reorder_item)")) {
+  for (const li of document.querySelectorAll(
+    "li.task_list_item:not(.reorder_item)",
+  )) {
     augmentTaskLabel(li);
   }
 }
@@ -922,7 +945,10 @@ function startFilterViewObserver() {
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== Node.ELEMENT_NODE) continue;
-        if (node.matches && node.matches("li.task_list_item:not(.reorder_item)")) {
+        if (
+          node.matches &&
+          node.matches("li.task_list_item:not(.reorder_item)")
+        ) {
           augmentTaskLabel(node);
         }
         // Also check descendants (in case a whole subtree was added)
@@ -934,7 +960,10 @@ function startFilterViewObserver() {
       }
     }
   });
-  _filterViewObserver.observe(document.body, { childList: true, subtree: true });
+  _filterViewObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
   DBG("filter-view observer started");
 }
 
@@ -972,8 +1001,14 @@ function initNavigationWatcher() {
   const origPushState = history.pushState.bind(history);
   const origReplaceState = history.replaceState.bind(history);
 
-  history.pushState = (...args) => { origPushState(...args); onNavigate(); };
-  history.replaceState = (...args) => { origReplaceState(...args); onNavigate(); };
+  history.pushState = (...args) => {
+    origPushState(...args);
+    onNavigate();
+  };
+  history.replaceState = (...args) => {
+    origReplaceState(...args);
+    onNavigate();
+  };
   window.addEventListener("popstate", onNavigate);
 
   // Run once immediately for the current page
@@ -984,6 +1019,10 @@ function initNavigationWatcher() {
 
 loadShortcuts();
 loadTodoistCache().then(() => {
-  DBG("todoist cache loaded: tasks=%d projects=%d", _taskById ? _taskById.size : 0, _projectById ? _projectById.size : 0);
+  DBG(
+    "todoist cache loaded: tasks=%d projects=%d",
+    _taskById ? _taskById.size : 0,
+    _projectById ? _projectById.size : 0,
+  );
   initNavigationWatcher();
 });
