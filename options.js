@@ -62,6 +62,21 @@ const SHORTCUT_DEFAULTS = [
       label: "Alt+K",
     },
   },
+  {
+    id: "copyTaskName",
+    name: "Copy task name",
+    description: "Copy the name of the focused task or open modal task",
+    section: "taskList",
+    shortcut: {
+      key: "n",
+      code: "KeyN",
+      altKey: true,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "Alt+N",
+    },
+  },
   // -- Task detail (modal) shortcuts --
   {
     id: "goToParent",

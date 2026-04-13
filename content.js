@@ -398,6 +398,14 @@ const DEFAULT_SHORTCUTS = {
     shiftKey: false,
     metaKey: false,
   },
+  copyTaskName: {
+    key: "n",
+    code: "KeyN",
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
   goToProject: {
     key: "G",
     code: "KeyG",
@@ -601,6 +609,34 @@ document.addEventListener(
       if (link) {
         event.preventDefault();
         link.click();
+      }
+      return;
+    }
+
+    // Copy the task name of the focused task or modal
+    if (matchesShortcut(event, "copyTaskName")) {
+      const modal = getTaskModal();
+      let textToCopy = null;
+
+      if (modal) {
+        // Modal is open — look for task content
+        const contentEl = modal.querySelector(".task_content");
+        if (contentEl) {
+          textToCopy = contentEl.textContent;
+        }
+      } else {
+        const focusedTask = getFocusedTask();
+        if (focusedTask) {
+          const contentEl = focusedTask.querySelector(".task_content");
+          if (contentEl) {
+            textToCopy = contentEl.textContent;
+          }
+        }
+      }
+
+      if (textToCopy) {
+        event.preventDefault();
+        navigator.clipboard.writeText(textToCopy);
       }
       return;
     }
