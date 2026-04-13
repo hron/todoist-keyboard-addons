@@ -624,8 +624,28 @@ document.addEventListener(
       const modal = getTaskModal();
       let textToCopy = null;
 
-      if (modal) {
-        // Modal is open — look for task content
+      // Check if there are explicitly selected tasks (multiselect mode)
+      // This works for both the main list and subtasks in a modal.
+      const selectedTasks = Array.from(
+        document.querySelectorAll(
+          "li.task_list_item.selected, li.task_list_item[aria-selected='true']",
+        ),
+      );
+
+      if (selectedTasks.length > 0) {
+        // Multi-select mode active (either in list or modal)
+        const names = [];
+        for (const task of selectedTasks) {
+          const contentEl = task.querySelector(".task_content");
+          if (contentEl) {
+            names.push(contentEl.textContent);
+          }
+        }
+        if (names.length > 0) {
+          textToCopy = names.join("\n");
+        }
+      } else if (modal) {
+        // Modal is open and NO subtasks are selected — copy the main modal task
         // Skip .task_content in the header/breadcrumbs (parent task)
         const contentEl = Array.from(modal.querySelectorAll(".task_content")).find(
           (el) =>
@@ -636,6 +656,7 @@ document.addEventListener(
           textToCopy = contentEl.textContent;
         }
       } else {
+        // No modal, no multiselect — fallback to the single keyboard-focused task
         const focusedTask = getFocusedTask();
         if (focusedTask) {
           const contentEl = focusedTask.querySelector(".task_content");
