@@ -928,7 +928,9 @@ function augmentAllVisibleTasks() {
  * Returns true when the current page is a filter or search view.
  */
 function isFilterOrSearchView() {
-  return /\/(filter|search)(\/|$)/.test(window.location.pathname);
+  return /\/(filter|search|today|upcoming)(\/|$)/.test(
+    window.location.pathname,
+  );
 }
 
 /** MutationObserver that watches for new task items being added (virtualised list). */
