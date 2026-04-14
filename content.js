@@ -982,6 +982,8 @@ function stopFilterViewObserver() {
  * Starts or stops the filter-view observer and runs an initial augmentation pass.
  */
 async function onNavigate() {
+  LOG("onNavigate");
+  LOG({ isFilterOrSearchView: isFilterOrSearchView(), _showParentTask });
   if (isFilterOrSearchView() && _showParentTask) {
     // Ensure cache is fresh (re-reads in case new tasks were added since load)
     if (!_taskById || !_projectById) {
@@ -996,22 +998,21 @@ async function onNavigate() {
 }
 
 /**
- * Watch for SPA URL changes by intercepting history API and listening to
- * popstate, plus a fallback polling check.
+ * Watch for SPA URL changes using the Navigation API (window.navigation).
+ * "currententrychange" fires after the history entry is committed — meaning
+ * window.location already reflects the new URL — but before React has rendered
+ * the new view.  This is the correct moment: isFilterOrSearchView() sees the
+ * destination URL, and the MutationObserver we start will catch every task node
+ * that React adds to the DOM afterward.
+ *
+ * (The earlier "navigate" event fires before the URL commits, so
+ * window.location still shows the old path when our handler runs — wrong.)
+ *
+ * Must be called before loadTodoistCache so navigations that happen during the
+ * async cache load are still caught. onNavigate() loads the cache on demand.
  */
 function initNavigationWatcher() {
-  const origPushState = history.pushState.bind(history);
-  const origReplaceState = history.replaceState.bind(history);
-
-  history.pushState = (...args) => {
-    origPushState(...args);
-    onNavigate();
-  };
-  history.replaceState = (...args) => {
-    origReplaceState(...args);
-    onNavigate();
-  };
-  window.addEventListener("popstate", onNavigate);
+  window.navigation.addEventListener("currententrychange", () => onNavigate());
 
   // Run once immediately for the current page
   onNavigate();
@@ -1020,11 +1021,19 @@ function initNavigationWatcher() {
 // ---- Init -----------------------------------------------------------------
 
 loadShortcuts();
+
+// Start navigation watcher before loadTodoistCache so navigations that happen
+// during the async cache load are still caught.
+initNavigationWatcher();
+
 loadTodoistCache().then(() => {
   DBG(
     "todoist cache loaded: tasks=%d projects=%d",
     _taskById ? _taskById.size : 0,
     _projectById ? _projectById.size : 0,
   );
-  initNavigationWatcher();
+  // Re-run onNavigate now that the cache is ready, in case we are already on
+  // a filter/search view (e.g. the user navigated there before the cache
+  // finished loading).
+  onNavigate();
 });
