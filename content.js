@@ -764,76 +764,100 @@ function applySettings(settings) {
   }
 }
 
-/** In-memory caches populated from IndexedDB. */
-let _taskById = null; // Map<id, {content, parent_id, project_id}>
-let _projectById = null; // Map<id, {name}>
+/**
+ * Fetch specific records from an IndexedDB object store by their keys.
+ * Returns a Map<id, record> for the keys that were found.
+ *
+ * @param {IDBDatabase} db
+ * @param {string} storeName
+ * @param {string[]} ids
+ * @returns {Promise<Map<string, any>>}
+ */
+function idbGetMany(db, storeName, ids) {
+  return new Promise((resolve) => {
+    if (!ids.length) {
+      resolve(new Map());
+      return;
+    }
+    const result = new Map();
+    let pending = ids.length;
+    const done = () => {
+      if (--pending === 0) resolve(result);
+    };
+    try {
+      const store = db.transaction(storeName, "readonly").objectStore(storeName);
+      for (const id of ids) {
+        const req = store.get(id);
+        req.onsuccess = (e) => {
+          if (e.target.result) result.set(id, e.target.result);
+          done();
+        };
+        req.onerror = done;
+      }
+    } catch {
+      resolve(result);
+    }
+  });
+}
 
 /**
- * Load (or reload) the tasks and projects caches from IndexedDB.
- * Resolves when both stores have been read.
+ * Open todoist.sync IndexedDB and fetch task and project records needed to
+ * augment a set of list items.
+ *
+ * @param {string[]} taskIds   IDs of the tasks rendered in the list items.
+ * @returns {Promise<{taskById: Map, projectById: Map}>}
+ *   taskById   – Map<id, {content, parent_id, project_id}> for tasks + their parents
+ *   projectById – Map<id, {name}> for projects referenced by those tasks
  */
-function loadTodoistCache() {
+function queryTodoistDB(taskIds) {
   return new Promise((resolve) => {
+    if (!taskIds.length) {
+      resolve({ taskById: new Map(), projectById: new Map() });
+      return;
+    }
     const req = indexedDB.open("todoist.sync");
     req.onerror = () => {
       WARN("Could not open todoist.sync IndexedDB");
-      resolve();
+      resolve({ taskById: new Map(), projectById: new Map() });
     };
-    req.onsuccess = (e) => {
+    req.onsuccess = async (e) => {
       const db = e.target.result;
-      let pending = 2;
-      const done = () => {
-        if (--pending === 0) {
-          db.close();
-          resolve();
-        }
-      };
-
-      const taskMap = new Map();
-      const projMap = new Map();
-
-      // Read tasks
       try {
-        const tx1 = db.transaction("tasks", "readonly");
-        const cursor1 = tx1.objectStore("tasks").openCursor();
-        cursor1.onsuccess = (ev) => {
-          const c = ev.target.result;
-          if (!c) {
-            _taskById = taskMap;
-            done();
-            return;
+        // Fetch the primary tasks
+        const primaryTasks = await idbGetMany(db, "tasks", taskIds);
+
+        // Collect parent IDs we still need
+        const parentIds = [];
+        for (const t of primaryTasks.values()) {
+          if (t.parent_id && !primaryTasks.has(t.parent_id)) {
+            parentIds.push(t.parent_id);
           }
-          const t = c.value;
-          taskMap.set(t.id, {
+        }
+
+        // Fetch parent tasks
+        const parentTasks = await idbGetMany(db, "tasks", parentIds);
+
+        // Merge into one task map with trimmed shape
+        const taskById = new Map();
+        for (const [id, t] of [...primaryTasks, ...parentTasks]) {
+          taskById.set(id, {
             content: t.content,
             parent_id: t.parent_id || null,
             project_id: t.project_id,
           });
-          c.continue();
-        };
-        cursor1.onerror = done;
-      } catch {
-        done();
-      }
+        }
 
-      // Read projects
-      try {
-        const tx2 = db.transaction("projects", "readonly");
-        const cursor2 = tx2.objectStore("projects").openCursor();
-        cursor2.onsuccess = (ev) => {
-          const c = ev.target.result;
-          if (!c) {
-            _projectById = projMap;
-            done();
-            return;
-          }
-          const p = c.value;
-          projMap.set(p.id, { name: p.name });
-          c.continue();
-        };
-        cursor2.onerror = done;
+        // Collect project IDs
+        const projectIds = [...new Set(
+          [...taskById.values()].map((t) => t.project_id).filter(Boolean),
+        )];
+        const projectById = await idbGetMany(db, "projects", projectIds);
+
+        db.close();
+        resolve({ taskById, projectById });
       } catch {
-        done();
+        db.close();
+        resolve({ taskById: new Map(), projectById: new Map() });
       }
     };
   });
@@ -858,14 +882,15 @@ function getTaskFromFiber(li) {
 }
 
 /**
- * Augment the project label of a single task list item.
+ * Augment the project label of a single task list item using pre-fetched data.
  * If the task has a parent, the label becomes "Project › Parent Title".
  * Top-level tasks are left untouched.
  * Already-augmented nodes are skipped (idempotent).
+ *
+ * @param {Element} li
+ * @param {Map} taskById   Map<id, {content, parent_id, project_id}>
  */
-function augmentTaskLabel(li) {
-  if (!_taskById || !_projectById) return;
-
+function augmentTaskLabel(li, taskById) {
   // Skip if already processed
   if (li.dataset.kbdParentAugmented === "1") return;
 
@@ -873,11 +898,11 @@ function augmentTaskLabel(li) {
   const taskId = fiberTask ? fiberTask.id : li.getAttribute("data-item-id");
   if (!taskId) return;
 
-  const task = _taskById.get(taskId);
+  const task = taskById.get(taskId);
   if (!task || !task.parent_id) return; // top-level task — nothing to do
 
-  const parent = _taskById.get(task.parent_id);
-  if (!parent) return; // parent not in cache yet
+  const parent = taskById.get(task.parent_id);
+  if (!parent) return;
 
   // Find the project link element rendered by Todoist
   // It's an <a> that points to the project page and contains the project name text
@@ -913,14 +938,34 @@ function augmentTaskLabel(li) {
 }
 
 /**
- * Run augmentation on all currently visible task list items.
+ * Collect task IDs from a list of <li> elements (skipping already-augmented ones).
  */
-function augmentAllVisibleTasks() {
-  if (!_taskById || !_projectById || !_showParentTask) return;
-  for (const li of document.querySelectorAll(
-    "li.task_list_item:not(.reorder_item)",
-  )) {
-    augmentTaskLabel(li);
+function collectTaskIds(lis) {
+  const ids = [];
+  for (const li of lis) {
+    if (li.dataset.kbdParentAugmented === "1") continue;
+    const fiberTask = getTaskFromFiber(li);
+    const id = fiberTask ? fiberTask.id : li.getAttribute("data-item-id");
+    if (id) ids.push(id);
+  }
+  return ids;
+}
+
+/**
+ * Run augmentation on all currently visible task list items.
+ * Queries IndexedDB once for all visible tasks.
+ */
+async function augmentAllVisibleTasks() {
+  if (!_showParentTask) return;
+  const lis = Array.from(
+    document.querySelectorAll("li.task_list_item:not(.reorder_item)"),
+  );
+  const taskIds = collectTaskIds(lis);
+  if (!taskIds.length) return;
+
+  const { taskById } = await queryTodoistDB(taskIds);
+  for (const li of lis) {
+    augmentTaskLabel(li, taskById);
   }
 }
 
@@ -942,24 +987,29 @@ let _filterViewObserver = null;
  */
 function startFilterViewObserver() {
   if (_filterViewObserver) return; // already running
-  _filterViewObserver = new MutationObserver((mutations) => {
+  _filterViewObserver = new MutationObserver(async (mutations) => {
     if (!isFilterOrSearchView() || !_showParentTask) return;
+    const lis = [];
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== Node.ELEMENT_NODE) continue;
-        if (
-          node.matches &&
-          node.matches("li.task_list_item:not(.reorder_item)")
-        ) {
-          augmentTaskLabel(node);
+        if (node.matches && node.matches("li.task_list_item:not(.reorder_item)")) {
+          lis.push(node);
         }
         // Also check descendants (in case a whole subtree was added)
         for (const li of node.querySelectorAll
           ? node.querySelectorAll("li.task_list_item:not(.reorder_item)")
           : []) {
-          augmentTaskLabel(li);
+          lis.push(li);
         }
       }
+    }
+    if (!lis.length) return;
+    const taskIds = collectTaskIds(lis);
+    if (!taskIds.length) return;
+    const { taskById } = await queryTodoistDB(taskIds);
+    for (const li of lis) {
+      augmentTaskLabel(li, taskById);
     }
   });
   _filterViewObserver.observe(document.body, {
@@ -985,10 +1035,6 @@ async function onNavigate() {
   LOG("onNavigate");
   LOG({ isFilterOrSearchView: isFilterOrSearchView(), _showParentTask });
   if (isFilterOrSearchView() && _showParentTask) {
-    // Ensure cache is fresh (re-reads in case new tasks were added since load)
-    if (!_taskById || !_projectById) {
-      await loadTodoistCache();
-    }
     startFilterViewObserver();
     // Augment any items already in the DOM (handles hard-reload case)
     augmentAllVisibleTasks();
@@ -1007,9 +1053,6 @@ async function onNavigate() {
  *
  * (The earlier "navigate" event fires before the URL commits, so
  * window.location still shows the old path when our handler runs — wrong.)
- *
- * Must be called before loadTodoistCache so navigations that happen during the
- * async cache load are still caught. onNavigate() loads the cache on demand.
  */
 function initNavigationWatcher() {
   window.navigation.addEventListener("currententrychange", () => onNavigate());
@@ -1022,18 +1065,4 @@ function initNavigationWatcher() {
 
 loadShortcuts();
 
-// Start navigation watcher before loadTodoistCache so navigations that happen
-// during the async cache load are still caught.
 initNavigationWatcher();
-
-loadTodoistCache().then(() => {
-  DBG(
-    "todoist cache loaded: tasks=%d projects=%d",
-    _taskById ? _taskById.size : 0,
-    _projectById ? _projectById.size : 0,
-  );
-  // Re-run onNavigate now that the cache is ready, in case we are already on
-  // a filter/search view (e.g. the user navigated there before the cache
-  // finished loading).
-  onNavigate();
-});
