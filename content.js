@@ -398,6 +398,14 @@ const DEFAULT_SHORTCUTS = {
     shiftKey: false,
     metaKey: false,
   },
+  copyTaskName: {
+    key: "n",
+    code: "KeyN",
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
   goToProject: {
     key: "G",
     code: "KeyG",
@@ -586,7 +594,13 @@ document.addEventListener(
       const modal = getTaskModal();
       if (modal) {
         // Modal is open — look for link in the task name content area
-        const link = modal.querySelector(".task_content a[target=_blank]");
+        // Skip .task_content in the header/breadcrumbs (parent task)
+        const contentEl = Array.from(modal.querySelectorAll(".task_content")).find(
+          (el) =>
+            !el.closest('[data-testid="task-detail-default-header"]') &&
+            !el.closest('[data-testid="task-detail-breadcrumbs"]'),
+        );
+        const link = contentEl ? contentEl.querySelector("a[target=_blank]") : null;
         if (link) {
           event.preventDefault();
           link.click();
@@ -601,6 +615,60 @@ document.addEventListener(
       if (link) {
         event.preventDefault();
         link.click();
+      }
+      return;
+    }
+
+    // Copy the task name of the focused task or modal
+    if (matchesShortcut(event, "copyTaskName")) {
+      const modal = getTaskModal();
+      let textToCopy = null;
+
+      // Check if there are explicitly selected tasks (multiselect mode)
+      // This works for both the main list and subtasks in a modal.
+      const selectedTasks = Array.from(
+        document.querySelectorAll(
+          "li.task_list_item.selected, li.task_list_item[aria-selected='true']",
+        ),
+      );
+
+      if (selectedTasks.length > 0) {
+        // Multi-select mode active (either in list or modal)
+        const names = [];
+        for (const task of selectedTasks) {
+          const contentEl = task.querySelector(".task_content");
+          if (contentEl) {
+            names.push(contentEl.textContent);
+          }
+        }
+        if (names.length > 0) {
+          textToCopy = names.join("\n");
+        }
+      } else if (modal) {
+        // Modal is open and NO subtasks are selected — copy the main modal task
+        // Skip .task_content in the header/breadcrumbs (parent task)
+        const contentEl = Array.from(modal.querySelectorAll(".task_content")).find(
+          (el) =>
+            !el.closest('[data-testid="task-detail-default-header"]') &&
+            !el.closest('[data-testid="task-detail-breadcrumbs"]'),
+        );
+        if (contentEl) {
+          textToCopy = contentEl.textContent;
+        }
+      } else {
+        // No modal, no multiselect — fallback to the single keyboard-focused task
+        const focusedTask = getFocusedTask();
+        if (focusedTask) {
+          const contentEl = focusedTask.querySelector(".task_content");
+          if (contentEl) {
+            textToCopy = contentEl.textContent;
+          }
+        }
+      }
+
+      if (textToCopy) {
+        event.preventDefault();
+        navigator.clipboard.writeText(textToCopy);
       }
       return;
     }
