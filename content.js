@@ -406,14 +406,7 @@ const DEFAULT_SHORTCUTS = {
     shiftKey: false,
     metaKey: false,
   },
-  goToProject: {
-    key: "G",
-    code: "KeyG",
-    altKey: false,
-    ctrlKey: false,
-    shiftKey: true,
-    metaKey: false,
-  },
+  // goToProject shortcut removed
   scrollSubtasksUp: {
     key: "PageUp",
     code: "PageUp",
@@ -595,12 +588,16 @@ document.addEventListener(
       if (modal) {
         // Modal is open — look for link in the task name content area
         // Skip .task_content in the header/breadcrumbs (parent task)
-        const contentEl = Array.from(modal.querySelectorAll(".task_content")).find(
+        const contentEl = Array.from(
+          modal.querySelectorAll(".task_content"),
+        ).find(
           (el) =>
             !el.closest('[data-testid="task-detail-default-header"]') &&
             !el.closest('[data-testid="task-detail-breadcrumbs"]'),
         );
-        const link = contentEl ? contentEl.querySelector("a[target=_blank]") : null;
+        const link = contentEl
+          ? contentEl.querySelector("a[target=_blank]")
+          : null;
         if (link) {
           event.preventDefault();
           link.click();
@@ -647,7 +644,9 @@ document.addEventListener(
       } else if (modal) {
         // Modal is open and NO subtasks are selected — copy the main modal task
         // Skip .task_content in the header/breadcrumbs (parent task)
-        const contentEl = Array.from(modal.querySelectorAll(".task_content")).find(
+        const contentEl = Array.from(
+          modal.querySelectorAll(".task_content"),
+        ).find(
           (el) =>
             !el.closest('[data-testid="task-detail-default-header"]') &&
             !el.closest('[data-testid="task-detail-breadcrumbs"]'),
@@ -669,23 +668,6 @@ document.addEventListener(
       if (textToCopy) {
         event.preventDefault();
         navigator.clipboard.writeText(textToCopy);
-      }
-      return;
-    }
-
-    // Go to project from task detail modal (extends native Shift+G)
-    if (matchesShortcut(event, "goToProject")) {
-      if (isEditing()) return;
-      const modal = document.querySelector(
-        'div[data-testid="task-details-modal"]',
-      );
-      if (!modal) return; // no modal — let native Shift+G handle it
-      const link = modal.querySelector(
-        'div[data-testid="task-detail-default-header"] > a',
-      );
-      if (link) {
-        event.preventDefault();
-        link.click();
       }
       return;
     }
@@ -853,7 +835,9 @@ function idbGetMany(db, storeName, ids) {
       if (--pending === 0) resolve(result);
     };
     try {
-      const store = db.transaction(storeName, "readonly").objectStore(storeName);
+      const store = db
+        .transaction(storeName, "readonly")
+        .objectStore(storeName);
       for (const id of ids) {
         const req = store.get(id);
         req.onsuccess = (e) => {
@@ -916,9 +900,11 @@ function queryTodoistDB(taskIds) {
         }
 
         // Collect project IDs
-        const projectIds = [...new Set(
-          [...taskById.values()].map((t) => t.project_id).filter(Boolean),
-        )];
+        const projectIds = [
+          ...new Set(
+            [...taskById.values()].map((t) => t.project_id).filter(Boolean),
+          ),
+        ];
         const projectById = await idbGetMany(db, "projects", projectIds);
 
         db.close();
@@ -1061,7 +1047,10 @@ function startFilterViewObserver() {
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== Node.ELEMENT_NODE) continue;
-        if (node.matches && node.matches("li.task_list_item:not(.reorder_item)")) {
+        if (
+          node.matches &&
+          node.matches("li.task_list_item:not(.reorder_item)")
+        ) {
           lis.push(node);
         }
         // Also check descendants (in case a whole subtree was added)
