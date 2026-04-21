@@ -29,7 +29,7 @@ const SHORTCUT_DEFAULTS = [
       ctrlKey: false,
       shiftKey: true,
       metaKey: false,
-      label: "Alt+Shift+Up",
+      label: "Alt + Shift + Up",
     },
   },
   {
@@ -44,7 +44,7 @@ const SHORTCUT_DEFAULTS = [
       ctrlKey: false,
       shiftKey: true,
       metaKey: false,
-      label: "Alt+Shift+Down",
+      label: "Alt + Shift + Down",
     },
   },
   {
@@ -59,7 +59,7 @@ const SHORTCUT_DEFAULTS = [
       ctrlKey: false,
       shiftKey: false,
       metaKey: false,
-      label: "Alt+K",
+      label: "Alt + K",
     },
   },
   {
@@ -74,7 +74,7 @@ const SHORTCUT_DEFAULTS = [
       ctrlKey: false,
       shiftKey: false,
       metaKey: false,
-      label: "Alt+N",
+      label: "Alt + N",
     },
   },
   // -- Task detail (modal) shortcuts --
@@ -90,7 +90,7 @@ const SHORTCUT_DEFAULTS = [
       ctrlKey: false,
       shiftKey: false,
       metaKey: false,
-      label: "Alt+Up",
+      label: "Alt + Up",
     },
   },
   {
@@ -105,7 +105,7 @@ const SHORTCUT_DEFAULTS = [
       ctrlKey: false,
       shiftKey: false,
       metaKey: false,
-      label: "Alt+O",
+      label: "Alt + O",
     },
   },
   {
@@ -121,7 +121,7 @@ const SHORTCUT_DEFAULTS = [
       ctrlKey: false,
       shiftKey: true,
       metaKey: false,
-      label: "Shift+G",
+      label: "Shift + G",
     },
   },
   {
@@ -168,7 +168,7 @@ const SHORTCUT_DEFAULTS = [
       ctrlKey: false,
       shiftKey: false,
       metaKey: false,
-      label: "Alt+H",
+      label: "Alt + H",
     },
   },
   {
@@ -235,7 +235,7 @@ function buildLabel(e) {
   // Use a friendly name for special keys, otherwise fall back to key/code
   const keyName = friendlyKeyName(e.key, e.code);
   parts.push(keyName);
-  return parts.join("+");
+  return parts.join(" + ");
 }
 
 function friendlyKeyName(key, code) {
