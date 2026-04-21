@@ -224,6 +224,16 @@ const FEATURE_DEFAULTS = [
 // Helpers
 // ---------------------------------------------------------------------------
 
+/** Format label for Mac if applicable */
+function formatLabel(label) {
+  const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+  if (!isMac) return label;
+
+  return label
+    .replace(/Meta/g, "Cmd")
+    .replace(/Alt/g, "Opt");
+}
+
 /** Build a human-readable label from a KeyboardEvent (or stored shortcut). */
 function buildLabel(e) {
   const parts = [];
@@ -251,7 +261,15 @@ function friendlyKeyName(key, code) {
     Delete: "Del",
     Tab: "Tab",
   };
+
   if (MAP[key]) return MAP[key];
+
+  // For alpha/digit keys, prioritize code (e.g. "KeyK" -> "K") to avoid 
+  // macOS accent characters like "˚" or "∆" appearing in labels.
+  if (code && (code.startsWith("Key") || code.startsWith("Digit"))) {
+    return code.replace("Key", "").replace("Digit", "").toUpperCase();
+  }
+
   // Single printable character — upper-case it for display
   if (key.length === 1) return key.toUpperCase();
   // Fall back to code (e.g. "F5")
@@ -434,7 +452,7 @@ function renderShortcutRow(tbody, item) {
   input.className = "key-input";
   input.tabIndex = 0;
   input.dataset.id = item.id;
-  input.textContent = item.shortcut.label;
+  input.textContent = formatLabel(item.shortcut.label);
 
   const resetBtn = document.createElement("button");
   resetBtn.className = "btn-reset";
@@ -471,7 +489,7 @@ function renderShortcutRow(tbody, item) {
     const def = SHORTCUT_DEFAULTS.find((d) => d.id === item.id);
     if (def) {
       item.shortcut = { ...def.shortcut };
-      input.textContent = item.shortcut.label;
+      input.textContent = formatLabel(item.shortcut.label);
     }
   });
 }
@@ -483,7 +501,7 @@ function stopRecording() {
     el.classList.remove("recording");
     // Restore label from state in case recording was abandoned
     const item = currentShortcuts.find((s) => s.id === recordingId);
-    if (item) el.textContent = item.shortcut.label;
+    if (item) el.textContent = formatLabel(item.shortcut.label);
   }
   recordingId = null;
 }
@@ -515,7 +533,7 @@ document.addEventListener(
       const el = document.querySelector(`.key-input[data-id="${recordingId}"]`);
       if (el) {
         el.classList.remove("recording");
-        el.textContent = newShortcut.label;
+        el.textContent = formatLabel(newShortcut.label);
       }
     }
     recordingId = null;
