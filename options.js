@@ -109,22 +109,6 @@ const SHORTCUT_DEFAULTS = [
     },
   },
   {
-    id: "goToProject",
-    name: "Go to project (modal)",
-    description:
-      "Navigate to the task's project when the task detail modal is open (extends native Shift+G)",
-    section: "taskDetail",
-    shortcut: {
-      key: "G",
-      code: "KeyG",
-      altKey: false,
-      ctrlKey: false,
-      shiftKey: true,
-      metaKey: false,
-      label: "Shift + G",
-    },
-  },
-  {
     id: "scrollSubtasksUp",
     name: "Scroll subtasks up",
     description:
@@ -229,9 +213,7 @@ function formatLabel(label) {
   const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
   if (!isMac) return label;
 
-  return label
-    .replace(/Meta/g, "Cmd")
-    .replace(/Alt/g, "Opt");
+  return label.replace(/Meta/g, "Cmd").replace(/Alt/g, "Opt");
 }
 
 /** Build a human-readable label from a KeyboardEvent (or stored shortcut). */
@@ -264,7 +246,7 @@ function friendlyKeyName(key, code) {
 
   if (MAP[key]) return MAP[key];
 
-  // For alpha/digit keys, prioritize code (e.g. "KeyK" -> "K") to avoid 
+  // For alpha/digit keys, prioritize code (e.g. "KeyK" -> "K") to avoid
   // macOS accent characters like "˚" or "∆" appearing in labels.
   if (code && (code.startsWith("Key") || code.startsWith("Digit"))) {
     return code.replace("Key", "").replace("Digit", "").toUpperCase();
