@@ -31,11 +31,31 @@ function mouseOpts(x, y) {
   };
 }
 
+let lastRightClickedTask = null;
+
+document.addEventListener("mousedown", (event) => {
+  if (event.button === 2) {
+    lastRightClickedTask = event.target.closest("li.task_list_item");
+  } else {
+    lastRightClickedTask = null;
+  }
+}, true);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    lastRightClickedTask = null;
+  }
+}, true);
+
 /**
  * Find the currently focused / cursor-selected task list item.
  * We try multiple strategies since Todoist's DOM can vary.
  */
 function getFocusedTask() {
+  if (lastRightClickedTask && document.body.contains(lastRightClickedTask)) {
+    return lastRightClickedTask;
+  }
+
   // Strategy 1: Todoist's own cursor/selection indicator
   const selectors = [
     'li.task_list_item[data-is-drag-target="true"]',
@@ -584,6 +604,18 @@ document.addEventListener(
     // Follow the first external link in the focused task or modal
     if (matchesShortcut(event, "followLink")) {
       const modal = getTaskModal();
+      
+      if (lastRightClickedTask && document.body.contains(lastRightClickedTask)) {
+        const link = lastRightClickedTask.querySelector(
+          ".task_list_item__content a[target=_blank]",
+        );
+        if (link) {
+          event.preventDefault();
+          link.click();
+          return;
+        }
+      }
+      
       if (modal) {
         // Modal is open — look for link in the task name content area
         // Skip .task_content in the header/breadcrumbs (parent task)
@@ -603,6 +635,7 @@ document.addEventListener(
         }
         return;
       }
+      
       const focusedTask = getFocusedTask();
       if (!focusedTask) return;
       const link = focusedTask.querySelector(
@@ -640,8 +673,14 @@ document.addEventListener(
         if (names.length > 0) {
           textToCopy = names.join("\n");
         }
+      } else if (lastRightClickedTask && document.body.contains(lastRightClickedTask)) {
+        // Focus is explicitly on a right-clicked task
+        const contentEl = lastRightClickedTask.querySelector(".task_content");
+        if (contentEl) {
+          textToCopy = contentEl.textContent;
+        }
       } else if (modal) {
-        // Modal is open and NO subtasks are selected — copy the main modal task
+        // Modal is open and NO subtasks are selected/right-clicked — copy the main modal task
         // Skip .task_content in the header/breadcrumbs (parent task)
         const contentEl = Array.from(
           modal.querySelectorAll(".task_content"),
@@ -654,7 +693,6 @@ document.addEventListener(
           textToCopy = contentEl.textContent;
         }
       } else {
-        // No modal, no multiselect — fallback to the single keyboard-focused task
         const focusedTask = getFocusedTask();
         if (focusedTask) {
           const contentEl = focusedTask.querySelector(".task_content");
