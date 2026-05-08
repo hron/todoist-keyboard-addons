@@ -967,25 +967,34 @@ function augmentTaskLabel(li, taskById) {
   //   <svg>  ← hash "#" icon
   // We want to insert " › ParentTaskTitle" between the div and the svg.
 
-  // Remove any text nodes we previously injected (idempotency guard is above,
-  // but just in case)
+  // Remove previously injected nodes (text nodes or our own <span>)
   for (const node of Array.from(projectLink.childNodes)) {
     if (node.nodeType === Node.TEXT_NODE) node.remove();
+    if (
+      node.nodeType === Node.ELEMENT_NODE &&
+      node.matches?.(".kbd-parent-label")
+    )
+      node.remove();
   }
 
   const svg = projectLink.querySelector("svg");
-  const separatorText = document.createTextNode(
-    `\u00a0›\u00a0${parent.content}`,
-  );
+
+  // Wrap parent task name in a <span> so we can limit its width
+  const liWidth = li.getBoundingClientRect().width;
+  const parentSpan = document.createElement("span");
+  parentSpan.className = "kbd-parent-label";
+  parentSpan.textContent = `\u00a0›\u00a0${parent.content}`;
+  parentSpan.style.maxWidth = `${liWidth * 0.5}px`;
+  parentSpan.style.display = "inline-block";
+  parentSpan.style.overflow = "hidden";
+  parentSpan.style.textOverflow = "ellipsis";
+  parentSpan.style.whiteSpace = "nowrap";
 
   if (svg) {
-    projectLink.insertBefore(separatorText, svg);
+    projectLink.insertBefore(parentSpan, svg);
   } else {
-    projectLink.appendChild(separatorText);
+    projectLink.appendChild(parentSpan);
   }
-
-  // Widen the element so the longer text doesn't get clipped
-  projectLink.style.maxWidth = "none";
 
   li.dataset.kbdParentAugmented = "1";
 }
