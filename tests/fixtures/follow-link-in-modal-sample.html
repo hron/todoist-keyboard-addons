@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html dir="ltr" data-viewer-country="FI" data-cdns="https://todoist.b-cdn.net/|https://d3ptyyxy2at9ui.cloudfront.net/" data-csp-nonce="XPRYZrBXCeaCOs895Vo0Ie1GxFtJCzQj0lDUcDkBvY8" data-darkreader-mode="dynamic" data-darkreader-scheme="dark" data-darkreader-proxy-injected="true" data-platform="linux" data-is-electron="false" lang="en" class="theme_todoist todoist_loaded" style="--main-view-header-height: calc(56px + 0px); --scrollbar-width: 0px;" data-browser="chromium" data-whatinput="keyboard" data-whatintent="keyboard"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script async="" src="./follow-link-in-modal-sample_files/gtm.js" nonce=""></script><script nonce="">
+			(function(w,d,s,l,i){w[l]=w[l]||[];
+				w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+				var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+				j.async=true;
+				j.src='https://googletagmanager.com/gtm.js?id='+i+dl+'';
+				j.setAttribute('nonce','XPRYZrBXCeaCOs895Vo0Ie1GxFtJCzQj0lDUcDkBvY8');
+				f.parentNode.insertBefore(j,f);
+			})(window,document,'script','dataLayerGlobal','GTM-KW4J5DNZ');</script><script data-testid="dataLayerGlobal">
+			window.dataLayerGlobal = window.dataLayerGlobal || [];
+			window.dataLayerGlobal.push({"user_id":"58440250","language":"en","user_subscription":"free","user_role":null,"user_type":"solo","user_proficiency":"beginner","user_use_case":["solo"],"activated_user":false,"magic_number":false})</script><style class="darkreader darkreader--fallback" media="screen"></style><style class="darkreader darkreader--user-agent" media="screen">@layer {
+html {
+    background-color: var(--darkreader-background-ffffff, #181a1b) !important;
+}
+html {
+    color-scheme: dark !important;
+}
+iframe {
+    color-scheme: dark !important;
+}
+html, body {
+    background-color: var(--darkreader-background-ffffff, #181a1b);
+}
+html, body {
+    border-color: var(--darkreader-border-4c4c4c, #736b5e);
+    color: var(--darkreader-text-000000, #e8e6e3);
+}
+a {
+    color: var(--darkreader-text-0040ff, #3391ff);
+}
+table {
+    border-color: var(--darkreader-border-808080, #545b5e);
+}
+mark {
+    color: var(--darkreader-text-000000, #e8e6e3);
+}
+::placeholder {
+    color: var(--darkreader-text-a9a9a9, #b2aba1);
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: var(--darkreader-background-faffbd, #404400) !important;
+    color: var(--darkreader-text-000000, #e8e6e3) !important;
+}
+::selection {
+    background-color: var(--darkreader-background-0060d4, #004daa) !important;
+    color: var(--darkreader-text-ffffff, #e8e6e3) !important;
+}
+::-moz-selection {
+    background-color: var(--darkreader-background-0060d4, #004daa) !important;
+    color: var(--darkreader-text-ffffff, #e8e6e3) !important;
+}
+}</style><style class="darkreader darkreader--text" media="screen"></style><style class="darkreader darkreader--invert" media="screen">.jfk-bubble.gtx-bubble, .captcheck_answer_label > input + img, span#closed_text > img[src^="https://www.gstatic.com/images/branding/googlelogo"], span[data-href^="https://www.hcaptcha.com/"] > #icon, img.Wirisformula, a[data-testid="headerMediumLogo"]>svg, .d2l-navigation-link-image-container, .d2l-iframe-loading-container, div.mc-ip-hide[style*="background: rgb(255, 255, 255) !important"], [style*="color: rgb(0, 0, 1) !important;"] {
+    filter: invert(100%) hue-rotate(180deg) contrast(90%) !important;
+}</style><style class="darkreader darkreader--inline" media="screen">[data-darkreader-inline-bgcolor] {
+  background-color: var(--darkreader-inline-bgcolor) !important;
+}
+[data-darkreader-inline-bgimage] {
+  background-image: var(--darkreader-inline-bgimage) !important;
+}
+[data-darkreader-inline-border] {
+  border-color: var(--darkreader-inline-border) !important;
+}
+[data-darkreader-inline-border-bottom] {
+  border-bottom-color: var(--darkreader-inline-border-bottom) !important;
+}
+[data-darkreader-inline-border-left] {
+  border-left-color: var(--darkreader-inline-border-left) !important;
+}
+[data-darkreader-inline-border-right] {
+  border-right-color: var(--darkreader-inline-border-right) !important;
+}
+[data-darkreader-inline-border-top] {
+  border-top-color: var(--darkreader-inline-border-top) !important;
+}
+[data-darkreader-inline-boxshadow] {
+  box-shadow: var(--darkreader-inline-boxshadow) !important;
+}
+[data-darkreader-inline-color] {
+  color: var(--darkreader-inline-color) !important;
+}
+[data-darkreader-inline-fill] {
+  fill: var(--darkreader-inline-fill) !important;
+}
+[data-darkreader-inline-stroke] {
+  stroke: var(--darkreader-inline-stroke) !important;
+}
+[data-darkreader-inline-outline] {
+  outline-color: var(--darkreader-inline-outline) !important;
+}
+[data-darkreader-inline-stopcolor] {
+  stop-color: var(--darkreader-inline-stopcolor) !important;
+}
+[data-darkreader-inline-bg] {
+  background: var(--darkreader-inline-bg) !important;
+}
+[data-darkreader-inline-border-short] {
+  border: var(--darkreader-inline-border-short) !important;
+}
+[data-darkreader-inline-border-bottom-short] {
+  border-bottom: var(--darkreader-inline-border-bottom-short) !important;
+}
+[data-darkreader-inline-border-left-short] {
+  border-left: var(--darkreader-inline-border-left-short) !important;
+}
+[data-darkreader-inline-border-right-short] {
+  border-right: var(--darkreader-inline-border-right-short) !important;
+}
+[data-darkreader-inline-border-top-short] {
+  border-top: var(--darkreader-inline-border-top-short) !important;
+}
+[data-darkreader-inline-invert] {
+    filter: invert(100%) hue-rotate(180deg);
+}</style><style class="darkreader darkreader--variables" media="screen">:root {
+   --darkreader-neutral-background: var(--darkreader-background-ffffff, #181a1b);
+   --darkreader-neutral-text: var(--darkreader-text-000000, #e8e6e3);
+   --darkreader-selection-background: var(--darkreader-background-0060d4, #004daa);
+   --darkreader-selection-text: var(--darkreader-text-ffffff, #e8e6e3);
+}</style><style class="darkreader darkreader--root-vars" media="screen"></style><title>Make `alt+k` to follow the link from description while modal is active – Todoist</title><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta property="og:image" content="https://todoist.b-cdn.net/assets/images/db169b6dbcff7f07.jpg"><meta property="og:image:secure_url" content="https://todoist.b-cdn.net/assets/images/db169b6dbcff7f07.jpg"><meta name="apple-itunes-app" content="app-id=572688855"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#fcfaf8"><meta name="description" content="This content is private. Sign in to Todoist to see it."><meta name="robots" content="noindex, nofollow"><link rel="icon" href="https://app.todoist.com/favicon.ico" type="image/x-icon" sizes="32x32"><link rel="icon" href="https://app.todoist.com/favicon_16.png" type="image/png" sizes="16x16"><link rel="icon" href="https://app.todoist.com/favicon_32.png" type="image/png" sizes="32x32"><link rel="icon" href="https://app.todoist.com/todoist.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://app.todoist.com/apple-touch-icon.png"><link rel="manifest" href="https://app.todoist.com/manifest.json"><script nonce="">class CdnFailbackWatchdog {
+    TYPE_CSS = 'css'
+    TYPE_JS = 'js'
+
+    MAX_CDN_FALLBACK = 2
+    ASSET_TIMEOUT = 15 * 1000 // 15 seconds
+    SEARCH_PARAM = 'cdn_fallback'
+
+    constructor(console) {
+        this.console = console
+        this.isReloading = false
+        this.tracked = 0
+        this.timeout = null
+
+        this.successes = []
+        this.failures = []
+        this.params = new URLSearchParams(window.location.search)
+        this.jsFilesCnt = 0
+        this.cssFilesCnt = 0
+        this.cdns = null
+        this.cdn = ''
+
+        this.console.log('[watchdog] init')
+    }
+
+    saveLastTriedCDN(value) {
+        // store in localStorage a value 'x', otherwise log that it was not possible
+        try {
+            this.console.log('[watchdog] saving last tried CDN: ' + value)
+            localStorage.setItem('td-cdn', value)
+            localStorage.setItem('td-cdn-ttl', Date.now() + 1000 * 60 * 60 * 24 * 30) // 30 days
+        } catch {
+            this.console.log('[watchdog] failed to save working CDN in localStorage')
+        }
+    }
+
+    getLastTriedCDN() {
+        const value = localStorage.getItem('td-cdn')
+        const ttl = localStorage.getItem('td-cdn-ttl')
+
+        if (value && ttl && parseInt(ttl, 10) > Date.now()) {
+            this.console.log('[watchdog] retrieving last tried CDN: ' + value)
+            return value
+        }
+
+        this.clearLastTriedCDN()
+        return null
+    }
+
+    clearLastTriedCDN() {
+        try {
+            this.console.log('[watchdog] clearing last tried CDN')
+            localStorage.removeItem('td-cdn')
+            localStorage.removeItem('td-cdn-ttl')
+        } catch {
+            this.console.log('[watchdog] failed to clear working CDN in localStorage')
+        }
+    }
+
+    getCdns() {
+        if (this.cdns == null) {
+            const cdnsStr =
+                (document &&
+                    document.documentElement &&
+                    document.documentElement.getAttribute('data-cdns')) ||
+                '/'
+            this.cdns = cdnsStr.split('|')
+        }
+
+        return this.cdns
+    }
+
+    selectCDN() {
+        if (this.cdn) {
+            this.console.log('[watchdog] using CDN from cache: ' + this.cdn)
+            return this.cdn
+        }
+
+        const cdns = this.getCdns()
+
+        // Check if we have a cached CDN
+        // If we can't access it, use the last CDN in the list
+        let lastTriedCDN
+        try {
+            lastTriedCDN = this.getLastTriedCDN()
+        } catch {
+            this.console.log('[watchdog] failed to get last tried CDN')
+            this.cdn = cdns[cdns.length - 1]
+            return this.cdn
+        }
+
+        // If the cached CDN is not in the list, clear it
+        if (lastTriedCDN && !cdns.includes(lastTriedCDN)) {
+            lastTriedCDN = null
+            this.clearLastTriedCDN()
+        }
+
+        // If we have a cached CDN, use it
+        // Otherwise, use the current load attempt to get the CDN
+        if (lastTriedCDN) {
+            this.cdn = lastTriedCDN
+        } else {
+            const loadAttempt = this.getLoadAttempt()
+            const cdnIndex = Math.min(loadAttempt, cdns.length - 1)
+
+            this.cdn = cdns[cdnIndex]
+        }
+
+        // ensure CDN always end in trailing /
+        if (!this.cdn.endsWith('/')) {
+            this.cdn += '/'
+        }
+
+        this.saveLastTriedCDN(this.cdn)
+        return this.cdn
+    }
+
+    getLoadAttempt() {
+        const cdnFallback = this.params.get(this.SEARCH_PARAM)
+        return (cdnFallback && parseInt(cdnFallback, 10)) || 0
+    }
+
+    track(assetType) {
+        this.tracked += 1
+
+        if (assetType === this.TYPE_JS) {
+            this.jsFilesCnt += 1
+        } else if (assetType === this.TYPE_CSS) {
+            this.cssFilesCnt += 1
+        }
+
+        if (this.timeout != null) {
+            clearTimeout(this.timeout)
+            this.timeout = null
+        }
+
+        this.timeout = setTimeout(this.reloadIfIssue.bind(this, true), this.ASSET_TIMEOUT)
+    }
+
+    parse(element) {
+        element.onload = null
+        element.onerror = null
+
+        if (element) {
+            if (element.href && element.rel && element.rel === 'stylesheet') {
+                return {
+                    src: element.href,
+                    type: this.TYPE_CSS,
+                }
+            }
+
+            if (element.src && element.nodeName.toLowerCase() === 'script') {
+                return {
+                    src: element.src,
+                    type: this.TYPE_JS,
+                }
+            }
+        }
+
+        return null
+    }
+
+    ok(element) {
+        const parsedAsset = this.parse(element)
+
+        if (parsedAsset) {
+            this.successes.push(parsedAsset)
+            this.reloadIfIssue()
+        }
+    }
+
+    err(element) {
+        const parsedAsset = this.parse(element)
+
+        if (parsedAsset) {
+            this.failures.push({
+                ...parsedAsset,
+                reason: 'Failed to load from CDN',
+            })
+            this.reloadIfIssue()
+        }
+    }
+
+    haveAssetsLoaded(ignoreTracking = false) {
+        if (ignoreTracking) {
+            this.console.warn(
+                `Ignoring asset checks, because something timed out. Tracked: ${this.tracked}; Successes: ${this.successes.length}; Failures: ${this.failures.length}`,
+            )
+
+            return false
+        }
+
+        if (this.tracked > this.successes.length + this.failures.length) {
+            return null
+        }
+
+        if (this.timeout != null) {
+            this.console.log(
+                `[watchdog] All assets have reported back; successes: ${this.successes.length}; failures: ${this.failures.length}`,
+            )
+            clearTimeout(this.timeout)
+            this.timeout = null
+        }
+
+        if (this.failures.length > 0) {
+            this.logFailures()
+
+            return false
+        }
+
+        const anySuccessfulCss =
+            this.cssFilesCnt == 0 ||
+            this.successes.findIndex((asset) => asset.type === this.TYPE_CSS) > -1
+
+        const anySuccessfulJS =
+            this.jsFilesCnt == 0 ||
+            this.successes.findIndex((asset) => asset.type === this.TYPE_JS) > -1
+
+        if (anySuccessfulCss && anySuccessfulJS) {
+            return true
+        }
+
+        this.console.warn(
+            `CSS or JS is missing from loaded assets; CSS: ${anySuccessfulCss}; JS: ${anySuccessfulJS}`,
+        )
+
+        return false
+    }
+
+    showTroubleLoading() {
+        try {
+            document.querySelector('.cdn-failback-error').classList.add('cdn-failback-error--show')
+        } catch {
+            // do nothing
+        }
+    }
+
+    logFailures() {
+        this.console.group('The following assets had issues loading:')
+        const messages = this.failures.map((asset) => `${asset.src}: ${asset.reason}`)
+
+        messages.forEach((msg) => this.console.warn(msg))
+        this.console.groupEnd()
+    }
+
+    reloadIfIssue(ignoreTracking = false) {
+        const result = this.haveAssetsLoaded(ignoreTracking)
+
+        if (result === null || result === true) {
+            return
+        }
+
+        if (result === false) {
+            // ensures next attempt won't use the same CDN, as failed this time.
+            this.clearLastTriedCDN()
+        }
+
+        if (this.isReloading) {
+            this.console.warn(
+                '[RELOAD] Detected more issues loading assets, but we are already preparing to reload so no need to do anything',
+            )
+            return
+        }
+
+        if (window.navigator.onLine === false) {
+            this.console.warn("[RELOAD] Need to reload, but not online; won't try reloading")
+            this.showTroubleLoading()
+            return
+        }
+
+        const cdnFallback = this.getLoadAttempt() + 1
+        const maxCdnFallback = Math.min(this.getCdns().length, this.MAX_CDN_FALLBACK)
+
+        if (cdnFallback > maxCdnFallback) {
+            this.console.warn("[RELOAD] Hit maximum reload attempts, won't try reloading anymore")
+            this.showTroubleLoading()
+            return
+        }
+
+        let timeoutId = null
+        this.isReloading = true
+
+        const reloadClient = () => {
+            this.params.set(this.SEARCH_PARAM, cdnFallback)
+            this.console.warn('[RELOAD] Reloading client with URL: ' + this.params.toString())
+            window.clearTimeout(timeoutId)
+            window.location.search = this.params.toString()
+        }
+
+        timeoutId = window.setTimeout(
+            reloadClient.bind(this),
+            5 * 1000, // 5 seconds
+        )
+
+        this.cleanupServiceWorkers().then(reloadClient).catch(reloadClient)
+    }
+
+    cleanupServiceWorkers() {
+        const cleanupPromises = []
+
+        if ('serviceWorker' in navigator && window && window.caches != null) {
+            cleanupPromises.push(
+                new Promise((resolve) => {
+                    window.caches
+                        .keys()
+                        .then((cacheKeys) =>
+                            Promise.all(
+                                cacheKeys.map((cacheKey) => window.caches.delete(cacheKey)),
+                            ),
+                        )
+                        .then(() => {
+                            this.console.warn('[RELOAD] Removed all Service Worker caches')
+                            resolve()
+                        })
+                        .catch((t) => {
+                            this.console.warn(
+                                '[RELOAD] Service worker cache keys could not be removed: ' +
+                                    t.message,
+                            )
+
+                            resolve()
+                        })
+                }),
+            )
+        }
+
+        // unregister service worker
+        cleanupPromises.push(
+            new Promise((resolve) => {
+                navigator.serviceWorker
+                    .getRegistration('/app/service-worker.js')
+                    .then((swReg) => {
+                        if (swReg) {
+                            swReg
+                                .unregister()
+                                .then(() => {
+                                    this.console.warn('[RELOAD] Service worker unregistered')
+                                    resolve()
+                                })
+                                .catch((t) => {
+                                    this.console.warn(
+                                        '[RELOAD] Service worker could not be unregistered: ' +
+                                            t.message,
+                                    )
+                                    resolve()
+                                })
+                        } else {
+                            resolve()
+                        }
+                    })
+                    .catch((e) => {
+                        this.console.warn(
+                            '[RELOAD] Service worker could not be unregistered: ' + e.message,
+                        )
+                        resolve()
+                    })
+            }),
+        )
+
+        return Promise.all(cleanupPromises)
+    }
+}
+
+function getPathnameFromAsset(asset) {
+    if (asset.startsWith('/')) {
+        return asset.slice(1)
+    }
+    try {
+        return new URL(asset).pathname.slice(1)
+    } catch {
+        return asset
+    }
+}
+
+function cdnLoadScript(tagName = 'head') {
+    return (asset) => {
+        window.watchdog.track('js')
+        const scriptE = document.createElement('script')
+        scriptE.onload = () => {
+            window.watchdog.ok(scriptE)
+        }
+        scriptE.onerror = () => {
+            window.watchdog.err(scriptE)
+        }
+
+        scriptE.src = window.watchdog.cdn + getPathnameFromAsset(asset)
+        scriptE.async = false
+        scriptE.crossOrigin = 'anonymous'
+        scriptE.nonce = document.documentElement.getAttribute('data-csp-nonce') || 'unknown-nonce'
+        document.getElementsByTagName(tagName)[0].appendChild(scriptE)
+    }
+}
+
+function cdnLoadLink(tagName = 'head') {
+    return (asset) => {
+        window.watchdog.track('css')
+        const linkE = document.createElement('link')
+        linkE.onload = () => {
+            window.watchdog.ok(linkE)
+        }
+        linkE.onerror = () => {
+            window.watchdog.err(linkE)
+        }
+
+        linkE.href = window.watchdog.cdn + getPathnameFromAsset(asset)
+        linkE.async = false
+        linkE.crossOrigin = 'anonymous'
+        linkE.rel = 'stylesheet'
+        linkE.nonce = document.documentElement.getAttribute('data-csp-nonce') || 'unknown-nonce'
+        document.getElementsByTagName(tagName)[0].appendChild(linkE)
+    }
+}
+
+window.watchdog = new CdnFailbackWatchdog(window.console)
+window.watchdog.selectCDN()
+
+window.cdnLoadScript = cdnLoadScript
+window.cdnLoadLink = cdnLoadLink</script><script nonce="">cdnLoadScript()("init-theme.5ee9e9fed6534c54.js");
+            
+                cdnLoadScript()("check-unsupported-browser.47a4cdb63252e588.js");
+            
+                cdnLoadScript()("/assets/runtime.9de5a2c7c1348c86.js");</script><script src="./follow-link-in-modal-sample_files/init-theme.5ee9e9fed6534c54.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/check-unsupported-browser.47a4cdb63252e588.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/runtime.9de5a2c7c1348c86.js" crossorigin="anonymous"></script><script nonce="">cdnLoadLink()("/assets/vendors~template-preview~permission-request~public-project~authentication~app~add~electron-login.8e1bf4c732328c9e.css");
+            
+                cdnLoadLink()("/assets/3235.ee4b52a477e88ca3.css");
+            
+                cdnLoadLink()("/assets/7035.e5dc71019be2e2a7.css");
+            
+                cdnLoadLink()("/assets/8043.132746807bccf058.css");
+            
+                cdnLoadLink()("/assets/8094.84b3f6f5219728a0.css");
+            
+                cdnLoadLink()("/assets/app.674a4206a9c1f6ab.css");</script><link href="./follow-link-in-modal-sample_files/vendors~template-preview~permission-request~public-project~authentication~app~add~electron-login.8e1bf4c732328c9e.css" crossorigin="anonymous" rel="stylesheet"><style class="darkreader darkreader--sync" media="screen"></style><link href="./follow-link-in-modal-sample_files/3235.ee4b52a477e88ca3.css" crossorigin="anonymous" rel="stylesheet"><style class="darkreader darkreader--sync" media="screen"></style><link href="./follow-link-in-modal-sample_files/7035.e5dc71019be2e2a7.css" crossorigin="anonymous" rel="stylesheet"><style class="darkreader darkreader--sync" media="screen"></style><link href="./follow-link-in-modal-sample_files/8043.132746807bccf058.css" crossorigin="anonymous" rel="stylesheet"><style class="darkreader darkreader--sync" media="screen"></style><link href="./follow-link-in-modal-sample_files/8094.84b3f6f5219728a0.css" crossorigin="anonymous" rel="stylesheet"><style class="darkreader darkreader--sync" media="screen"></style><link href="./follow-link-in-modal-sample_files/app.674a4206a9c1f6ab.css" crossorigin="anonymous" rel="stylesheet"><style class="darkreader darkreader--sync" media="screen"></style><script async="" src="./follow-link-in-modal-sample_files/analytics.js" nonce=""></script><style>.cdn-failback-error {
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                height: calc(100% - 36px);
+                width: calc(100% - 36px);
+                /* Should match font stack defined in src/05-common/styles/variables/typography.css */
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+                padding: 18px;
+                background-color: white;
+                z-index: 1;
+            }
+            .cdn-failback-error h1 {
+                font-size: 24px;
+            }
+            .cdn-failback-error p {
+                font-size: 16px;
+            }
+            .cdn-failback-error p a {
+                color: #d1453b !important;
+            }
+
+            .cdn-failback-error.cdn-failback-error--show {
+                display: flex;
+            }</style><style class="darkreader darkreader--sync" media="screen"></style><style>body {
+                margin: 0;
+            }
+
+            .loading_screen {
+                position: fixed;
+                display: flex;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+            }
+
+            .loading_screen--loader {
+                max-width: 500px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .loading_screen--logo {
+                margin-bottom: 32px;
+            }
+
+            .loading_screen--spinner {
+                animation-name: circular-spinner;
+                animation-duration: 1.2s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+            }
+
+            .theme_dark .loading_screen {
+                background-color: #1f1f1f;
+            }
+
+            .theme_dark .loading_screen--logo .logo_bg {
+                fill: rgba(255, 255, 255, 0.87);
+            }
+
+            .theme_dark .loading_screen--logo .logo_stripe {
+                fill: #1f1f1f;
+            }
+
+            .theme_dark .loading_screen--spinner .ring_thumb {
+                fill: rgba(255, 255, 255, 0.87);
+            }
+
+            .theme_dark .loading_screen--spinner .ring_track {
+                fill: rgba(255, 255, 255, 0.4);
+            }
+
+            @keyframes circular-spinner {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }</style><style class="darkreader darkreader--sync" media="screen"></style><meta name="darkreader" content="01cce581e6e4493ab634b8bbe4729a01"><style class="darkreader darkreader--override" media="screen">.vimvixen-hint {
+    background-color: var(--darkreader-background-ffd76e, #684b00) !important;
+    border-color: var(--darkreader-background-c59d00, #9e7e00) !important;
+    color: var(--darkreader-text-302505, #d7d4cf) !important;
+}
+#vimvixen-console-frame {
+    color-scheme: light !important;
+}
+::placeholder {
+    opacity: 0.5 !important;
+}
+#edge-translate-panel-body,
+.MuiTypography-body1,
+.nfe-quote-text {
+    color: var(--darkreader-neutral-text) !important;
+}
+gr-main-header {
+    background-color: var(--darkreader-background-add8e6, #1b4958) !important;
+}
+.tou-z65h9k,
+.tou-mignzq,
+.tou-1b6i2ox,
+.tou-lnqlqk {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+.tou-75mvi {
+    background-color: var(--darkreader-background-cfecf5, #0f3a47) !important;
+}
+.tou-ta9e87,
+.tou-1w3fhi0,
+.tou-1b8t2us,
+.tou-py7lfi,
+.tou-1lpmd9d,
+.tou-1frrtv8,
+.tou-17ezmgn {
+    background-color: var(--darkreader-background-f5f5f5, #1e2021) !important;
+}
+.tou-uknfeu {
+    background-color: var(--darkreader-background-faedda, #432c09) !important;
+}
+.tou-6i3zyv {
+    background-color: var(--darkreader-background-85c3d8, #245d70) !important;
+}
+div.mermaid-viewer-control-panel .btn {
+    background-color: var(--darkreader-neutral-background);
+    fill: var(--darkreader-neutral-text);
+}
+svg g rect.er {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g rect.er.entityBox {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g rect.er.attributeBoxOdd {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g rect.er.attributeBoxEven {
+    fill: var(--darkreader-selection-background);
+    fill-opacity: 0.8 !important;
+}
+svg rect.er.relationshipLabelBox {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g g.nodes rect,
+svg g g.nodes polygon {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g rect.task {
+    fill: var(--darkreader-selection-background) !important;
+}
+svg line.messageLine0,
+svg line.messageLine1 {
+    stroke: var(--darkreader-neutral-text) !important;
+}
+div.mermaid .actor {
+    fill: var(--darkreader-neutral-background) !important;
+}
+mitid-authenticators-code-app > .code-app-container {
+    background-color: white !important;
+    padding-top: 1rem;
+}
+iframe#unpaywall[src$="unpaywall.html"] {
+    color-scheme: light !important;
+}
+select {
+    --darkreader-bg--form-control-background-color: rgba(22, 22, 22, 0) !important;
+}
+body#tumblr {
+    --darkreader-bg--secondary-accent: 31, 32, 34 !important;
+    --darkreader-bg--white: 23, 23, 23 !important;
+    --darkreader-text--black: 228, 224, 218 !important;
+}
+:host {
+    --d2l-border-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+    --d2l-button-icon-background-color-hover: var(--darkreader-bg--d2l-color-gypsum) !important;
+    --d2l-color-ferrite: var(--darkreader-neutral-text) !important;
+    --d2l-color-sylvite: var(--darkreader-bg--d2l-color-sylvite) !important;
+    --d2l-dropdown-background-color: var(--darkreader-neutral-background) !important;
+    --d2l-dropdown-border-color: var(--darkreader-border--d2l-color-mica) !important;
+    --d2l-input-backgroud-color: var(--darkreader-neutral-background) !important;
+    --d2l-menu-border-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+    --d2l-tooltip-background-color: var(--darkreader-neutral-background) !important;
+    --d2l-tooltip-border-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+}
+:host([_floating]) .d2l-floating-buttons-container {
+    background-color: var(--darkreader-neutral-background) !important;
+    border-top-color: var(--darkreader-border--d2l-color-mica) !important;
+    opacity: 0.88 !important;
+}
+d2l-card {
+    background: var(--darkreader-neutral-background) !important;
+    border-color: var(--darkreader-border--d2l-color-gypsum) !important;
+}
+d2l-dropdown-content > div,
+d2l-menu-item {
+    background-color: var(--darkreader-neutral-background) !important;
+    border-radius: 10px !important;
+}
+d2l-empty-state-simple {
+    border-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+}
+.d2l-button-filter > ul > li > a.vui-button {
+    border-color: var(--darkreader-border--d2l-color-mica) !important;
+}
+.d2l-label-text:has(.d2l-button-subtle-content):hover,
+.d2l-label-text:has(.d2l-button-subtle-content):focus,
+.d2l-label-text:has(.d2l-button-subtle-content):active {
+    background-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+}
+.d2l-navigation-centerer {
+    color: inherit !important;
+}
+.d2l-tabs-layout {
+    border-color: var(--darkreader-border--d2l-color-gypsum) !important;
+}
+.d2l-input,
+.d2l-calendar-date,
+.d2l-htmleditor-container {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+.d2l-collapsible-panel {
+    border: 1px solid var(--darkreader-border--d2l-color-mica) !important;
+    border-radius: 0.4rem !important;
+}
+.d2l-collapsible-panel-divider {
+    border-bottom: 1px solid var(--darkreader-border--d2l-color-mica) !important;
+}
+.d2l-w2d-flex {
+    border-bottom: 2px solid var(--darkreader-border--d2l-color-mica) !important;
+}
+.d2l-collapsible-panel scrolled,
+.d2l-collapsible-panel-header,
+.d2l-w2d-collection-fixed {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+.d2l-loading-spinner-bg {
+    fill: var(--darkreader-bg--d2l-color-gypsum) !important;
+}
+.d2l-loading-spinner-bg-stroke {
+    stroke: var(--darkreader-border--d2l-color-mica) !important;
+}
+.d2l-loading-spinner-wrapper svg path,
+.d2l-loading-spinner-wrapper svg circle {
+    fill: var(--darkreader-neutral-background) !important;
+}
+.d2l-twopanelselector-side.d2l-twopanelselector-side-sep {
+    background: var(--darkreader-bg--d2l-color-mica) !important;
+}
+.d2l-le-TreeAccordionItem-anchor::before {
+    background: var(--darkreader-bg--d2l-color-corundum) !important;
+}
+table[class|="moz-header"] {
+    background: none;
+}
+*[style*="color: rgba(0,0,0,"],
+*[style*="color: rgba(0, 0, 0,"],
+*[style*="color:#000"],
+*[style*="color:black"],
+*[style*="color:#282828"],
+*[style*="color:#444"] {
+    color: var(--darkreader-neutral-text) !important;
+}
+*[style*="background:#fff"],
+*[style*="background-color:#fff"] {
+    background: var(--darkreader-neutral-background) !important;
+}
+*[bgcolor="#F5F5F5"],
+*[style*="background-color: #F5F5F5"] {
+    background: var(--darkreader-background-f5f5f5, #1e2021) !important;
+}
+body[style*="background: rgb(255, 255, 255) !important"] *:not(a),
+.body[style*="background-color: rgb(254, 254, 254) !important"] *:not(a) {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+div[style*="www.gstatic.com/android/"] {
+    background: none !important;
+}
+*[style*="background:#f9f9f9"] {
+    background: var(--darkreader-background-f9f9f9, #1b1e1f) !important;
+}
+body.mediawiki.skin-vector #mw-page-base {
+    background-image: none !important;
+}
+embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast(90%); }</style><link rel="stylesheet" type="text/css" href="./follow-link-in-modal-sample_files/2156.6eb4d4a21cf2c546.css"><style class="darkreader darkreader--sync" media="screen"></style><link rel="stylesheet" type="text/css" href="./follow-link-in-modal-sample_files/2480.d1c4e4f3871d5ced.css"><style class="darkreader darkreader--sync" media="screen"></style><link rel="stylesheet" type="text/css" href="./follow-link-in-modal-sample_files/1733.cfe9178cebb4a5b6.css"><style class="darkreader darkreader--sync" media="screen"></style><link rel="stylesheet" type="text/css" href="./follow-link-in-modal-sample_files/4042.fdac2fa669d53416.css"><style class="darkreader darkreader--sync" media="screen"></style><link rel="stylesheet" type="text/css" href="./follow-link-in-modal-sample_files/6504.609dd8128937d4cd.css"><style class="darkreader darkreader--sync" media="screen"></style><link rel="stylesheet" type="text/css" href="./follow-link-in-modal-sample_files/5679.580ff8db193ec477.css"><style class="darkreader darkreader--sync" media="screen"></style><link rel="stylesheet" type="text/css" href="./follow-link-in-modal-sample_files/4465.c2b5b46bc387082e.css"><style class="darkreader darkreader--sync" media="screen"></style><link rel="stylesheet" type="text/css" href="./follow-link-in-modal-sample_files/8034.8c5c865f9338c9ce.css"><style class="darkreader darkreader--sync" media="screen"></style><style data-tiptap-style="">.ProseMirror {
+  position: relative;
+}
+
+.ProseMirror {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: break-spaces;
+  -webkit-font-variant-ligatures: none;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+}
+
+.ProseMirror [contenteditable="false"] {
+  white-space: normal;
+}
+
+.ProseMirror [contenteditable="false"] [contenteditable="true"] {
+  white-space: pre-wrap;
+}
+
+.ProseMirror pre {
+  white-space: pre-wrap;
+}
+
+img.ProseMirror-separator {
+  display: inline !important;
+  border: none !important;
+  margin: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  margin: 0;
+}
+
+.ProseMirror-gapcursor:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 1px solid black;
+  animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes ProseMirror-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.ProseMirror-hideselection *::selection {
+  background: transparent;
+}
+
+.ProseMirror-hideselection *::-moz-selection {
+  background: transparent;
+}
+
+.ProseMirror-hideselection * {
+  caret-color: transparent;
+}
+
+.ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
+}
+
+.tippy-box[data-animation=fade][data-state=hidden] {
+  opacity: 0
+}</style><style class="darkreader darkreader--sync" media="screen"></style></head><body style="overflow: hidden; padding-right: 0px;" data-dialog-prevent-body-scroll=":rm:"><noscript data-aria-hidden="true" aria-hidden="true">
+			<iframe src="https://googletagmanager.com/ns.html?id=GTM-KW4J5DNZ"
+				height="0" width="0" style="display:none;visibility:hidden" id="tag-manager"></iframe></noscript><div class="cdn-failback-error" data-aria-hidden="true" aria-hidden="true"><svg class="loading_screen--logo" width="64" height="64" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path class="logo_bg" d="M56.000016 0h-48c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V8c0-4.4-3.6-8-8-8" fill="#E44332"></path><g class="logo_stripe" fill="#FFF"><path d="M13.672368 29.985936c1.1304-.65152 25.34368-14.58496 25.89952-14.90592.5544-.32016.58224-1.30224-.03824-1.65632-.62096-.35408-1.79984-1.02368-2.23856-1.28048-.44656-.26048-1.24976-.40528-1.99472.02384-.30928.1784-21.00256 12.0768-21.69424
+                        12.46992-.82784.47072-1.85248.4768-2.67744-.0008-.65152-.37696-10.92864-6.3488-10.92864-6.3488v5.39712c2.66016 1.54912 9.2744 5.40128 10.87744 6.30624.95664.54016 1.87232.52688 2.79488-.0048"></path><path d="M13.672368 40.76952c1.1304-.65152 25.34368-14.58496 25.89952-14.90592.5544-.32.58224-1.30224-.03824-1.65632-.62096-.35408-1.79984-1.02368-2.23856-1.28048-.44656-.26048-1.24976-.40528-1.99472.02384-.30928.1784-21.00256 12.0768-21.69424
+                        12.46992-.82784.47072-1.85248.4768-2.67744-.0008-.65152-.37696-10.92864-6.3488-10.92864-6.3488v5.39712c2.66016 1.54912 9.2744 5.40128 10.87744 6.30624.95664.54016 1.87232.52688 2.79488-.0048"></path><path d="M13.672368 51.55312c1.1304-.65152 25.34368-14.58496 25.89952-14.90592.5544-.32.58224-1.30224-.03824-1.65632-.62096-.35408-1.79984-1.02368-2.23856-1.28048-.44656-.26048-1.24976-.40528-1.99472.02384-.30928.1784-21.00256 12.0768-21.69424
+                        12.46992-.82784.47072-1.85248.4768-2.67744-.0008-.65152-.37696-10.92864-6.3488-10.92864-6.3488v5.39712c2.66016 1.54912 9.2744 5.40128 10.87744 6.30624.95664.54016 1.87232.52688 2.79488-.0048"></path></g></g></svg><h1>Todoist couldn't load the required files.</h1><p>Please check your network connection, or <a href="https://todoist.com/contact">contact support</a> if the problem persists.</p></div><div id="todoist_app"><a class="skiplink" href="https://app.todoist.com/app/task/make-alt-k-to-follow-the-link-from-description-while-modal-is-active-6gcH36392V5MV6Qp#content" data-aria-hidden="true" aria-hidden="true">Skip to task list</a><div class="xPiLGH0" data-aria-hidden="true" aria-hidden="true"><div data-testid="app-sidebar-container" class="app-sidebar-container ZYSmqrb _19abae45" style="--sidebar-width: 280px;"><div class="oQqYX8F"></div><div class="zllOIht" style="position: relative; user-select: auto; width: 280px; height: auto; max-width: 420px; min-width: 210px; box-sizing: border-box; flex-shrink: 0;"><nav class="XoRptUo"><div class="_19abae45"><div class="_19abae45 a7c6de33 _4ea254c1 _297575f4 c7313022 c4a9b3ab _194d8611 _8ad6a17c _54d85bfe"><div class="UHxIh6N QkztGcX _19abae45"><button aria-expanded="false" aria-haspopup="menu" aria-label="Settings" class="_19abae45 _56a651f6 _3930afa0 aa19cb97 _7246d092" id=":r0:" type="button" aria-disabled="false" style="padding-right: 0px;"><div aria-hidden="true" class="_380e7c73 _19abae45 a7c6de33 _194d8611"><div class="_19abae45 a7c6de33 _7fb159a0 _6016f4fb _194d8611 _8ad6a17c f88bdaf1"><div class="OD8YRRR WYrLQUL FDBfovE _19abae45 a7c6de33 _7fb159a0 _194d8611 _8ad6a17c f88bdaf1"><div class="_19abae45 _7fb159a0" style="width: 26px; height: 26px;"><div class="OxvfdXS _19abae45 a7c6de33 _194d8611 _8ad6a17c f88bdaf1 _5cede05a" style="--progress-ring-inner-size: 26px;"><div class="o78TTsy B9fYTNR _19abae45"><img src="./follow-link-in-modal-sample_files/saved_resource" alt="Extension Test"></div></div><div class="K2xs0Ro CWyjLBw _19abae45"><svg width="26" height="26"><circle cx="13" cy="13" r="12" class="gVuMXiW" stroke-width="2" fill="none"></circle><circle cx="13" cy="13" r="12" class="HmcGN_t" stroke-width="2" fill="none" stroke-dasharray="75.39822368615503" stroke-dashoffset="75.39822368615503" stroke-linecap="round"></circle><circle cx="13" cy="13" r="10.25" class="tJwcG51" fill="none" stroke-width="1.25"></circle></svg></div></div></div></div></div><span class="_90654824 _19abae45 b7f35b86 _47471e4e"><span class="_19abae45 a7c6de33 _194d8611 _8ad6a17c"><span class="iuUk2ON _19abae45">Extension</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" aria-hidden="true" class="VE070Ri"><path fill="currentColor" d="M15.646 9.647a.5.5 0 0 1 .708.707l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 1 1 .708-.707L12 13.294z"></path></svg></span></span></button></div><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _0315ed60"><div class="c8OfnXW _19abae45 a7c6de33 _194d8611 _2580a74b"><a aria-label="Notifications" aria-disabled="false" class="_3930afa0 aa19cb97 _7246d092 abd5766f" href="https://app.todoist.com/app/notifications"><div class="OD8YRRR eOaYGh0 FDBfovE _19abae45 a7c6de33 _7fb159a0 _194d8611 _8ad6a17c f88bdaf1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m6.585 15.388-.101.113c-.286.322-.484.584-.484 1h12c0-.416-.198-.678-.484-1l-.101-.113c-.21-.233-.455-.505-.7-.887-.213-.33-.355-.551-.458-.79-.209-.482-.256-1.035-.4-2.71-.214-3.5-1.357-5.5-3.857-5.5s-3.643 2-3.857 5.5c-.144 1.675-.191 2.227-.4 2.71-.103.239-.245.46-.457.79-.246.382-.491.654-.701.887m10.511-2.312c-.083-.341-.131-.862-.241-2.148-.113-1.811-.469-3.392-1.237-4.544C14.8 5.157 13.57 4.5 12 4.5s-2.8.656-3.618 1.883c-.768 1.152-1.124 2.733-1.237 4.544-.11 1.286-.158 1.807-.241 2.148-.062.253-.13.373-.46.884-.198.308-.373.504-.57.723q-.11.12-.232.261c-.293.342-.642.822-.642 1.557a1 1 0 0 0 1 1h3a3 3 0 0 0 6 0h3a1 1 0 0 0 1-1c0-.735-.35-1.215-.642-1.557q-.122-.141-.232-.261c-.197-.22-.372-.415-.57-.723-.33-.511-.398-.63-.46-.884M14 17.5h-4a2 2 0 1 0 4 0" clip-rule="evenodd"></path></svg></div></a></div><button aria-controls="sidebar" aria-expanded="true" aria-label="Open/close sidebar" type="button" aria-disabled="false" class="qEwzQYq _3930afa0 aa19cb97 _7246d092 abd5766f"><div class="OD8YRRR eOaYGh0 FDBfovE _19abae45 a7c6de33 _7fb159a0 _194d8611 _8ad6a17c f88bdaf1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M19 4.001H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-12a2 2 0 0 0-2-2m-15 2a1 1 0 0 1 1-1h4v14H5a1 1 0 0 1-1-1zm6 13h9a1 1 0 0 0 1-1v-12a1 1 0 0 0-1-1h-9z" clip-rule="evenodd"></path></svg></div></button></div></div></div><div class="_19abae45 _297575f4 db26b033 c4a9b3ab"></div><div class="_19abae45 a7c6de33 _297575f4 c4a9b3ab _194d8611"><button type="button" aria-disabled="false" class="_19abae45 _56a651f6 e7RD0jj _3930afa0 _650176bf _7246d092"><div aria-hidden="true" class="_380e7c73 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 23c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11m-.711-16.5a.75.75 0 1 1 1.5 0v4.789H17.5a.75.75 0 0 1 0 1.5h-4.711V17.5a.75.75 0 0 1-1.5 0V12.79H6.5a.75.75 0 1 1 0-1.5h4.789z" clip-rule="evenodd"></path></svg></div><span class="_90654824 _19abae45 b7f35b86 _47471e4e">Add task</span></button><span class="KCyeQwS"><button aria-label="Dictate tasks with Ramble" type="button" aria-disabled="false" class="_3930afa0 _650176bf _7246d092 abd5766f"><div class="OD8YRRR eOaYGh0 FDBfovE _19abae45 a7c6de33 _7fb159a0 _194d8611 _8ad6a17c f88bdaf1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M15 15.985v-11c0-.517-.166-.815-.332-.98a.94.94 0 0 0-.668-.27.94.94 0 0 0-.668.27c-.166.165-.332.463-.332.98v14c0 .996-.328 1.835-.914 2.428a2.9 2.9 0 0 1-2.097.854C8.435 22.25 7 21.027 7 18.985v-9c0-.517-.166-.815-.332-.98A.94.94 0 0 0 6 8.735a.94.94 0 0 0-.668.27c-.166.165-.332.463-.332.98v5a1 1 0 1 1-2 0v-5c0-.983.334-1.81.918-2.395A2.94 2.94 0 0 1 6 6.735c.747 0 1.507.28 2.082.855.584.585.918 1.412.918 2.395v9c0 .959.565 1.278 1.01 1.283a.9.9 0 0 0 .654-.262c.164-.166.336-.474.336-1.021v-14c0-.983.334-1.81.918-2.395A2.94 2.94 0 0 1 14 1.735c.747 0 1.507.28 2.082.855.584.585.918 1.412.918 2.395v11c0 .517.166.815.332.98a.94.94 0 0 0 .668.27.94.94 0 0 0 .668-.27c.166-.165.332-.463.332-.98v-4a1 1 0 1 1 2 0v4c0 .983-.334 1.81-.918 2.395a2.94 2.94 0 0 1-2.082.855c-.747 0-1.507-.28-2.082-.855-.584-.585-.918-1.412-.918-2.395"></path></svg></div></button></span></div><div data-testid="app-sidebar-scrollable-container" class="dI8cODs _19abae45 d19e99ad"><div class="_19abae45 a7c6de33 c4803194 a03e39af b0e6eab4 _8c851bd6 _1e47f652" style="width: 280px;"><div class="_19abae45 a7c6de33 _1e47f652 bfa58fdf"><div role="navigation" aria-label="Main Navigation: contains Projects, Labels, and Filters" class="_19abae45 a7c6de33 _1e47f652 bfa58fdf _966b120f"><ul aria-label="Main filters" data-testid="top-sidebar-nav-items" id="top-menu" class="Yc2yYtfrRvYyshxg30ZbYgK5zFs78vIe _19abae45"><li tabindex="0" aria-labelledby="sidebar-list-item-0"><div data-sidebar-list-item="true" data-drag-over="false" class="Xh35CPVB_RMb9YccHorMGY6rNDunoRy9 _19abae45 a7c6de33 _194d8611 _8ad6a17c"><div id="sidebar-list-item-0" class="Y_ahQrRSsVYMzPXqIb_gEwQuy6uEyh06 _19abae45 a7c6de33 cd4c8183 _194d8611 _8ad6a17c bfa58fdf f6a2af5a"><button type="button" aria-label="Search" class=""><span aria-hidden="true" class="lmCuKI3ojXA87qCcendJtQ2EWi27RCtN"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.29 15.584a7 7 0 1 0-.707.707l3.563 3.563a.5.5 0 0 0 .708-.707zM11 17a6 6 0 1 0 0-12 6 6 0 0 0 0 12" clip-rule="evenodd"></path></svg></span><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b _47471e4e"><span class="_vxb8bOQYyk1_nJhBzy6yc_xm4S5bqKd a83bd4e0 _2f303ac3 _19abae45 _211eebc7">Search</span></div></button><span data-project-actions="true" class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b"><div class="bh19hfuzFbY88HkcYKfazwZa0vAQKNdz _19abae45 _7fb159a0"></div></span></div></div></li><div class="KhzVaye" role="button" tabindex="-1" aria-roledescription="sortable" data-project-id="6gM73x9Qx9fqG3Hp"><li id="filter_inbox" data-id="6gM73x9Qx9fqG3Hp" data-track="navigation|inbox" tabindex="0" aria-labelledby="sidebar-list-item-1"><div data-sidebar-list-item="true" data-drag-over="false" class="Xh35CPVB_RMb9YccHorMGY6rNDunoRy9 _19abae45 a7c6de33 _194d8611 _8ad6a17c"><div id="sidebar-list-item-1" class="Y_ahQrRSsVYMzPXqIb_gEwQuy6uEyh06 _19abae45 a7c6de33 cd4c8183 _194d8611 _8ad6a17c bfa58fdf f6a2af5a"><a aria-label="Inbox, 2 tasks" class="" href="https://app.todoist.com/app/inbox"><span aria-hidden="true" class="lmCuKI3ojXA87qCcendJtQ2EWi27RCtN"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M8.062 4h7.876a2 2 0 0 1 1.94 1.515l2.062 8.246q.06.24.06.486V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3.754a2 2 0 0 1 .06-.485L6.12 5.515A2 2 0 0 1 8.061 4m0 1a1 1 0 0 0-.97.758L5.03 14.004a1 1 0 0 0-.03.242V18a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.754a1 1 0 0 0-.03-.242L16.91 5.758a1 1 0 0 0-.97-.758zm6.643 10a2.75 2.75 0 0 1-5.41 0H7a.5.5 0 1 1 0-1h2.75a.5.5 0 0 1 .5.5 1.75 1.75 0 1 0 3.5 0 .5.5 0 0 1 .5-.5H17a.5.5 0 0 1 0 1z" clip-rule="evenodd"></path></svg></span><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b _47471e4e"><span class="_vxb8bOQYyk1_nJhBzy6yc_xm4S5bqKd a83bd4e0 _2f303ac3 _19abae45 _211eebc7">Inbox</span></div></a><span data-project-actions="true" class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b"><div class="bh19hfuzFbY88HkcYKfazwZa0vAQKNdz _19abae45 _7fb159a0"><span aria-hidden="true" class="JPIzT7zQIcjP5OYlzJgjsEVMXnvB3OgI _19abae45">2</span></div></span></div></div></li></div><div data-is-over="false" data-testid="dnd-date-dropzone-wrapper"><li id="filter_today" data-track="navigation|today" tabindex="0" aria-labelledby="sidebar-list-item-2"><div data-sidebar-list-item="true" data-drag-over="false" class="Xh35CPVB_RMb9YccHorMGY6rNDunoRy9 _19abae45 a7c6de33 _194d8611 _8ad6a17c"><div id="sidebar-list-item-2" class="Y_ahQrRSsVYMzPXqIb_gEwQuy6uEyh06 _19abae45 a7c6de33 cd4c8183 _194d8611 _8ad6a17c bfa58fdf f6a2af5a"><a aria-label="Today, 3 tasks" class="" href="https://app.todoist.com/app/today"><span aria-hidden="true" class="lmCuKI3ojXA87qCcendJtQ2EWi27RCtN"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor" fill-rule="evenodd"><path fill-rule="nonzero" d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6zm1 3h10a.5.5 0 1 1 0 1H7a.5.5 0 0 1 0-1z"></path><text font-family="var(--font-family-regular)" font-size="9" transform="translate(4 2)" font-weight="500"><tspan x="8" y="15" text-anchor="middle">10</tspan></text></g></svg></span><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b _47471e4e"><span class="_vxb8bOQYyk1_nJhBzy6yc_xm4S5bqKd a83bd4e0 _2f303ac3 _19abae45 _211eebc7">Today</span></div></a><span data-project-actions="true" class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b"><div class="bh19hfuzFbY88HkcYKfazwZa0vAQKNdz _19abae45 _7fb159a0"><span aria-hidden="true" class="JPIzT7zQIcjP5OYlzJgjsEVMXnvB3OgI m4VbslsvglM4h9I4soeD5kiJetpiArC0 _19abae45">3</span></div></span></div></div></li></div><li id="filter_upcoming" data-track="navigation|upcoming" tabindex="0" aria-labelledby="sidebar-list-item-3"><div data-sidebar-list-item="true" data-drag-over="false" class="Xh35CPVB_RMb9YccHorMGY6rNDunoRy9 _19abae45 a7c6de33 _194d8611 _8ad6a17c"><div id="sidebar-list-item-3" class="Y_ahQrRSsVYMzPXqIb_gEwQuy6uEyh06 _19abae45 a7c6de33 cd4c8183 _194d8611 _8ad6a17c bfa58fdf f6a2af5a"><a aria-label="Upcoming" class="" href="https://app.todoist.com/app/upcoming"><span aria-hidden="true" class="lmCuKI3ojXA87qCcendJtQ2EWi27RCtN"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m0 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm10 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-3-1a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-5 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m9-5a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-5 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-3-1a1 1 0 1 1-2 0 1 1 0 0 1 2 0M7 8a.5.5 0 0 0 0 1h10a.5.5 0 0 0 0-1z" clip-rule="evenodd"></path></svg></span><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b _47471e4e"><span class="_vxb8bOQYyk1_nJhBzy6yc_xm4S5bqKd a83bd4e0 _2f303ac3 _19abae45 _211eebc7">Upcoming</span></div></a><span data-project-actions="true" class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b"><div class="bh19hfuzFbY88HkcYKfazwZa0vAQKNdz _19abae45 _7fb159a0"></div></span></div></div></li><li id="filters_labels" data-track="navigation|filters-labels" tabindex="0" aria-labelledby="sidebar-list-item-4"><div data-sidebar-list-item="true" data-drag-over="false" class="Xh35CPVB_RMb9YccHorMGY6rNDunoRy9 _19abae45 a7c6de33 _194d8611 _8ad6a17c"><div id="sidebar-list-item-4" class="Y_ahQrRSsVYMzPXqIb_gEwQuy6uEyh06 _19abae45 a7c6de33 cd4c8183 _194d8611 _8ad6a17c bfa58fdf f6a2af5a"><a aria-label="Filters &amp; Labels" class="" href="https://app.todoist.com/app/filters-labels"><span aria-hidden="true" class="lmCuKI3ojXA87qCcendJtQ2EWi27RCtN"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M17.5 6.001h-3a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5m-3-1a1.5 1.5 0 0 0-1.5 1.5v3a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5v-3a1.5 1.5 0 0 0-1.5-1.5zm-8 9h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5m-1.5.5a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a1.5 1.5 0 0 1-1.5-1.5zm9.5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5m-1.5.5a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a1.5 1.5 0 0 1-1.5-1.5zm-6.5-8.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5m-1.5.5a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a1.5 1.5 0 0 1-1.5-1.5z" clip-rule="evenodd"></path></svg></span><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b _47471e4e"><span class="_vxb8bOQYyk1_nJhBzy6yc_xm4S5bqKd a83bd4e0 _2f303ac3 _19abae45 _211eebc7">Filters &amp; Labels</span></div></a><span data-project-actions="true" class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b"><div class="bh19hfuzFbY88HkcYKfazwZa0vAQKNdz _19abae45 _7fb159a0"></div></span></div></div></li><li id="activity_log" data-track="navigation|activity-log" tabindex="0" aria-labelledby="sidebar-list-item-5"><div data-sidebar-list-item="true" data-drag-over="false" class="Xh35CPVB_RMb9YccHorMGY6rNDunoRy9 _19abae45 a7c6de33 _194d8611 _8ad6a17c"><div id="sidebar-list-item-5" class="Y_ahQrRSsVYMzPXqIb_gEwQuy6uEyh06 _19abae45 a7c6de33 cd4c8183 _194d8611 _8ad6a17c bfa58fdf f6a2af5a"><a aria-label="Reporting" class="" href="https://app.todoist.com/app/activity"><span aria-hidden="true" class="lmCuKI3ojXA87qCcendJtQ2EWi27RCtN"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M6 5h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2m0 1a1 1 0 0 0-1 1v5h2.691l1.362-2.724a.5.5 0 0 1 .917.053l1.473 4.05 1.576-5.516a.5.5 0 0 1 .938-.066L15.825 12H19V7a1 1 0 0 0-1-1zm13 7h-3.5a.5.5 0 0 1-.457-.297l-1.44-3.241-1.622 5.675a.5.5 0 0 1-.95.034l-1.604-4.408-.98 1.96A.5.5 0 0 1 8 13H5v4a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" clip-rule="evenodd"></path></svg></span><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b _47471e4e"><span class="_vxb8bOQYyk1_nJhBzy6yc_xm4S5bqKd a83bd4e0 _2f303ac3 _19abae45 _211eebc7">Reporting</span></div></a><span data-project-actions="true" class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b"><div class="bh19hfuzFbY88HkcYKfazwZa0vAQKNdz _19abae45 _7fb159a0"></div></span></div></div></li></ul><div class="Aa8zwrB"><div class="_19abae45"><div data-expansion-panel-header="true" class="YHCt7UT _19abae45 _7fb159a0 _5912d165"><div class="JczMOAc _19abae45 a7c6de33 c4803194 b0e6eab4 cad4e2ec _194d8611 _8ad6a17c _47471e4e f6a2af5a"><a class="ASPzjaw _19abae45 a7c6de33 cad4e2ec efe72b13 a329dbd3 c76cb3c7 _194d8611 _8ad6a17c d607c41c bfa58fdf _47471e4e f6a2af5a" href="https://app.todoist.com/app/projects"><div class="_19abae45 a7c6de33 _194d8611 _1e964f8a _2580a74b _47471e4e"><div class="ieOwiLx a83bd4e0 _7be5c531 _6a3e5ade _2f303ac3 _19abae45 _211eebc7">My Projects</div></div></a><div class="yPqxrfl _19abae45 b834b77e"><button aria-label="My projects menu" aria-expanded="false" aria-haspopup="menu" class="_3930afa0 aa19cb97 _1e29d236 abd5766f" id=":r1:" type="button" aria-disabled="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 6a.46.46 0 0 0-.461.462v5.077H6.462a.462.462 0 1 0 0 .922h5.077v5.077a.461.461 0 1 0 .922 0v-5.077h5.077a.461.461 0 1 0 0-.922h-5.077V6.462A.46.46 0 0 0 12 6" clip-rule="evenodd"></path></svg></button></div><div class="_19abae45 b834b77e"><button aria-expanded="true" aria-controls="left-menu-projects-panel" aria-label="Toggle list of My Projects" data-expansion-panel-toggle="true" data-track="navigation|projects_panel" type="button" aria-disabled="false" class="oN3vyJD n17PMxE _3930afa0 _64ee8afd _1e29d236 abd5766f"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="QTXDw52"><path fill="currentColor" fill-rule="evenodd" d="M17.854 8.897a.5.5 0 0 0-.708 0L12 14.044 6.854 8.897a.5.5 0 1 0-.708.707l5.5 5.5a.5.5 0 0 0 .708 0l5.5-5.5a.5.5 0 0 0 0-.707" clip-rule="evenodd"></path></svg></button></div></div></div><div class="_19abae45"><div class="T5iVE_d rlSa5jk _19abae45 _47471e4e"><div class="_19abae45 a7c6de33 _194d8611"><div class="_19abae45 _8c75067a"><div id="left-menu-projects-panel" class="_19abae45"><ul id="projects_list" aria-label="Projects" class="Yc2yYtfrRvYyshxg30ZbYgK5zFs78vIe _19abae45"><div><div data-virtuoso-scroller="true" style="position: relative; height: 34px;"><div data-viewport-type="window" style="height: 100%; position: absolute; top: 0px; width: 100%;"><div data-testid="virtuoso-item-list" style="box-sizing: border-box; margin-top: 0px; padding-bottom: 0px; padding-top: 0px;"><div data-index="0" data-item-index="0" data-known-size="34" style="overflow-anchor: none;"><div class="contextMenuTrigger"><div class="KhzVaye" role="button" tabindex="-1" aria-roledescription="sortable" data-project-id="6gM746jwMxwrXPWM" data-indent-level="1" style=""><li data-testid="project-list-item" data-type="project_list_item" data-id="6gM746jwMxwrXPWM" tabindex="0" aria-labelledby="sidebar-list-item-6"><div data-sidebar-list-item="true" data-drag-over="false" class="Xh35CPVB_RMb9YccHorMGY6rNDunoRy9 _19abae45 a7c6de33 _194d8611 _8ad6a17c"><div id="sidebar-list-item-6" class="Y_ahQrRSsVYMzPXqIb_gEwQuy6uEyh06 _19abae45 a7c6de33 cd4c8183 _194d8611 _8ad6a17c bfa58fdf f6a2af5a"><a aria-label="Getting Started 👋, 15 tasks" class="" href="https://app.todoist.com/app/project/getting-started-6gM746jwMxwrXPWM"><span aria-hidden="true" class="lmCuKI3ojXA87qCcendJtQ2EWi27RCtN"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="P1rAycs" style="color: var(--named-color-charcoal); --darkreader-inline-color: var(--darkreader-text--named-color-charcoal, var(--darkreader-text-000000, #e8e6e3));" data-darkreader-inline-color=""><path fill="currentColor" fill-rule="evenodd" d="M15.994 6.082a.5.5 0 1 0-.987-.164L14.493 9h-3.986l.486-2.918a.5.5 0 1 0-.986-.164L9.493 9H7a.5.5 0 1 0 0 1h2.326l-.666 4H6a.5.5 0 0 0 0 1h2.493l-.486 2.918a.5.5 0 1 0 .986.164L9.507 15h3.986l-.486 2.918a.5.5 0 1 0 .987.164L14.507 15H17a.5.5 0 1 0 0-1h-2.326l.667-4H18a.5.5 0 1 0 0-1h-2.493zM14.327 10H10.34l-.667 4h3.987z" clip-rule="evenodd"></path></svg></span><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b _47471e4e"><span class="_vxb8bOQYyk1_nJhBzy6yc_xm4S5bqKd a83bd4e0 _2f303ac3 _19abae45 _211eebc7">Getting Started <span class="emoji twemoji"><img class="emoji" alt="👋" src="./follow-link-in-modal-sample_files/1f44b.svg"></span></span></div></a><span data-project-actions="true" class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b"><div class="bh19hfuzFbY88HkcYKfazwZa0vAQKNdz JAdquFVPISmKpJcXIcVU3UfFvMLVbSA_ _19abae45 _7fb159a0"><span aria-hidden="true" class="JPIzT7zQIcjP5OYlzJgjsEVMXnvB3OgI _19abae45">15</span><div class="UrqjVcM1pDooX112sZQfiAbxHoW3TMGT _19abae45"><button aria-label="More actions" aria-expanded="false" aria-haspopup="menu" class="_3930afa0 aa19cb97 _1e29d236 abd5766f" id=":r7:" type="button" aria-disabled="false"><svg width="15" height="3" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M1.5 3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"></path></svg></button></div></div></span></div></div></li></div></div></div></div></div></div></div></ul></div></div></div></div></div></div></div></div></div></div></div><div class="PDHSMJA _19abae45 a7c6de33 a03e39af _8c851bd6 _1e47f652 c68f8bf6"><button aria-expanded="false" aria-haspopup="menu" class="_19abae45 _8c75067a _3930afa0 aa19cb97 _7246d092" id=":r2:" type="button" aria-disabled="false"><div aria-hidden="true" class="_380e7c73 _19abae45 a7c6de33 _194d8611"><div class="OD8YRRR eOaYGh0 FDBfovE qBgsoes _19abae45 a7c6de33 _7fb159a0 _194d8611 _8ad6a17c f88bdaf1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="nonzero" d="M12 3a9 9 0 1 1-.001 18.001A9 9 0 0 1 12 3m0 1a8 8 0 1 0 0 16 8 8 0 0 0 0-16m-.093 10.794c.47 0 .802.355.802.856 0 .495-.331.85-.802.85s-.808-.355-.808-.85c0-.501.337-.856.808-.856m.128-7.294c1.465 0 2.465.954 2.465 2.213 0 .96-.47 1.639-1.215 2.11-.738.458-.948.8-.948 1.443v.397H11.32v-.562c-.006-.808.366-1.358 1.163-1.86.674-.433.936-.818.936-1.473 0-.758-.559-1.314-1.425-1.314-.878 0-1.436.544-1.5 1.418H9.5c.064-1.32.901-2.372 2.535-2.372"></path></svg></div></div><span class="_90654824 _19abae45 _57086b20 _47471e4e _8c75067a">Help &amp; resources</span></button></div></nav><div><div class="USw_LiR" style="position: absolute; user-select: none; height: 100%; top: 0px;"></div></div></div></div><div class="miwRg8R"><main aria-label="Main Content" id="content" tabindex="-1"><div data-testid="task-selection-list-container" class="hiGMgHg _19abae45 _5cede05a"><div data-testid="project-view" class="TGcY7vK _19abae45 a7c6de33 _194d8611 _7682c7ed _8c75067a _5cede05a"><div class="W8rBu9M main-view-layout i_TMTDC main-view-layout--narrow _19abae45 a7c6de33 _1e47f652 d607c41c bfa58fdf d19e99ad" data-virtuoso-seq="2" data-virtuoso-range="0-1-2"><div role="presentation" class="project_view__file_drop_target GeOxwr9"><div class="project_view project_editor_instance current_editor" data-project-id="6gM73x9Qx9fqG3Hp"><header class="c7PVoGK" aria-label="Header: contains title, subtitle, actions and options related to the current view"><div class="Dc7mhc7 _6IUuYM WHj4a_u bJf6Wkt _19abae45 _1b0c2c53 a03e39af _8c851bd6 b834b77e b50b47ee" style="height: 56px;"><div class="SThH8jl _19abae45 a7c6de33 _68ab48ca _194d8611 _8ad6a17c _47471e4e"></div><div class="P_l7pOJ _19abae45 a7c6de33 _194d8611 _8ad6a17c f88bdaf1 _47471e4e"></div><div class="zkDMrSj _19abae45 a7c6de33 _194d8611 _8ad6a17c _0315ed60"><button aria-label="View Options Menu" aria-expanded="false" aria-haspopup="dialog" type="button" aria-disabled="false" class="_3930afa0 aa19cb97 _7246d092 abd5766f"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M17.333 4.001A2.667 2.667 0 0 1 20 6.668v10.667A2.667 2.667 0 0 1 17.333 20H6.667A2.667 2.667 0 0 1 4 17.335V6.668A2.667 2.667 0 0 1 6.667 4zm-.083 1H6.75a1.75 1.75 0 0 0-1.745 1.62L5 6.75v10.5a1.75 1.75 0 0 0 1.62 1.745l.13.005h10.5a1.75 1.75 0 0 0 1.745-1.62l.005-.13v-10.5a1.75 1.75 0 0 0-1.62-1.745zm-.75 7c0-.276-.183-.5-.41-.5H7.91l-.074.008c-.191.043-.336.247-.336.492 0 .276.183.5.41.5h8.18l.074-.008c.191-.042.336-.246.336-.492m-.41 3.5c.227 0 .41.224.41.5 0 .246-.145.45-.336.492l-.073.008H7.909c-.226 0-.409-.224-.409-.5 0-.245.145-.45.336-.492l.073-.008zm.41-7.5c0-.276-.183-.5-.41-.5H7.91l-.074.008c-.191.043-.336.247-.336.492 0 .276.183.5.41.5h8.18l.074-.008c.191-.042.336-.246.336-.492" clip-rule="evenodd"></path></svg></button><a data-track="project|comments" data-note-type="project_note" data-note-parent-id="6gM73x9Qx9fqG3Hp" aria-label="Comments" aria-disabled="false" class="_3930afa0 aa19cb97 _7246d092 abd5766f" href="https://app.todoist.com/app/inbox/comments"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" data-svgs-path="sm1/comments.svg"><path fill="currentColor" fill-rule="nonzero" d="M11.707 20.793A1 1 0 0 1 10 20.086V18H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4.5l-2.793 2.793zM11 20.086L14.086 17H19a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h6v3.086z"></path></svg></a><button aria-label="Project options menu" aria-expanded="false" aria-haspopup="menu" class="_3930afa0 aa19cb97 _7246d092 abd5766f" id=":r8:" type="button" aria-disabled="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" transform="translate(3 10)" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><circle cx="2" cy="2" r="2"></circle><circle cx="9" cy="2" r="2"></circle><circle cx="16" cy="2" r="2"></circle></g></svg></button></div></div><div data-title-area="true" aria-hidden="false" data-testid="large-header" class="zhmNKzr WHj4a_u _6IUuYM _19abae45 a7c6de33 _194d8611 _8ad6a17c f88bdaf1"><div class="_19abae45 a7c6de33 _1e47f652 bfa58fdf c68f8bf6 _8c75067a"><div class="QmVfZZp _19abae45 a7c6de33 b0e6eab4 _194d8611 _8ad6a17c c68f8bf6 _8c75067a"><div class="ejgYE8j _19abae45 a7c6de33 _194d8611 bfa58fdf"><h1 class="bff24867 b3e14969 _71391f13 _6d357d76 _19abae45 _211eebc7">Inbox</h1></div></div></div></div><div class="pN0uRKO _19abae45 a7c6de33 _1b0c2c53 _1e47f652 _8ad6a17c f88bdaf1 _8c75067a b50b47ee" style="top: 56px;"></div></header><div class="list_editor view_content" data-empty-view="false" data-testid="project-list-view" style="min-height: 108px;"><div class="section_list" data-project-list-id="6gM73x9Qx9fqG3Hp"><li data-is-active="false"><section aria-label="(No Section)" class="section section__default"><header class="section_head"><div class="section_head__title"><span class="simple_content">(No Section)</span><small>2</small></div></header><div class="list_holder" data-task-list-id="null"><ul class="items" data-section-list-id="null"><div><div data-virtuoso-scroller="true" style="position: relative; min-height: fit-content; height: 108px;"><div data-viewport-type="window" style="height: 100%; position: absolute; top: 0px; width: 100%;"><div class="OmhBRQA"></div><div data-testid="virtual-list-placeholder-container" class="E0wFuFg _19abae45 a7c6de33 _1e47f652 f1f37bf1" style="height: 0px; position: absolute; margin: 0px; padding: 0px; width: 100%; top: 0px;"></div><div data-testid="virtuoso-item-list" style="box-sizing: border-box; margin-top: 0px; padding-bottom: 0px; padding-top: 0px;"><div data-index="0" data-item-index="0" data-known-size="43" style="overflow-anchor: none;"><div class="pxz5V6A" role="presentation" tabindex="-1" aria-roledescription="sortable" style=""><li aria-selected="false" data-selection-id="null/6gMFwGP76J42xMWp" id="task-6gMFwGP76J42xMWp" data-testid="task-list-item" class="task_list_item task_list_item--project_hidden" data-item-id="6gMFwGP76J42xMWp" data-item-indent="1" data-supports-active-task="true"><div role="button" tabindex="0" data-action-hint="task-root" aria-labelledby="task-6gMFwGP76J42xMWp-content" aria-describedby="task-6gMFwGP76J42xMWp-info-tags" aria-disabled="false" class="task_list_item__body"><div class="_19abae45 a7c6de33 _194d8611 bfa58fdf"><div class="task_list_item__overflow_actions"><div class="task_list_item__drag_container"><span class="task_list_item__drag_handle item_dnd_handle" data-testid="task_list_item__drag_handle"><svg width="24" height="24"><path fill="currentColor" d="M14.5 15.5a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 14.5 15.5m-5 0a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 9.5 15.5m5-5a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 14.5 10.5m-5 0a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 9.5 10.5m5-5a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 14.5 5.5m-5 0a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 9.5 5.5"></path></svg></span></div></div><button class="task_checkbox TIlLpN_ priority_1 TfbFB45 GksLTy7 kS5a6Hg" type="button" role="checkbox" aria-checked="false" aria-label="Mark task as complete" aria-describedby="task-6gMFwGP76J42xMWp-content" data-action-hint="task-complete"><span class="UgB8lOl"></span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="xziPKQd"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.5056 9.00958C16.2128 8.71668 15.7379 8.71668 15.445 9.00958L10.6715 13.7831L8.72649 11.8381C8.43359 11.5452 7.95872 11.5452 7.66583 11.8381C7.37294 12.1309 7.37293 12.6058 7.66583 12.8987L10.1407 15.3736C10.297 15.5299 10.5051 15.6028 10.7097 15.5923C10.8889 15.5833 11.0655 15.5104 11.2023 15.3735L16.5056 10.0702C16.7985 9.77735 16.7985 9.30247 16.5056 9.00958Z" fill="currentColor"></path></svg><span class="nFjnBtO"></span></button><div class="task_list_item__content"><div id="task-6gMFwGP76J42xMWp-content" class="task_list_item__content__wrapper"><div class="_618235b7 _19abae45 c77f2a47 _47471e4e">Task:&nbsp;</div><div class="_19abae45 a7c6de33 _194d8611"><div class="_37468e52 _19abae45"><div class="task_content">Test task</div></div></div></div><div id="task-6gMFwGP76J42xMWp-info-tags" data-testid="task-info-tags" class="pktBVPO _19abae45"></div></div></div><div class="A8K5Z5g task_list_item__actions task_list_item__actions--active"><button type="button" aria-label="Edit" data-action-hint="task-edit"><svg width="24" height="24"><g fill="none" fill-rule="evenodd"><path fill="currentColor" d="M9.5 19h10a.5.5 0 1 1 0 1h-10a.5.5 0 1 1 0-1"></path><path stroke="currentColor" d="M4.42 16.03a1.5 1.5 0 0 0-.43.9l-.22 2.02a.5.5 0 0 0 .55.55l2.02-.21a1.5 1.5 0 0 0 .9-.44L18.7 7.4a1.5 1.5 0 0 0 0-2.12l-.7-.7a1.5 1.5 0 0 0-2.13 0L4.42 16.02z" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"></path></g></svg></button><button type="button" data-testid="due-date-control" aria-expanded="false" data-action-hint="task-scheduler" aria-label="Date" class="due_date_controls"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M18 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M5 6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1zm12 10a1 1 0 1 1-2 0 1 1 0 0 1 2 0M7 8a.5.5 0 0 0 0 1h10a.5.5 0 0 0 0-1z" clip-rule="evenodd"></path></svg></button><button type="button" aria-label="Comment" data-action-hint="task-comment" class="task_list_item__comments_link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" data-svgs-path="sm1/comments.svg"><path fill="currentColor" fill-rule="nonzero" d="M11.707 20.793A1 1 0 0 1 10 20.086V18H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4.5l-2.793 2.793zM11 20.086L14.086 17H19a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h6v3.086z"></path></svg></button><button aria-label="More actions" data-testid="more_menu" data-action-hint="task-overflow-menu" aria-expanded="false" aria-haspopup="menu" class="_3930afa0 aa19cb97 _7246d092 abd5766f" id=":rh:" type="button" aria-disabled="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" transform="translate(3 10)" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><circle cx="2" cy="2" r="2"></circle><circle cx="9" cy="2" r="2"></circle><circle cx="16" cy="2" r="2"></circle></g></svg></button></div></div></li></div></div><div data-index="1" data-item-index="1" data-known-size="65" style="overflow-anchor: none;"><div class="pxz5V6A" role="presentation" tabindex="-1" aria-roledescription="sortable" style=""><li aria-selected="false" data-selection-id="null/6gcH36392V5MV6Qp" id="task-6gcH36392V5MV6Qp" data-testid="task-list-item" class="task_list_item task_list_item--project_hidden task_list_item--keyboard_shortcuts_active" data-item-id="6gcH36392V5MV6Qp" data-item-indent="1" data-supports-active-task="true"><div role="button" tabindex="0" data-action-hint="task-root" aria-labelledby="task-6gcH36392V5MV6Qp-content" aria-describedby="task-6gcH36392V5MV6Qp-info-tags" aria-disabled="false" class="task_list_item__body"><div class="_19abae45 a7c6de33 _194d8611 bfa58fdf"><div class="task_list_item__overflow_actions"><div class="task_list_item__drag_container"><span class="task_list_item__drag_handle item_dnd_handle" data-testid="task_list_item__drag_handle"><svg width="24" height="24"><path fill="currentColor" d="M14.5 15.5a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 14.5 15.5m-5 0a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 9.5 15.5m5-5a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 14.5 10.5m-5 0a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 9.5 10.5m5-5a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 14.5 5.5m-5 0a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 9.5 5.5"></path></svg></span></div></div><button class="task_checkbox TIlLpN_ priority_1 TfbFB45 GksLTy7 kS5a6Hg" type="button" role="checkbox" aria-checked="false" aria-label="Mark task as complete" aria-describedby="task-6gcH36392V5MV6Qp-content" data-action-hint="task-complete"><span class="UgB8lOl"></span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="xziPKQd"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.5056 9.00958C16.2128 8.71668 15.7379 8.71668 15.445 9.00958L10.6715 13.7831L8.72649 11.8381C8.43359 11.5452 7.95872 11.5452 7.66583 11.8381C7.37294 12.1309 7.37293 12.6058 7.66583 12.8987L10.1407 15.3736C10.297 15.5299 10.5051 15.6028 10.7097 15.5923C10.8889 15.5833 11.0655 15.5104 11.2023 15.3735L16.5056 10.0702C16.7985 9.77735 16.7985 9.30247 16.5056 9.00958Z" fill="currentColor"></path></svg><span class="nFjnBtO"></span></button><div class="task_list_item__content"><div id="task-6gcH36392V5MV6Qp-content" class="task_list_item__content__wrapper"><div class="_618235b7 _19abae45 c77f2a47 _47471e4e">Task:&nbsp;</div><div class="_19abae45 a7c6de33 _194d8611"><div class="_37468e52 _19abae45"><div class="task_content">Make <code>alt+k</code> to follow the link from description while modal is active</div></div></div><div class="_37468e52 _19abae45"><div class="task_description task_description--first-line-description"><p><a href="https://example.com/" target="_blank" rel="noopener noreferrer">Example Domain</a></p></div></div></div><div id="task-6gcH36392V5MV6Qp-info-tags" data-testid="task-info-tags" class="pktBVPO _19abae45"></div></div></div><div class="A8K5Z5g task_list_item__actions task_list_item__actions--active"><button type="button" aria-label="Edit" data-action-hint="task-edit"><svg width="24" height="24"><g fill="none" fill-rule="evenodd"><path fill="currentColor" d="M9.5 19h10a.5.5 0 1 1 0 1h-10a.5.5 0 1 1 0-1"></path><path stroke="currentColor" d="M4.42 16.03a1.5 1.5 0 0 0-.43.9l-.22 2.02a.5.5 0 0 0 .55.55l2.02-.21a1.5 1.5 0 0 0 .9-.44L18.7 7.4a1.5 1.5 0 0 0 0-2.12l-.7-.7a1.5 1.5 0 0 0-2.13 0L4.42 16.02z" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"></path></g></svg></button><button type="button" data-testid="due-date-control" aria-expanded="false" data-action-hint="task-scheduler" aria-label="Date" class="due_date_controls"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M18 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M5 6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1zm12 10a1 1 0 1 1-2 0 1 1 0 0 1 2 0M7 8a.5.5 0 0 0 0 1h10a.5.5 0 0 0 0-1z" clip-rule="evenodd"></path></svg></button><button type="button" aria-label="Comment" data-action-hint="task-comment" class="task_list_item__comments_link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" data-svgs-path="sm1/comments.svg"><path fill="currentColor" fill-rule="nonzero" d="M11.707 20.793A1 1 0 0 1 10 20.086V18H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4.5l-2.793 2.793zM11 20.086L14.086 17H19a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h6v3.086z"></path></svg></button><button aria-label="More actions" data-testid="more_menu" data-action-hint="task-overflow-menu" aria-expanded="false" aria-haspopup="menu" class="_3930afa0 aa19cb97 _7246d092 abd5766f" id=":ri:" type="button" aria-disabled="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" transform="translate(3 10)" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><circle cx="2" cy="2" r="2"></circle><circle cx="9" cy="2" r="2"></circle><circle cx="16" cy="2" r="2"></circle></g></svg></button></div></div></li></div></div></div><div data-testid="virtual-list-placeholder-container" class="E0wFuFg _19abae45 a7c6de33 _1e47f652 f1f37bf1" style="height: 0px; position: absolute; margin: 0px; padding: 0px; width: 100%; bottom: 0px;"></div><div class="OmhBRQA"></div></div></div><div style="height: 1px;"></div></div><li class="controller actions task_actions full_width_actions"><button type="button" aria-hidden="false" data-supports-active-task="true" class="plus_add_button"><span class="icon_add" aria-hidden="true"><svg width="13" height="13"><path fill="currentColor" fill-rule="evenodd" d="M6 6V.5a.5.5 0 0 1 1 0V6h5.5a.5.5 0 1 1 0 1H7v5.5a.5.5 0 1 1-1 0V7H.5a.5.5 0 0 1 0-1z"></path></svg></span>Add task</button></li></ul></div></section><button type="button" class="hover_action_button">Add section</button></li></div></div></div></div></div></div></div></main></div></div><div class="f0ByEsJ _19abae45 c77f2a47" data-aria-hidden="true" aria-hidden="true"></div><div id="DndDescribedBy-0" style="display: none;" data-aria-hidden="true" aria-hidden="true">
+    To pick up a draggable item, press the space bar.
+    While dragging, use the arrow keys to move the item.
+    Press space again to drop the item in its new position, or press escape to cancel.
+  </div><div id="DndLiveRegion-0" role="status" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 0px; left: 0px; width: 1px; height: 1px; margin: -1px; border: 0px; padding: 0px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(100%); white-space: nowrap; --darkreader-inline-border-top: 0px; --darkreader-inline-border-right: 0px; --darkreader-inline-border-bottom: 0px; --darkreader-inline-border-left: 0px;" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left=""></div></div><script nonce="">cdnLoadScript('body')("/assets/vendors~template-preview~permission-request~public-project~authentication~app~add~electron-login.4655f1b61bf51b30.js");
+            
+                cdnLoadScript('body')("/assets/vendors~template-preview~permission-request~public-project~authentication~app~add.e63df2b07232fad8.js");
+            
+                cdnLoadScript('body')("/assets/vendors~template-preview~public-project~authentication~app~add~electron-login.7889ef78dcaaa3e9.js");
+            
+                cdnLoadScript('body')("/assets/vendors~template-preview~permission-request~public-project~app~add~authentication-template-preview.441b29c31ba9538e.js");
+            
+                cdnLoadScript('body')("/assets/6076.93bad7034bb568c1.js");
+            
+                cdnLoadScript('body')("/assets/vendors~template-preview~public-project~app~add~authentication-template-preview.b6ee48b5b7eb6a64.js");
+            
+                cdnLoadScript('body')("/assets/vendors~template-preview~public-project~app~add.6adf8b2b2724fb28.js");
+            
+                cdnLoadScript('body')("/assets/vendors~app~add~electron-login.3f6281d522201b7a.js");
+            
+                cdnLoadScript('body')("/assets/vendors~authentication~app~public-project.348fddda6e69f938.js");
+            
+                cdnLoadScript('body')("/assets/vendors~app~electron-login.0fa063498304db05.js");
+            
+                cdnLoadScript('body')("/assets/vendors~app~public-project.2afbde117b308a7e.js");
+            
+                cdnLoadScript('body')("/assets/vendors~app~add.e5aeaaf43625b8f6.js");
+            
+                cdnLoadScript('body')("/assets/vendors~authentication~app.01570d7a91a246b0.js");
+            
+                cdnLoadScript('body')("/assets/vendors~app.2379918f6a78b63c.js");
+            
+                cdnLoadScript('body')("/assets/3235.fafa03d78d689d18.js");
+            
+                cdnLoadScript('body')("/assets/7399.d94104114b6a73fe.js");
+            
+                cdnLoadScript('body')("/assets/7035.93d266f4493b16fa.js");
+            
+                cdnLoadScript('body')("/assets/8043.b707b60eecc9b9c3.js");
+            
+                cdnLoadScript('body')("/assets/8094.6b67e79aed36ffeb.js");
+            
+                cdnLoadScript('body')("/assets/8622.374e27c03fcb0ffa.js");
+            
+                cdnLoadScript('body')("/assets/268.49f85520f3a46544.js");
+            
+                cdnLoadScript('body')("/assets/555.c47b83a255de7b31.js");
+            
+                cdnLoadScript('body')("/assets/3810.82bfc31c5a3f8f21.js");
+            
+                cdnLoadScript('body')("/assets/1833.9c848add7aabb214.js");
+            
+                cdnLoadScript('body')("/assets/2735.173149dc0e136957.js");
+            
+                cdnLoadScript('body')("/assets/app.304f848804e55bac.js");</script><script src="./follow-link-in-modal-sample_files/vendors~template-preview~permission-request~public-project~authentication~app~add~electron-login.4655f1b61bf51b30.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~template-preview~permission-request~public-project~authentication~app~add.e63df2b07232fad8.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~template-preview~public-project~authentication~app~add~electron-login.7889ef78dcaaa3e9.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~template-preview~permission-request~public-project~app~add~authentication-template-preview.441b29c31ba9538e.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/6076.93bad7034bb568c1.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~template-preview~public-project~app~add~authentication-template-preview.b6ee48b5b7eb6a64.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~template-preview~public-project~app~add.6adf8b2b2724fb28.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~app~add~electron-login.3f6281d522201b7a.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~authentication~app~public-project.348fddda6e69f938.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~app~electron-login.0fa063498304db05.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~app~public-project.2afbde117b308a7e.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~app~add.e5aeaaf43625b8f6.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~authentication~app.01570d7a91a246b0.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/vendors~app.2379918f6a78b63c.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/3235.fafa03d78d689d18.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/7399.d94104114b6a73fe.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/7035.93d266f4493b16fa.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/8043.b707b60eecc9b9c3.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/8094.6b67e79aed36ffeb.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/8622.374e27c03fcb0ffa.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/268.49f85520f3a46544.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/555.c47b83a255de7b31.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/3810.82bfc31c5a3f8f21.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/1833.9c848add7aabb214.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/2735.173149dc0e136957.js" crossorigin="anonymous"></script><script src="./follow-link-in-modal-sample_files/app.304f848804e55bac.js" crossorigin="anonymous"></script><!-- version 10487 --><div class="ist_tooltip_holder" style="display: none;" data-aria-hidden="true" aria-hidden="true"></div><div id="id-8uh5ho" data-aria-hidden="true" aria-hidden="true"><div></div></div><div id="id-fwh26j"><div><div data-testid="modal-overlay" data-overlay="true" class="_05da64fc _2e29ea19 _9346579f o6A64Ac _19abae45"><div data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div><div data-focus-lock-disabled="false"><div data-open="true" data-dialog="" role="dialog" tabindex="-1" aria-label="Make `alt+k` to follow the link from description while modal is active" data-testid="task-details-modal" data-wide-modal="" id=":rm:" class="I8rbKlP _6910d6c2 _19abae45 a7c6de33 _1e47f652 bfa58fdf _47471e4e _5cede05a b50b47ee _7e67e1f6" style="--dialog-viewport-height: 951px;" data-enter="true"><header data-component="ModalHeader" class="xD08u3u _19abae45 _4e9ab24b ad0ccf15 _9510d053 _078feb3c"><div class="eae3d34f _1cf15621 _19abae45 a7c6de33 _194d8611 _8ad6a17c _9e8363f8 _966b120f"><div class="_9dd31975 _19abae45 _68ab48ca bfa58fdf _5cede05a"><div data-testid="task-detail-default-header" class="wm7QVbf _19abae45 a7c6de33 _194d8611 afd15909 _8ad6a17c _9e8363f8"><a aria-disabled="false" class="_19abae45 _56a651f6 pAr20QW _3930afa0 aa19cb97 _1e29d236" href="https://app.todoist.com/app/inbox#task-6gcH36392V5MV6Qp"><div aria-hidden="true" class="_380e7c73 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" class="p6zrLJh P1rAycs"><path fill="currentColor" fill-rule="evenodd" d="M5.509 2h4.982a2 2 0 0 1 1.923 1.45l1.509 5.28q.077.271.077.55V12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.28a2 2 0 0 1 .077-.55l1.509-5.28A2 2 0 0 1 5.509 2m0 1a1 1 0 0 0-.962.726l-1.509 5.28A1 1 0 0 0 3 9.28V12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V9.28a1 1 0 0 0-.039-.274l-1.508-5.28A1 1 0 0 0 10.49 3zm4.685 7a2.25 2.25 0 0 1-4.388 0H4.5a.5.5 0 1 1 0-1h1.75a.5.5 0 0 1 .5.5 1.25 1.25 0 0 0 2.5 0 .5.5 0 0 1 .5-.5h1.75a.5.5 0 0 1 0 1z" clip-rule="evenodd"></path></svg></div><span class="_90654824 _19abae45 b7f35b86 _47471e4e">Inbox</span></a></div></div><div data-testid="button-container" class="_309f02f2 _4bb9987d _19abae45 _68ab48ca b834b77e _89d517e2 _5cede05a"><div class="_19abae45 a7c6de33 _194d8611 c68f8bf6"><div class="_19abae45 a7c6de33 _194d8611 afd15909 _8ad6a17c _9e8363f8"><button aria-label="Previous task" type="button" aria-disabled="false" class="_3930afa0 aa19cb97 _7246d092 abd5766f"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M6.146 15.104a.5.5 0 0 0 .708 0L12 9.957l5.146 5.147a.5.5 0 0 0 .708-.708l-5.5-5.5a.5.5 0 0 0-.708 0l-5.5 5.5a.5.5 0 0 0 0 .708" clip-rule="evenodd"></path></svg></button><button aria-label="Next task" type="button" aria-disabled="true" class="_3930afa0 aa19cb97 _7246d092 abd5766f _2b0b9d95"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M17.854 8.897a.5.5 0 0 0-.708 0L12 14.044 6.854 8.897a.5.5 0 1 0-.708.707l5.5 5.5a.5.5 0 0 0 .708 0l5.5-5.5a.5.5 0 0 0 0-.707" clip-rule="evenodd"></path></svg></button></div><button aria-label="More actions" aria-expanded="false" aria-haspopup="menu" class="_3930afa0 aa19cb97 _7246d092 abd5766f" id=":ro:" type="button" aria-disabled="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" transform="translate(3 10)" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><circle cx="2" cy="2" r="2"></circle><circle cx="9" cy="2" r="2"></circle><circle cx="16" cy="2" r="2"></circle></g></svg></button><button aria-label="Close task" type="button" aria-disabled="false" class="_3930afa0 aa19cb97 _7246d092 abd5766f" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path fill="currentColor" d="M5.146 5.146a.5.5 0 0 1 .708 0L12 11.293l6.146-6.147a.5.5 0 0 1 .638-.057l.07.057a.5.5 0 0 1 0 .708L12.707 12l6.147 6.146a.5.5 0 0 1 .057.638l-.057.07a.5.5 0 0 1-.708 0L12 12.707l-6.146 6.147a.5.5 0 0 1-.638.057l-.07-.057a.5.5 0 0 1 0-.708L11.293 12 5.146 5.854a.5.5 0 0 1-.057-.638z"></path></svg></button></div></div></div></header><hr class="_3f3a401c _19abae45"><div data-testid="task-selection-list-container" class="hiGMgHg FCBkedf _19abae45"><div data-item-content="Make `alt+k` to follow the link from description while modal is active" data-item-id="6gcH36392V5MV6Qp" data-item-detail-root="" data-item-project-id="6gM73x9Qx9fqG3Hp" data-item-project-name="Inbox" class="_19abae45 a7c6de33 _194d8611 _5cede05a"><div class="_19abae45 a7c6de33 _6fa2b565 _1e47f652 bfa58fdf"><div data-testid="task-main-content-container" class="n_ZbHKy _19abae45 eb6097f1 f0941ead _078feb3c _37460640 _8c75067a b50b47ee"><div class="_19abae45 a7c6de33 _1e47f652 c68f8bf6 _8c75067a"><div class="_19abae45 a7c6de33 _1e47f652 c68f8bf6 _8c75067a"><div class="task-detail-editor-container" data-testid="task-overview-container"><div class="task-overview focus-marker-enabled-within"><button class="task_checkbox TIlLpN_ priority_1 TfbFB45 GksLTy7 kS5a6Hg" type="button" role="checkbox" aria-checked="false" aria-label="Checkbox for Make `alt+k` to follow the link from description while modal is active" data-action-hint="task-detail-view-complete"><span class="UgB8lOl"></span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="xziPKQd"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.5056 9.00958C16.2128 8.71668 15.7379 8.71668 15.445 9.00958L10.6715 13.7831L8.72649 11.8381C8.43359 11.5452 7.95872 11.5452 7.66583 11.8381C7.37294 12.1309 7.37293 12.6058 7.66583 12.8987L10.1407 15.3736C10.297 15.5299 10.5051 15.6028 10.7097 15.5923C10.8889 15.5833 11.0655 15.5104 11.2023 15.3735L16.5056 10.0702C16.7985 9.77735 16.7985 9.30247 16.5056 9.00958Z" fill="currentColor"></path></svg><span class="nFjnBtO"></span></button><div class="task-overview-main"><div class="task-overview-header"><div role="button" tabindex="0" data-autofocus="true" data-action-hint="task-detail-view-edit" aria-label="Task name" aria-describedby="a11y_task_name" class="task-overview-content"><div class="_37468e52 _19abae45"><div class="task_content task-overview-content-large">Make <code>alt+k</code> to follow the link from description while modal is active</div></div><div id="a11y_task_name" class="_618235b7 _19abae45 c77f2a47 _47471e4e">Activate to edit the task name</div></div><div role="button" tabindex="0" data-action-hint="task-detail-view-edit" aria-label="Task description" aria-description="Activate to edit the task description" class="task-overview-description"><div class="_37468e52 _19abae45"><div class="task_content"><p><a href="https://example.com/" target="_blank" rel="noopener noreferrer">Example Domain</a></p></div></div></div></div></div></div></div></div><div class="_19abae45 a7c6de33 _1e47f652 c68f8bf6 _8c75067a"><div class="_19abae45"><div class="ZQ9QPWp _19abae45 a7c6de33 _194d8611"><div class="_19abae45 a7c6de33 _96003c07 _194d8611 c68f8bf6"><button type="button" aria-disabled="false" class="_19abae45 _56a651f6 _3930afa0 aa19cb97 _1e29d236"><div aria-hidden="true" class="_380e7c73 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 6a.46.46 0 0 0-.461.462v5.077H6.462a.462.462 0 1 0 0 .922h5.077v5.077a.461.461 0 1 0 .922 0v-5.077h5.077a.461.461 0 1 0 0-.922h-5.077V6.462A.46.46 0 0 0 12 6" clip-rule="evenodd"></path></svg></div><span class="_90654824 _19abae45 b7f35b86 _47471e4e">Add sub-task</span></button></div></div></div><div class="_19abae45"><div class="_19abae45"><div class="_19abae45"><div class="T5iVE_d rlSa5jk _19abae45 _47471e4e"><div class="_19abae45 a7c6de33 _194d8611"><div class="_19abae45 _8c75067a"><div id="task-detail-comments-panel" class="_19abae45 f53218d5"></div></div></div></div></div></div></div></div></div></div><div class="_19abae45 f0941ead _078feb3c"><div role="presentation" class="sV1Cmzc GyiaFPg"><div><div class="QMhW1vK _19abae45 a7c6de33 _194d8611"><div class="_19abae45 a7c6de33 b85e3dfa _194d8611 _8ad6a17c"><div class="o78TTsy G6g01mP _19abae45"><img src="./follow-link-in-modal-sample_files/saved_resource(1)" alt="Extension Test"></div></div><div class="_19abae45 a7c6de33 _7fb159a0 _194d8611 bfa58fdf _47471e4e"><button data-testid="open-comment-editor-button" aria-label="Open comment editor" type="button" aria-disabled="false" class="_19abae45 _56a651f6 tcSF1Ar _3930afa0 aa19cb97 _7246d092"><span class="_90654824 _19abae45 b7f35b86 _47471e4e">Comment</span></button><button aria-label="Attach file" type="button" aria-disabled="false" class="h_FZOAG _3930afa0 aa19cb97 _7246d092 abd5766f"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12.646 5.646a3.33 3.33 0 0 1 4.847 4.56l-.14.148-4.824 4.825a2.163 2.163 0 0 1-3.178-2.927l.12-.13 3.325-3.326a.501.501 0 0 1 .765.638l-.057.07-3.325 3.325a1.16 1.16 0 0 0 1.541 1.732l.101-.09 4.825-4.825a2.328 2.328 0 0 0-3.165-3.411l-.127.119-6.175 6.175a3.494 3.494 0 0 0 4.793 5.083l.15-.14 3.674-3.676a.501.501 0 0 1 .765.638l-.057.07-3.675 3.675a4.497 4.497 0 0 1-6.358 0 4.497 4.497 0 0 1-.159-6.19l.16-.168z"></path></svg></button></div></div></div></div></div></div><div class="_19abae45 b834b77e"><div data-testid="task-details-sidebar" class="QSNps3U _19abae45 a7c6de33 eb6097f1 f0941ead b75f86cd _078feb3c _1e47f652 _54d85bfe _37460640 _5cede05a _5912d165"><div class="LT_sdM0 _19abae45 a7c6de33 ad0ccf15 d70b3c17 _1e47f652 c68f8bf6 _8c75067a"><div role="group" aria-label="Project" class="X3qDvcY _19abae45"><div aria-hidden="true" class="MCTsbmv a83bd4e0 _6a3e5ade _19abae45">Project</div><div class="XoP9WWP"><div class="gsYuhvj V5S220M _19abae45 ae9d1115 _96003c07"><button aria-label="Select a project" aria-owns="dropdown-select-12-popup" aria-controls="dropdown-select-12-popup" aria-expanded="false" aria-haspopup="listbox" type="button" aria-disabled="false" class="_19abae45 _8c75067a yh_2RrI _3930afa0 aa19cb97 _1e29d236"><div aria-hidden="true" class="_380e7c73 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" class="p6zrLJh P1rAycs"><path fill="currentColor" fill-rule="evenodd" d="M5.509 2h4.982a2 2 0 0 1 1.923 1.45l1.509 5.28q.077.271.077.55V12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.28a2 2 0 0 1 .077-.55l1.509-5.28A2 2 0 0 1 5.509 2m0 1a1 1 0 0 0-.962.726l-1.509 5.28A1 1 0 0 0 3 9.28V12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V9.28a1 1 0 0 0-.039-.274l-1.508-5.28A1 1 0 0 0 10.49 3zm4.685 7a2.25 2.25 0 0 1-4.388 0H4.5a.5.5 0 1 1 0-1h1.75a.5.5 0 0 1 .5.5 1.25 1.25 0 0 0 2.5 0 .5.5 0 0 1 .5-.5h1.75a.5.5 0 0 1 0 1z" clip-rule="evenodd"></path></svg></div><span class="_90654824 _19abae45 _57086b20 _47471e4e _8c75067a"><div class="tAhLSUW _19abae45"><span class="Y5g0JCq">Inbox</span></div></span></button><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" aria-hidden="true" class="_WH6zXS amzCQXU"><path fill="currentColor" d="M15.646 9.647a.5.5 0 0 1 .708.707l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 1 1 .708-.707L12 13.294z"></path></svg></div></div></div><hr class="_3f3a401c _19abae45"><div class="X3qDvcY _19abae45"><div><div class="gsYuhvj _19abae45 ae9d1115 _96003c07"><button aria-expanded="false" type="button" aria-disabled="false" class="_19abae45 _8c75067a yh_2RrI _3930afa0 aa19cb97 _1e29d236"><span class="_90654824 _19abae45 _57086b20 _47471e4e _8c75067a">Date</span><div aria-hidden="true" class="_20fe4105 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 6a.46.46 0 0 0-.461.462v5.077H6.462a.462.462 0 1 0 0 .922h5.077v5.077a.461.461 0 1 0 .922 0v-5.077h5.077a.461.461 0 1 0 0-.922h-5.077V6.462A.46.46 0 0 0 12 6" clip-rule="evenodd"></path></svg></div></button></div></div></div><hr class="_3f3a401c _19abae45"><div class="X3qDvcY _19abae45"><div><div class="gsYuhvj _19abae45 ae9d1115 _96003c07"><button aria-expanded="false" type="button" aria-disabled="false" class="_19abae45 _8c75067a htoGHFU yh_2RrI _3930afa0 aa19cb97 _1e29d236"><span class="_90654824 _19abae45 _57086b20 _47471e4e _8c75067a">Deadline<div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true" class="SVT21Pd" data-icon-name="upgrade-icon" data-testid="upgrade-icon"><path fill="#FFBA0A" d="M6.684 2.65a1.657 1.657 0 0 1 2.632 0c.361.473.947.715 1.536.637a1.657 1.657 0 0 1 1.861 1.861 1.66 1.66 0 0 0 .636 1.536c.868.663.868 1.97 0 2.632-.472.361-.714.947-.636 1.536a1.657 1.657 0 0 1-1.861 1.861 1.66 1.66 0 0 0-1.536.636 1.657 1.657 0 0 1-2.632 0 1.66 1.66 0 0 0-1.536-.636 1.657 1.657 0 0 1-1.861-1.861 1.66 1.66 0 0 0-.636-1.536 1.657 1.657 0 0 1 0-2.632c.472-.361.714-.947.636-1.536a1.657 1.657 0 0 1 1.861-1.861 1.66 1.66 0 0 0 1.536-.636" data-darkreader-inline-fill="" style="--darkreader-inline-fill: var(--darkreader-text-ffba0a, #ffc021);"></path><g filter="url(#upgrade-icon-16_svg__a)"><path fill="#fff" d="M6.806 4.969c-.021-.406.527-.553.713-.191l.692 1.354c.101.2.353.267.54.145l1.277-.827c.341-.22.743.18.522.522l-.827 1.276a.377.377 0 0 0 .145.542l1.354.692c.363.185.216.733-.19.712l-1.52-.078a.377.377 0 0 0-.396.397l.078 1.518c.021.407-.527.554-.713.191L7.79 9.868a.377.377 0 0 0-.54-.145l-1.277.827c-.342.221-.743-.18-.522-.522l.827-1.276a.377.377 0 0 0-.145-.541l-1.354-.692c-.363-.185-.216-.734.19-.713l1.52.078a.377.377 0 0 0 .396-.396z" data-darkreader-inline-fill="" style="--darkreader-inline-fill: var(--darkreader-text-ffffff, #e8e6e3);"></path></g><defs><filter id="upgrade-icon-16_svg__a" width="10.286" height="10.286" x="2.857" y="2.857" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feflood flood-opacity="0" result="BackgroundImageFix"></feflood><fecolormatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></fecolormatrix><feoffset></feoffset><fegaussianblur stdDeviation="0.857"></fegaussianblur><fecomposite in2="hardAlpha" operator="out"></fecomposite><fecolormatrix values="0 0 0 0 0.780392 0 0 0 0 0.482353 0 0 0 0 0 0 0 0 0.3 0"></fecolormatrix><feblend in2="BackgroundImageFix" result="effect1_dropShadow_19205_209264"></feblend><feblend in="SourceGraphic" in2="effect1_dropShadow_19205_209264" result="shape"></feblend></filter></defs></svg></div></span><div aria-hidden="true" class="_20fe4105 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M15 6.995V9H9V6.995C9 5.895 9.9 5 11.01 5h1.988C14.102 5 15 5.897 15 6.995M8 9V6.995A3.003 3.003 0 0 1 11.01 4h1.988A3 3 0 0 1 16 6.995V9h.994C18.102 9 19 9.887 19 11v6c0 1.105-.897 2-2.006 2H7.006A2 2 0 0 1 5 17v-6c0-1.105.897-2 2.006-2zm-2 2v6c0 .556.446 1 1.006 1h9.988c.557 0 1.006-.448 1.006-1v-6c0-.556-.446-1-1.006-1H7.006C6.449 10 6 10.448 6 11m4 3a2 2 0 1 0 4 0 2 2 0 0 0-4 0m2 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" clip-rule="evenodd"></path></svg></div></button></div></div></div><hr class="_3f3a401c _19abae45"><div role="group" aria-label="Priority" class="X3qDvcY _19abae45"><div aria-hidden="true" class="MCTsbmv a83bd4e0 _6a3e5ade _19abae45">Priority</div><div class="XoP9WWP"><div class="gsYuhvj V5S220M _19abae45 ae9d1115 _96003c07"><button aria-owns="dropdown-select-13-popup" aria-controls="dropdown-select-13-popup" aria-expanded="false" aria-haspopup="listbox" type="button" aria-disabled="false" class="_19abae45 _8c75067a yh_2RrI _3930afa0 aa19cb97 _1e29d236"><div aria-hidden="true" class="_380e7c73 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" class="SUxMVFy" data-icon-name="priority-icon" data-priority="4"><path fill="currentColor" fill-rule="evenodd" d="M2 3a.5.5 0 0 1 .276-.447C3.025 2.179 4.096 2 5.5 2c.901 0 1.485.135 2.658.526C9.235 2.885 9.735 3 10.5 3c1.263 0 2.192-.155 2.776-.447A.5.5 0 0 1 14 3v6.5a.5.5 0 0 1-.276.447c-.749.375-1.82.553-3.224.553-.901 0-1.485-.135-2.658-.526C6.765 9.615 6.265 9.5 5.5 9.5c-1.08 0-1.915.113-2.5.329V13.5a.5.5 0 0 1-1 0V3m1 5.779v-5.45C3.585 3.113 4.42 3 5.5 3c.765 0 1.265.115 2.342.474C9.015 3.865 9.599 4 10.5 4c1.002 0 1.834-.09 2.5-.279v5.45c-.585.216-1.42.329-2.5.329-.765 0-1.265-.115-2.342-.474C6.985 8.635 6.401 8.5 5.5 8.5c-1.001 0-1.834.09-2.5.279" clip-rule="evenodd"></path></svg></div><span class="_90654824 _19abae45 _57086b20 _47471e4e _8c75067a">P4</span></button><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" aria-hidden="true" class="_WH6zXS amzCQXU"><path fill="currentColor" d="M15.646 9.647a.5.5 0 0 1 .708.707l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 1 1 .708-.707L12 13.294z"></path></svg></div></div></div><hr class="_3f3a401c _19abae45"><div class="X3qDvcY _19abae45"><div><div class="_19abae45 a7c6de33 _1e47f652 _2580a74b _8c75067a"><div class="_19abae45 ae9d1115 _96003c07"><button class="_19abae45 _8c75067a _3930afa0 aa19cb97 _1e29d236" aria-owns="dropdown-select-14-popup" aria-controls="dropdown-select-14-popup" aria-expanded="false" aria-haspopup="listbox" type="button" aria-disabled="false"><span class="_90654824 _19abae45 _57086b20 _47471e4e _8c75067a">Labels</span><div aria-hidden="true" class="_20fe4105 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 6a.46.46 0 0 0-.461.462v5.077H6.462a.462.462 0 1 0 0 .922h5.077v5.077a.461.461 0 1 0 .922 0v-5.077h5.077a.461.461 0 1 0 0-.922h-5.077V6.462A.46.46 0 0 0 12 6" clip-rule="evenodd"></path></svg></div></button></div></div></div></div><hr class="_3f3a401c _19abae45"><div class="X3qDvcY _19abae45"><div><div class="_19abae45 ae9d1115 _96003c07"><button type="button" aria-disabled="false" class="_19abae45 _8c75067a _3930afa0 aa19cb97 _1e29d236"><span class="_90654824 _19abae45 _57086b20 _47471e4e _8c75067a">Reminders</span><div aria-hidden="true" class="_20fe4105 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 6a.46.46 0 0 0-.461.462v5.077H6.462a.462.462 0 1 0 0 .922h5.077v5.077a.461.461 0 1 0 .922 0v-5.077h5.077a.461.461 0 1 0 0-.922h-5.077V6.462A.46.46 0 0 0 12 6" clip-rule="evenodd"></path></svg></div></button></div></div></div><hr class="_3f3a401c _19abae45"><div class="X3qDvcY _19abae45"><div><div class="_19abae45 ae9d1115 _96003c07"><button type="button" aria-disabled="false" class="_19abae45 _8c75067a _3930afa0 aa19cb97 _1e29d236"><span class="_90654824 _19abae45 _57086b20 _47471e4e _8c75067a"><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c _2580a74b"><span class="MCTsbmv _19abae45">Location</span><div class="_19abae45 a7c6de33 _194d8611 _8ad6a17c"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true" class="SVT21Pd" data-icon-name="upgrade-icon" data-testid="upgrade-icon"><path fill="#FFBA0A" d="M6.684 2.65a1.657 1.657 0 0 1 2.632 0c.361.473.947.715 1.536.637a1.657 1.657 0 0 1 1.861 1.861 1.66 1.66 0 0 0 .636 1.536c.868.663.868 1.97 0 2.632-.472.361-.714.947-.636 1.536a1.657 1.657 0 0 1-1.861 1.861 1.66 1.66 0 0 0-1.536.636 1.657 1.657 0 0 1-2.632 0 1.66 1.66 0 0 0-1.536-.636 1.657 1.657 0 0 1-1.861-1.861 1.66 1.66 0 0 0-.636-1.536 1.657 1.657 0 0 1 0-2.632c.472-.361.714-.947.636-1.536a1.657 1.657 0 0 1 1.861-1.861 1.66 1.66 0 0 0 1.536-.636" data-darkreader-inline-fill="" style="--darkreader-inline-fill: var(--darkreader-text-ffba0a, #ffc021);"></path><g filter="url(#upgrade-icon-16_svg__a)"><path fill="#fff" d="M6.806 4.969c-.021-.406.527-.553.713-.191l.692 1.354c.101.2.353.267.54.145l1.277-.827c.341-.22.743.18.522.522l-.827 1.276a.377.377 0 0 0 .145.542l1.354.692c.363.185.216.733-.19.712l-1.52-.078a.377.377 0 0 0-.396.397l.078 1.518c.021.407-.527.554-.713.191L7.79 9.868a.377.377 0 0 0-.54-.145l-1.277.827c-.342.221-.743-.18-.522-.522l.827-1.276a.377.377 0 0 0-.145-.541l-1.354-.692c-.363-.185-.216-.734.19-.713l1.52.078a.377.377 0 0 0 .396-.396z" data-darkreader-inline-fill="" style="--darkreader-inline-fill: var(--darkreader-text-ffffff, #e8e6e3);"></path></g><defs><filter id="upgrade-icon-16_svg__a" width="10.286" height="10.286" x="2.857" y="2.857" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feflood flood-opacity="0" result="BackgroundImageFix"></feflood><fecolormatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></fecolormatrix><feoffset></feoffset><fegaussianblur stdDeviation="0.857"></fegaussianblur><fecomposite in2="hardAlpha" operator="out"></fecomposite><fecolormatrix values="0 0 0 0 0.780392 0 0 0 0 0.482353 0 0 0 0 0 0 0 0 0.3 0"></fecolormatrix><feblend in2="BackgroundImageFix" result="effect1_dropShadow_19205_209264"></feblend><feblend in="SourceGraphic" in2="effect1_dropShadow_19205_209264" result="shape"></feblend></filter></defs></svg></div></div></span><div aria-hidden="true" class="_20fe4105 _19abae45 a7c6de33 _194d8611"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M15 6.995V9H9V6.995C9 5.895 9.9 5 11.01 5h1.988C14.102 5 15 5.897 15 6.995M8 9V6.995A3.003 3.003 0 0 1 11.01 4h1.988A3 3 0 0 1 16 6.995V9h.994C18.102 9 19 9.887 19 11v6c0 1.105-.897 2-2.006 2H7.006A2 2 0 0 1 5 17v-6c0-1.105.897-2 2.006-2zm-2 2v6c0 .556.446 1 1.006 1h9.988c.557 0 1.006-.448 1.006-1v-6c0-.556-.446-1-1.006-1H7.006C6.449 10 6 10.448 6 11m4 3a2 2 0 1 0 4 0 2 2 0 0 0-4 0m2 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" clip-rule="evenodd"></path></svg></div></button></div></div></div><hr class="_3f3a401c _19abae45"><div data-item-actions-root="" data-item-id="6gcH36392V5MV6Qp" data-item-content="Make `alt+k` to follow the link from description while modal is active" data-item-project-id="6gM73x9Qx9fqG3Hp" data-item-project-name="Inbox" data-item-disabled="false"></div></div></div></div></div></div></div></div><div data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div></div></div></div></body></html>
