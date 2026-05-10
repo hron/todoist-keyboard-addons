@@ -1,0 +1,1 @@
+(window.navigator.userAgent.indexOf("MSIE ")>0||window.navigator.userAgent.indexOf("Trident/")>0)&&(window.location.href="/app/unsupported");

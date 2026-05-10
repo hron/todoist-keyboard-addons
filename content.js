@@ -585,18 +585,15 @@ document.addEventListener(
     if (matchesShortcut(event, "followLink")) {
       const modal = getTaskModal();
       if (modal) {
-        // Modal is open — look for link in the task name content area
-        // Skip .task_content in the header/breadcrumbs (parent task)
-        const contentEl = Array.from(
-          modal.querySelectorAll(".task_content"),
-        ).find(
-          (el) =>
-            !el.closest('[data-testid="task-detail-default-header"]') &&
-            !el.closest('[data-testid="task-detail-breadcrumbs"]'),
-        );
-        const link = contentEl
-          ? contentEl.querySelector("a[target=_blank]")
-          : null;
+        // Modal is open — search all .task_content areas (task name first,
+        // then description) skipping the header/breadcrumbs (parent task).
+        let link = null;
+        for (const el of modal.querySelectorAll(".task_content")) {
+          if (el.closest('[data-testid="task-detail-default-header"]')) continue;
+          if (el.closest('[data-testid="task-detail-breadcrumbs"]')) continue;
+          link = el.querySelector("a[target=_blank]");
+          if (link) break;
+        }
         if (link) {
           event.preventDefault();
           link.click();
