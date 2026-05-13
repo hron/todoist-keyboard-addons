@@ -120,6 +120,47 @@ function focusTaskListItem(item) {
   if (body) body.focus();
 }
 
+function getModalSubtasks(modal) {
+  return Array.from(modal.querySelectorAll("li.task_list_item:not(.reorder_item)"));
+}
+
+function getFocusedSubtask(modal) {
+  const selectors = [
+    'li.task_list_item[data-is-drag-target="true"]',
+    "li.task_list_item.selected",
+    'li.task_list_item[aria-selected="true"]',
+    "li.task_list_item:focus-within",
+    "li.task_list_item:has(:focus)",
+  ];
+  for (const sel of selectors) {
+    try {
+      const el = modal.querySelector(sel);
+      if (el) return el;
+    } catch {}
+  }
+  let el = document.activeElement;
+  while (el && el !== document.body) {
+    if (el.matches?.("li.task_list_item") && modal.contains(el)) return el;
+    el = el.parentElement;
+  }
+  return null;
+}
+
+function focusModalSubtask(subtasks, targetIdx) {
+  const target = subtasks[targetIdx];
+  if (!target) return;
+  focusTaskListItem(target);
+  target.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function getModalSubtaskPageSize(subtasks) {
+  const container = getModalScrollContainer();
+  if (!container || !subtasks.length) return 10;
+  const itemHeight = subtasks[0].getBoundingClientRect().height;
+  if (!itemHeight) return 10;
+  return Math.max(1, Math.floor(container.clientHeight / itemHeight));
+}
+
 /**
  * Find the drag handle inside a task element.
  * Tries multiple selectors since Todoist may have changed class names.
@@ -446,6 +487,22 @@ const DEFAULT_SHORTCUTS = {
     shiftKey: false,
     metaKey: false,
   },
+  focusSubtaskUp: {
+    key: "ArrowUp",
+    code: "ArrowUp",
+    altKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
+  focusSubtaskDown: {
+    key: "ArrowDown",
+    code: "ArrowDown",
+    altKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    metaKey: false,
+  },
 };
 
 // Live shortcuts — populated on init, updated when storage changes.
@@ -581,6 +638,36 @@ document.addEventListener(
       return;
     }
 
+    // Focus previous subtask in modal (Up arrow)
+    if (matchesShortcut(event, "focusSubtaskUp")) {
+      if (isEditing()) return;
+      const modal = getTaskModal();
+      if (!modal) return;
+      const subtasks = getModalSubtasks(modal);
+      if (!subtasks.length) return;
+      event.preventDefault();
+      const current = getFocusedSubtask(modal);
+      const currentIdx = current ? subtasks.indexOf(current) : -1;
+      const targetIdx = currentIdx > 0 ? currentIdx - 1 : currentIdx === -1 ? subtasks.length - 1 : 0;
+      focusModalSubtask(subtasks, targetIdx);
+      return;
+    }
+
+    // Focus next subtask in modal (Down arrow)
+    if (matchesShortcut(event, "focusSubtaskDown")) {
+      if (isEditing()) return;
+      const modal = getTaskModal();
+      if (!modal) return;
+      const subtasks = getModalSubtasks(modal);
+      if (!subtasks.length) return;
+      event.preventDefault();
+      const current = getFocusedSubtask(modal);
+      const currentIdx = current ? subtasks.indexOf(current) : -1;
+      const targetIdx = currentIdx < subtasks.length - 1 ? currentIdx + 1 : currentIdx === -1 ? 0 : subtasks.length - 1;
+      focusModalSubtask(subtasks, targetIdx);
+      return;
+    }
+
     // Follow the first external link in the focused task or modal
     if (matchesShortcut(event, "followLink")) {
       const modal = getTaskModal();
@@ -668,18 +755,20 @@ document.addEventListener(
       return;
     }
 
-    // Scroll subtasks up (PageUp) — modal: scroll subtask list; task list: move focus up one page
+    // PageUp — modal: focus an earlier subtask; task list: move focus up one page
     if (matchesShortcut(event, "scrollSubtasksUp")) {
       // Never intercept while the user is typing in any input/textarea/contentEditable
       if (isEditing()) return;
-      const container = getModalScrollContainer();
-      if (container) {
-        // Modal is open — scroll the subtask container
+      const modal = getTaskModal();
+      if (modal) {
+        const subtasks = getModalSubtasks(modal);
+        if (!subtasks.length) return;
         event.preventDefault();
-        container.scrollBy({
-          top: -container.clientHeight,
-          behavior: "smooth",
-        });
+        const current = getFocusedSubtask(modal);
+        const currentIdx = current ? subtasks.indexOf(current) : -1;
+        const fromIdx = currentIdx >= 0 ? currentIdx : subtasks.length - 1;
+        const targetIdx = Math.max(0, fromIdx - getModalSubtaskPageSize(subtasks));
+        focusModalSubtask(subtasks, targetIdx);
       } else {
         // Task list view — move keyboard focus up by one page
         const tasks = getTaskList();
@@ -700,15 +789,23 @@ document.addEventListener(
       return;
     }
 
-    // Scroll subtasks down (PageDown) — modal: scroll subtask list; task list: move focus down one page
+    // PageDown — modal: focus a later subtask; task list: move focus down one page
     if (matchesShortcut(event, "scrollSubtasksDown")) {
       // Never intercept while the user is typing in any input/textarea/contentEditable
       if (isEditing()) return;
-      const container = getModalScrollContainer();
-      if (container) {
-        // Modal is open — scroll the subtask container
+      const modal = getTaskModal();
+      if (modal) {
+        const subtasks = getModalSubtasks(modal);
+        if (!subtasks.length) return;
         event.preventDefault();
-        container.scrollBy({ top: container.clientHeight, behavior: "smooth" });
+        const current = getFocusedSubtask(modal);
+        const currentIdx = current ? subtasks.indexOf(current) : -1;
+        const fromIdx = currentIdx >= 0 ? currentIdx : 0;
+        const targetIdx = Math.min(
+          subtasks.length - 1,
+          fromIdx + getModalSubtaskPageSize(subtasks),
+        );
+        focusModalSubtask(subtasks, targetIdx);
       } else {
         // Task list view — move keyboard focus down by one page
         const tasks = getTaskList();
@@ -729,14 +826,16 @@ document.addEventListener(
       return;
     }
 
-    // Home — modal: scroll subtask list to top; task list: focus first task
+    // Home — modal: focus first subtask; task list: focus first task
     if (matchesShortcut(event, "scrollToTop")) {
       // Never intercept while the user is typing in any input/textarea/contentEditable
       if (isEditing()) return;
-      const container = getModalScrollContainer();
-      if (container) {
+      const modal = getTaskModal();
+      if (modal) {
+        const subtasks = getModalSubtasks(modal);
+        if (!subtasks.length) return;
         event.preventDefault();
-        container.scrollTo({ top: 0, behavior: "smooth" });
+        focusModalSubtask(subtasks, 0);
       } else {
         const tasks = getTaskList();
         if (!tasks.length) return;
@@ -747,14 +846,16 @@ document.addEventListener(
       return;
     }
 
-    // End — modal: scroll subtask list to bottom; task list: focus last task
+    // End — modal: focus last subtask; task list: focus last task
     if (matchesShortcut(event, "scrollToBottom")) {
       // Never intercept while the user is typing in any input/textarea/contentEditable
       if (isEditing()) return;
-      const container = getModalScrollContainer();
-      if (container) {
+      const modal = getTaskModal();
+      if (modal) {
+        const subtasks = getModalSubtasks(modal);
+        if (!subtasks.length) return;
         event.preventDefault();
-        container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+        focusModalSubtask(subtasks, subtasks.length - 1);
       } else {
         const tasks = getTaskList();
         if (!tasks.length) return;
