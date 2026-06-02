@@ -41,10 +41,12 @@ Can be toggled on/off from the extension's options page.
 |----------|--------------------------------------------------------------------------------------------------|
 | Alt+Up   | Navigate to the parent project via the breadcrumb link                                           |
 | Alt+O    | Open the "More actions" menu                                                                     |
-| PageUp   | Scroll the subtask list up by one page                                                           |
-| PageDown | Scroll the subtask list down by one page                                                         |
-| Home     | Scroll the subtask list to the top                                                               |
-| End      | Scroll the subtask list to the bottom                                                            |
+| ↑        | Move keyboard focus to the previous sub-task                                                     |
+| ↓        | Move keyboard focus to the next sub-task                                                         |
+| PageUp   | Move keyboard focus up by one page of subtasks                                                   |
+| PageDown | Move keyboard focus down by one page of subtasks                                                 |
+| Home     | Move keyboard focus to the first subtask                                                         |
+| End      | Move keyboard focus to the last subtask                                                          |
 | Alt+H    | Toggle show/hide completed sub-tasks                                                             |
 
 ## Installation

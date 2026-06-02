@@ -109,10 +109,40 @@ const SHORTCUT_DEFAULTS = [
     },
   },
   {
+    id: "focusSubtaskUp",
+    name: "Focus previous sub-task",
+    description: "Move keyboard focus to the previous sub-task in the task detail modal",
+    section: "taskDetail",
+    shortcut: {
+      key: "ArrowUp",
+      code: "ArrowUp",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "↑",
+    },
+  },
+  {
+    id: "focusSubtaskDown",
+    name: "Focus next sub-task",
+    description: "Move keyboard focus to the next sub-task in the task detail modal",
+    section: "taskDetail",
+    shortcut: {
+      key: "ArrowDown",
+      code: "ArrowDown",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: false,
+      label: "↓",
+    },
+  },
+  {
     id: "scrollSubtasksUp",
-    name: "Scroll subtasks up",
+    name: "Focus subtasks up",
     description:
-      "Scroll the subtask list up by one page in the task detail modal",
+      "Move keyboard focus up by one page of sub-tasks in the task detail modal",
     section: "taskDetail",
     shortcut: {
       key: "PageUp",
@@ -126,9 +156,9 @@ const SHORTCUT_DEFAULTS = [
   },
   {
     id: "scrollSubtasksDown",
-    name: "Scroll subtasks down",
+    name: "Focus subtasks down",
     description:
-      "Scroll the subtask list down by one page in the task detail modal",
+      "Move keyboard focus down by one page of sub-tasks in the task detail modal",
     section: "taskDetail",
     shortcut: {
       key: "PageDown",
@@ -157,9 +187,9 @@ const SHORTCUT_DEFAULTS = [
   },
   {
     id: "scrollToTop",
-    name: "Scroll to top / first task",
+    name: "Focus first sub-task / task",
     description:
-      "In the task detail modal: scroll subtasks to the top. In the task list: move focus to the first task.",
+      "In the task detail modal: move focus to the first sub-task. In the task list: move focus to the first task.",
     section: "taskDetail",
     shortcut: {
       key: "Home",
@@ -173,9 +203,9 @@ const SHORTCUT_DEFAULTS = [
   },
   {
     id: "scrollToBottom",
-    name: "Scroll to bottom / last task",
+    name: "Focus last sub-task / task",
     description:
-      "In the task detail modal: scroll subtasks to the bottom. In the task list: move focus to the last task.",
+      "In the task detail modal: move focus to the last sub-task. In the task list: move focus to the last task.",
     section: "taskDetail",
     shortcut: {
       key: "End",
