@@ -7,7 +7,7 @@ Todoist Keyboard Add-ons
 
 A small, focused extension for Todoist.  
 
-A Chrome extension that adds extra keyboard shortcuts and quality-of-life features to the [Todoist](https://app.todoist.com) web app. All shortcuts are configurable via the extension's options page.
+A browser extension for Chrome and Firefox that adds extra keyboard shortcuts and quality-of-life features to the [Todoist](https://app.todoist.com) web app. All shortcuts are configurable via the extension's options page.
 
 ## Features
 
@@ -52,9 +52,9 @@ Can be toggled on/off from the extension's options page.
 ## Installation
 
 1. Clone or download this repository.
-2. Open `chrome://extensions` (or `brave://extensions`).
-3. Enable **Developer mode**.
-4. Click **Load unpacked** and select the repository folder.
+2. Open `chrome://extensions` (Chrome/Brave) or `about:debugging#/runtime/this-firefox` (Firefox).
+3. Enable **Developer mode** (if on Chrome).
+4. Click **Load unpacked** (Chrome) or **Load Temporary Add-on** (Firefox) and select the repository folder.
 
 ## Configuration
 
@@ -74,4 +74,4 @@ git push && git push --tags
 
 The workflow (`.github/workflows/release.yml`) will zip the production files and attach `extension.zip` to a GitHub Release.
 
-Download `extension.zip` from the release assets and upload it manually via the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole).
+Download `todoist-keyboard-addons-vX.Y.zip` from the release assets and upload it manually via the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole) and the [Firefox Add-ons Developer Hub](https://addons.mozilla.org/en-US/developers/).
