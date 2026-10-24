@@ -31,6 +31,25 @@ function mouseOpts(x, y) {
   };
 }
 
+// The mouse pointer id is 0 in Firefox and 1 in Chrome. The drag library calls
+// setPointerCapture(pointerId), which throws for an id that doesn't exist.
+const MOUSE_POINTER_ID = navigator.userAgent.includes("Firefox/") ? 0 : 1;
+
+// Todoist's drag sensor ignores pointers that are not the primary mouse one.
+// `pressed` mirrors a real drag: left button held and pressure 0.5, except on
+// release.
+function pointerOpts(x, y, pressed = true) {
+  return {
+    ...mouseOpts(x, y),
+    pointerId: MOUSE_POINTER_ID,
+    pointerType: "mouse",
+    isPrimary: true,
+    button: 0,
+    buttons: pressed ? 1 : 0,
+    pressure: pressed ? 0.5 : 0,
+  };
+}
+
 /**
  * Find the currently focused / cursor-selected task list item.
  * We try multiple strategies since Todoist's DOM can vary.
@@ -218,24 +237,23 @@ async function simulateDrag(task, target, direction) {
 
     // 2. pointerdown + mousedown on the drag handle
     handle.dispatchEvent(
-      new PointerEvent("pointerdown", {
-        ...mouseOpts(from.x, from.y),
-        pointerId: 1,
-      }),
+      new PointerEvent("pointerdown", pointerOpts(from.x, from.y)),
     );
     handle.dispatchEvent(
       new MouseEvent("mousedown", mouseOpts(from.x, from.y)),
     );
     await sleep(10);
 
+    // A real drag captures the pointer on <body> (gotpointercapture fires
+    // there), so later events can't be lost if Todoist re-renders and detaches
+    // the handle mid-drag.
+    const captured = document.body;
+
     // Some drag libraries need a small initial move to initiate the drag
-    handle.dispatchEvent(
-      new PointerEvent("pointermove", {
-        ...mouseOpts(from.x, from.y + direction * 2),
-        pointerId: 1,
-      }),
+    captured.dispatchEvent(
+      new PointerEvent("pointermove", pointerOpts(from.x, from.y + direction * 2)),
     );
-    handle.dispatchEvent(
+    captured.dispatchEvent(
       new MouseEvent("mousemove", mouseOpts(from.x, from.y + direction * 2)),
     );
     await sleep(10);
@@ -246,26 +264,20 @@ async function simulateDrag(task, target, direction) {
       const t = i / frames;
       const ease = (1 - Math.cos(Math.PI * t)) / 2;
       const curY = from.y + (destY - from.y) * ease;
-      handle.dispatchEvent(
-        new PointerEvent("pointermove", {
-          ...mouseOpts(from.x, curY),
-          pointerId: 1,
-        }),
+      captured.dispatchEvent(
+        new PointerEvent("pointermove", pointerOpts(from.x, curY)),
       );
-      handle.dispatchEvent(
+      captured.dispatchEvent(
         new MouseEvent("mousemove", mouseOpts(from.x, curY)),
       );
       await sleep(5);
     }
 
     // 4. pointerup + mouseup at destination
-    handle.dispatchEvent(
-      new PointerEvent("pointerup", {
-        ...mouseOpts(from.x, destY),
-        pointerId: 1,
-      }),
+    captured.dispatchEvent(
+      new PointerEvent("pointerup", pointerOpts(from.x, destY, false)),
     );
-    handle.dispatchEvent(new MouseEvent("mouseup", mouseOpts(from.x, destY)));
+    captured.dispatchEvent(new MouseEvent("mouseup", mouseOpts(from.x, destY)));
 
     // 5. Clean up hover
     task.dispatchEvent(new PointerEvent("pointerout", { bubbles: true }));

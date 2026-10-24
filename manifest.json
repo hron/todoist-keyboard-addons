@@ -11,6 +11,12 @@
   "content_scripts": [
     {
       "matches": ["*://app.todoist.com/*"],
+      "js": ["pointer-capture-shim.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["*://app.todoist.com/*"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
@@ -22,7 +28,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "todoist-keyboard-addons@aleksei.gusev",
-      "strict_min_version": "109.0",
+      "strict_min_version": "128.0",
       "data_collection_permissions": {
         "required": ["none"]
       }
