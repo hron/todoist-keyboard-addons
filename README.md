@@ -52,10 +52,22 @@ Can be toggled on/off from the extension's options page.
 
 ## Installation
 
-1. Clone or download this repository.
-2. Open `chrome://extensions` (Chrome/Brave) or `about:debugging#/runtime/this-firefox` (Firefox).
-3. Enable **Developer mode** (if on Chrome).
-4. Click **Load unpacked** (Chrome) or **Load Temporary Add-on** (Firefox) and select the repository folder.
+Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/todoist-keyboard-add-ons/lpdfcpglcjmmbfhmfkaaahglopofbfmd) or [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/todoist-keyboard-add-ons/), or load the source as an unpacked extension as described below. First clone or download this repository.
+
+### Chrome / Brave / other Chromium browsers
+
+1. Open `chrome://extensions` (or `brave://extensions`).
+2. Enable **Developer mode** (top-right toggle).
+3. Click **Load unpacked** and select the repository folder (the one containing `manifest.json`).
+4. After editing the code, click the reload icon on the extension's card, then reload the Todoist tab.
+
+### Firefox
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…** and select the `manifest.json` file in the repository folder.
+3. After editing the code, click **Reload** next to the extension, then hard-reload the Todoist tab (Ctrl+Shift+R).
+
+Temporary add-ons are removed when Firefox restarts, so repeat these steps in each new session.
 
 ## Configuration
 
