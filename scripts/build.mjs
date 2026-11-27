@@ -7,6 +7,7 @@ const ROOT = path.resolve(__dirname, "..");
 const SRC_DIR = path.join(ROOT, "src");
 const DIST_DIR = path.join(ROOT, "dist");
 const OUTPUT_FILE = path.join(DIST_DIR, "todoist-keyboard-addons.user.js");
+const META_OUTPUT_FILE = path.join(DIST_DIR, "todoist-keyboard-addons.meta.js");
 
 // Ordered modules — each module may use standard ES import/export syntax for
 // direct testing, which this bundler strips cleanly into one IIFE.
@@ -51,6 +52,7 @@ function buildHeader(pkg, iconDataUri) {
   const repoSlug =
     typeof repo === "string"
       ? repo
+          .replace(/^git\+/, "")
           .replace(/^https?:\/\/github\.com\//, "")
           .replace(/\.git$/, "")
           .replace(/^\/+|\/+$/g, "")
@@ -64,6 +66,13 @@ function buildHeader(pkg, iconDataUri) {
       : "// @namespace    todoist-keyboard-addons",
     `// @version      ${pkg.version}`,
     "// @description  Extra keyboard shortcuts and quality-of-life features for Todoist",
+  ];
+
+  if (pkg.author) {
+    lines.push(`// @author       ${pkg.author}`);
+  }
+
+  lines.push(
     "// @match        *://app.todoist.com/*",
     `// @icon         ${iconDataUri}`,
     "// @run-at       document-start",
@@ -72,13 +81,15 @@ function buildHeader(pkg, iconDataUri) {
     "// @grant        GM_addValueChangeListener",
     "// @grant        GM_registerMenuCommand",
     "// @grant        unsafeWindow",
-  ];
+  );
 
   if (repoSlug) {
-    const releaseUrl = `https://github.com/${repoSlug}/releases/latest/download/todoist-keyboard-addons.user.js`;
+    const releaseBase = `https://github.com/${repoSlug}/releases/latest/download`;
     lines.push(`// @homepageURL  https://github.com/${repoSlug}`);
-    lines.push(`// @downloadURL  ${releaseUrl}`);
-    lines.push(`// @updateURL    ${releaseUrl}`);
+    lines.push(
+      `// @downloadURL  ${releaseBase}/todoist-keyboard-addons.user.js`,
+    );
+    lines.push(`// @updateURL    ${releaseBase}/todoist-keyboard-addons.meta.js`);
   }
 
   lines.push("// ==/UserScript==");
@@ -96,6 +107,7 @@ export function buildUserscript({ write = true, log = false } = {}) {
   );
 
   const header = buildHeader(pkg, iconDataUri);
+  const meta = `${header}\n`;
   const assetsBlock = [
     "// ---- Embedded assets ------------------------------------------------------",
     `const PREVIEW_ASSETS = {`,
@@ -121,13 +133,18 @@ export function buildUserscript({ write = true, log = false } = {}) {
   if (write) {
     fs.mkdirSync(DIST_DIR, { recursive: true });
     fs.writeFileSync(OUTPUT_FILE, bundle, "utf8");
+    fs.writeFileSync(META_OUTPUT_FILE, meta, "utf8");
     if (log) {
       const kb = (Buffer.byteLength(bundle, "utf8") / 1024).toFixed(1);
+      const metaKb = (Buffer.byteLength(meta, "utf8") / 1024).toFixed(1);
       console.log(`Built ${path.relative(ROOT, OUTPUT_FILE)} (${kb} KB)`);
+      console.log(
+        `Built ${path.relative(ROOT, META_OUTPUT_FILE)} (${metaKb} KB)`,
+      );
     }
   }
 
-  return { bundle, version: pkg.version, iconDataUri };
+  return { bundle, meta, version: pkg.version, iconDataUri };
 }
 
 if (

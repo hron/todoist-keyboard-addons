@@ -12,9 +12,10 @@ export function createDevLoaderScript({ port = PORT } = {}) {
 
   return `// ==UserScript==
 // @name         Todoist Keyboard Add-ons (Local Dev)
-// @namespace    todoist-keyboard-addons#dev
+// @namespace    https://github.com/hron/todoist-keyboard-addons#dev
 // @version      0.0.1-dev
 // @description  Live local dev loader for Todoist Keyboard Add-ons (fetches a fresh build on every page load via GM_xmlhttpRequest, bypassing Tampermonkey @require caching).
+// @author       Aleksei Gusev
 // @match        *://app.todoist.com/*
 // @icon         ${iconDataUri}
 // @run-at       document-start

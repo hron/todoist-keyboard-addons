@@ -49,7 +49,9 @@ Can be toggled on/off from **Settings → Keyboard Add-ons**.
 ## Installation
 
 1. Install [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/) in Chrome or Firefox.
-2. Open the latest **GitHub Release** and click **`todoist-keyboard-addons.user.js`** — your userscript manager will prompt you to install it and keep it updated automatically.
+2. Open the latest release userscript:
+   **[Install Todoist Keyboard Add-ons](https://github.com/hron/todoist-keyboard-addons/releases/latest/download/todoist-keyboard-addons.user.js)**
+3. Click **Install** in the prompt. Future releases update automatically via `@updateURL` / `@downloadURL`.
 
 ### Building from source
 
@@ -57,7 +59,7 @@ Can be toggled on/off from **Settings → Keyboard Add-ons**.
 npm run build
 ```
 
-This generates `dist/todoist-keyboard-addons.user.js` with no external dependencies (Node.js only).
+This generates `dist/todoist-keyboard-addons.user.js` and `dist/todoist-keyboard-addons.meta.js` with no external dependencies (Node.js only).
 
 ### Live local development (no caching)
 
@@ -89,4 +91,4 @@ git tag vX.Y.Z
 git push && git push --tags
 ```
 
-The workflow (`.github/workflows/release.yml`) runs `npm run build` (injecting `@downloadURL` and `@updateURL` from `GITHUB_REPOSITORY`) and attaches `todoist-keyboard-addons.user.js` to the GitHub Release.
+The workflow (`.github/workflows/release.yml`) runs `npm test` (building and verifying the userscript with Playwright) and attaches `todoist-keyboard-addons.user.js` and `todoist-keyboard-addons.meta.js` to the GitHub Release.

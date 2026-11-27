@@ -1,6 +1,29 @@
+import fs from "node:fs";
+import path from "node:path";
 import { test, expect } from "@playwright/test";
 import { createDevServer } from "../scripts/dev-server.mjs";
-import { installGmMock } from "./gm-mock.js";
+import { installGmMock, ROOT } from "./gm-mock.js";
+
+test("build outputs matching .user.js and lightweight .meta.js with release update URLs", () => {
+  const pkg = JSON.parse(
+    fs.readFileSync(path.join(ROOT, "package.json"), "utf8"),
+  );
+  const metaPath = path.join(ROOT, "dist", "todoist-keyboard-addons.meta.js");
+  const userPath = path.join(ROOT, "dist", "todoist-keyboard-addons.user.js");
+
+  const meta = fs.readFileSync(metaPath, "utf8");
+  const user = fs.readFileSync(userPath, "utf8");
+
+  expect(meta).toContain(`// @version      ${pkg.version}`);
+  expect(meta).toContain(
+    "// @downloadURL  https://github.com/hron/todoist-keyboard-addons/releases/latest/download/todoist-keyboard-addons.user.js",
+  );
+  expect(meta).toContain(
+    "// @updateURL    https://github.com/hron/todoist-keyboard-addons/releases/latest/download/todoist-keyboard-addons.meta.js",
+  );
+  expect(user.startsWith(meta)).toBe(true);
+  expect(meta.length).toBeLessThan(user.length / 10);
+});
 
 test("dev server serves loader + fresh bundle and bridges GM_* APIs under strict nonce CSP", async ({
   page,

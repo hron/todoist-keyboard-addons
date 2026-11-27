@@ -18,11 +18,18 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Build userscript
-        run: npm run build
+      - name: Install Playwright test dependencies
+        run: |
+          npm --prefix tests ci
+          npx --prefix tests playwright install chromium --with-deps
+
+      - name: Build and verify userscript
+        run: npm test
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/todoist-keyboard-addons.user.js
+          files: |
+            dist/todoist-keyboard-addons.user.js
+            dist/todoist-keyboard-addons.meta.js
           generate_release_notes: true
