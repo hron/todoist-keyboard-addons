@@ -1,19 +1,8 @@
 import { test, expect } from "@playwright/test";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "..");
+import { installGmMock, USERSCRIPT_PATH } from "./gm-mock.js";
 
 test("modal navigation keys move focus between subtasks", async ({ page }) => {
-  await page.addInitScript(() => {
-    window.chrome = {
-      storage: {
-        sync: { get: (_keys, cb) => cb({}) },
-        onChanged: { addListener: () => {} },
-      },
-    };
-  });
+  await installGmMock(page);
 
   await page.setContent(`
     <div data-testid="task-details-modal">
@@ -31,7 +20,8 @@ test("modal navigation keys move focus between subtasks", async ({ page }) => {
       </div>
     </div>
   `);
-  await page.addScriptTag({ path: path.join(ROOT, "content.js") });
+
+  await page.addScriptTag({ path: USERSCRIPT_PATH });
 
   const focusedSubtask = () =>
     page.locator(".task_list_item__body:focus").textContent();

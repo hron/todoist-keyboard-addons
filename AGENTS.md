@@ -2,15 +2,18 @@
 
 ## Architecture
 
-- Chrome extension (Manifest V3) targeting `app.todoist.com`
-- Single-file content script (`content.js`), no build step, plain vanilla JS
-- Shortcuts stored in `chrome.storage.sync`, configurable via `options.html` / `options.js`
-- Each shortcut definition in `options.js` has a `section` field (`"taskList"` or `"taskDetail"`)
-- The `SECTIONS` array in `options.js` defines section order and display labels for the settings page
+- Tampermonkey / Violentmonkey userscript targeting `*://app.todoist.com/*` on Chrome and Firefox
+- Modular vanilla JS sources in `src/`, bundled with zero external dependencies via `node scripts/build.mjs` (`npm run build`) into `dist/todoist-keyboard-addons.user.js` (gitignored)
+- Single source of truth for shortcuts, sections, and feature toggles in `src/defaults.js`
+- Settings stored in userscript storage (`GM_getValue` / `GM_setValue`), synced live across tabs via `GM_addValueChangeListener`
+- Settings UI (`src/settings-ui.js`) auto-saves every change immediately (no Save button), adapts to Todoist's light/dark theme (`html[data-appearance]`), and is mounted in two places:
+  - Inline as a **Keyboard Add-ons** tab inside Todoist Settings (`src/settings-page.js`)
+  - As a standalone Shadow DOM modal opened via `GM_registerMenuCommand("Settings", ...)` (`src/settings-modal.js`)
+- Runs at `@run-at document-start` so `src/pointer-capture-shim.js` patches `Element.prototype.setPointerCapture` in the page world (using `exportFunction` on `unsafeWindow` for Firefox Xray/CSP safety) before Todoist initializes; DOM/UI logic initializes on `DOMContentLoaded`
 
 ## Todoist DOM Selectors
 
-These selectors were verified via CDP inspection against the live Todoist app (as of 2026-04):
+These selectors were verified via live browser inspection against Todoist:
 
 | Element | Selector |
 |---|---|
@@ -22,6 +25,10 @@ These selectors were verified via CDP inspection against the live Todoist app (a
 | Toggle completed subtasks button | `button[aria-label="Hide completed sub-tasks"]` or `button[aria-label="Show completed sub-tasks"]` |
 | Subtask list container | `ul.items` inside `div.list_holder` |
 | Focused/selected task in task list | `li.task_list_item[data-is-drag-target="true"]` (primary), also `.selected`, `[aria-selected="true"]`, `:focus-within` |
+| Settings modal dialog | `[role="dialog"]` containing `a[role="tab"][href*="/app/settings/"]` and `[role="tabpanel"]` |
+| Settings sidebar tabs | `a[role="tab"][href*="/app/settings/"]` (active state via `aria-selected="true"`, `aria-current="page"`, `data-active-item="true"`) |
+| Settings close button | `header[data-component="ModalHeader"] button[aria-label="Close settings"]` |
+| Light / dark appearance | `document.documentElement.getAttribute("data-appearance")` (`"light"` or `"dark"`) |
 
 ### Notes
 
@@ -29,28 +36,32 @@ These selectors were verified via CDP inspection against the live Todoist app (a
 - There are **two** `ul.items` inside the modal's `div.list_holder` -- one for active subtasks, one for completed subtasks.
 - The **first** checkbox inside the modal (with `data-action-hint="task-detail-view-complete"`) belongs to the **parent task**, not a subtask. Subtask checkboxes use `data-action-hint="task-complete"` and are inside `li.task_list_item`.
 - Subtask action buttons (edit, date, comment, 3-dots menu) are **lazily rendered** — they only exist in the DOM when the item is hovered (the container gets class `task_list_item__actions--active`). Dispatching synthetic `mouseover`/`pointerover`/`pointerenter` events on `li.task_list_item` forces React to render them. Once rendered, they persist even after `mouseout`.
+- In Todoist Settings, never mutate or remove React's children inside `[role="tabpanel"]`; hide the native `[role="tabpanel"]` with `display: none` and insert our sibling panel next to it instead.
 
 ## Keyboard Event Handling
 
-- The `keydown` listener must use **capture phase** (`true` as 3rd argument to `addEventListener`) to run before Todoist's own handlers.
-- During hint mode (or any mode that needs to swallow keys), all of `keydown`, `keyup`, and `keypress` must be intercepted with `preventDefault()`, `stopPropagation()`, and `stopImmediatePropagation()` to prevent Todoist shortcuts from firing.
+- The `keydown` listener in `src/shortcuts.js` uses **capture phase** (`true` as 3rd argument to `addEventListener`) to run before Todoist's own handlers.
+- During shortcut recording in `src/settings-ui.js`, `keydown`, `keyup`, and `keypress` are intercepted in capture phase on `window` with `preventDefault()`, `stopPropagation()`, and `stopImmediatePropagation()` (including `Escape`, so canceling recording does not close Todoist's Settings modal).
 
 ## Key Files
 
 | File | Purpose |
 |---|---|
-| `content.js` | Main content script. Keyboard listeners, hint mode, drag-and-drop reordering, scroll/toggle handlers. |
-| `options.js` | Options page logic. Shortcut definitions with `section` field, section-based rendering, key recording. |
-| `options.html` | Options page markup and CSS (including `.section-header` styles). |
-| `manifest.json` | Manifest V3. Content script for `app.todoist.com`, `storage` permission. |
+| `package.json` | Package version (injected into `@version`) and `build` / `test` scripts. |
+| `scripts/build.mjs` | Zero-dependency Node bundler that outputs `dist/todoist-keyboard-addons.user.js` with base64-inlined icon and preview screenshot. |
+| `scripts/dev-server.mjs` | Live-rebuilding local dev server (`npm run dev`, port `4174`) serving `/dev-loader.user.js` and `/dist/todoist-keyboard-addons.user.js` with a CSP-safe `GM_*` bridge. |
+| `src/defaults.js` | Single source of truth for shortcuts, sections, feature flags, and key formatting helpers. |
+| `src/pointer-capture-shim.js` | Firefox `NotFoundError` shim for synthetic pointer drags (`@run-at document-start`). |
+| `src/storage.js` | `GM_getValue` / `GM_setValue` / `GM_addValueChangeListener` reactive store. |
+| `src/drag.js` | Focus helpers and synthetic drag-and-drop task reordering. |
+| `src/parent-label.js` | IndexedDB `todoist.sync` parent-task label augmentation in filter/search/today/upcoming views. |
+| `src/shortcuts.js` | Capture-phase keyboard shortcut listener. |
+| `src/settings-ui.js` | Auto-saving Shadow DOM settings UI with key recorder and light/dark theme support. |
+| `src/settings-modal.js` | Standalone Shadow DOM modal opened via `GM_registerMenuCommand`. |
+| `src/settings-page.js` | Todoist Settings (`/app/settings/*`) sidebar tab and inline panel injector. |
+| `src/main.js` | Entry point wiring all modules together. |
 
-## Reloading the Extension for Testing
+## Testing
 
-After editing extension files (`content.js`, `options.js`, etc.), both the **extension** and the **page** must be reloaded for changes to take effect:
-
-1. **Reload the extension** — call `chrome.runtime.reload()` via CDP on the options page (or any extension page):
-   ```
-   ws → options page → Runtime.evaluate("chrome.runtime.reload()")
-   ```
-2. **Hard-reload the Todoist page** — `Page.reload({ ignoreCache: true })`, or navigate to the test task URL. A simple SPA navigation is **not** enough; the page must fully reload so the new content script is injected.
-3. **Wait** — after reload, wait ~4-5 seconds for Todoist to fully render before interacting.
+- **Automated Playwright suite**: `npm test` (builds `dist/todoist-keyboard-addons.user.js` and runs `tests/`).
+- **Live Firefox Nightly + Tampermonkey testing**: Serve `dist/` with `ff-env serve start <repo>/dist` and drive Firefox Nightly via `agent-browser` (see the `firefox-ext-testing` skill).

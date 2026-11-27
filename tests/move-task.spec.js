@@ -1,21 +1,10 @@
 import { test, expect } from "@playwright/test";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "..");
+import { installGmMock, USERSCRIPT_PATH } from "./gm-mock.js";
 
 test("alt+shift+arrows move the focused task via a primary mouse pointer drag", async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    window.chrome = {
-      storage: {
-        sync: { get: (_keys, cb) => cb({}) },
-        onChanged: { addListener: () => {} },
-      },
-    };
-  });
+  await installGmMock(page);
 
   await page.setContent(`
     <ul class="items" style="margin: 0; padding: 0">
@@ -50,17 +39,21 @@ test("alt+shift+arrows move the focused task via a primary mouse pointer drag", 
       });
       if (over && over !== dragged) {
         const after = items.indexOf(over) > items.indexOf(dragged);
-        over.parentElement.insertBefore(dragged, after ? over.nextSibling : over);
+        over.parentElement.insertBefore(
+          dragged,
+          after ? over.nextSibling : over,
+        );
       }
       dragged = null;
     });
   });
-  await page.addScriptTag({ path: path.join(ROOT, "content.js") });
+
+  await page.addScriptTag({ path: USERSCRIPT_PATH });
 
   const order = () =>
-    page.locator("li.task_list_item").evaluateAll((els) =>
-      els.map((el) => el.dataset.itemId),
-    );
+    page
+      .locator("li.task_list_item")
+      .evaluateAll((els) => els.map((el) => el.dataset.itemId));
   const focusedTask = () =>
     page.locator(".task_list_item__body:focus").textContent();
 
@@ -74,4 +67,3 @@ test("alt+shift+arrows move the focused task via a primary mouse pointer drag", 
   await expect.poll(order).toEqual(["1", "2", "3"]);
   await expect.poll(focusedTask).toBe("Task 2");
 });
-;
