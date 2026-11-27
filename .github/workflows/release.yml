@@ -6,28 +6,29 @@ on:
       - "v*"
 
 jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
   release:
+    needs: verify
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
 
-      - name: Install Playwright test dependencies
-        run: |
-          npm --prefix tests ci
-          npx --prefix tests playwright install chromium --with-deps
-
-      - name: Build and verify userscript
-        run: npm test
+      - name: Build userscript
+        run: npm run build
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             dist/todoist-keyboard-addons.user.js
