@@ -1,6 +1,6 @@
 {
   "name": "todoist-keyboard-addons",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "description": "Extra keyboard shortcuts and quality-of-life features for Todoist (Tampermonkey / Violentmonkey userscript)",
