@@ -6,13 +6,41 @@ export const LOG = (...args) => console.log("[todoist-kbd]", ...args);
 export const WARN = (...args) => console.warn("[todoist-kbd]", ...args);
 export const DBG = (...args) => console.debug("[todoist-kbd]", ...args);
 
+export function isMacPlatform() {
+  return (
+    typeof navigator !== "undefined" &&
+    /Mac|iPod|iPhone|iPad/.test(navigator.platform || "")
+  );
+}
+
 /**
  * Section definitions — order and labels for the settings UI.
  */
 export const SECTIONS = [
+  { id: "global", label: "Global" },
   { id: "taskList", label: "Task list" },
   { id: "taskDetail", label: "Task detail (modal)" },
 ];
+
+const DEFAULT_TOGGLE_SIDEBAR = isMacPlatform()
+  ? {
+      key: "b",
+      code: "KeyB",
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      metaKey: true,
+      label: "Meta + B",
+    }
+  : {
+      key: "b",
+      code: "KeyB",
+      altKey: false,
+      ctrlKey: true,
+      shiftKey: false,
+      metaKey: false,
+      label: "Ctrl + B",
+    };
 
 /**
  * Default shortcuts — single source of truth for both runtime matching and
@@ -22,6 +50,14 @@ export const SECTIONS = [
  *   { key, code, altKey, ctrlKey, shiftKey, metaKey, label }
  */
 export const SHORTCUT_DEFAULTS = [
+  // -- Global shortcuts --
+  {
+    id: "toggleSidebar",
+    name: "Toggle sidebar",
+    description: "Open or close the navigation sidebar (alias for M)",
+    section: "global",
+    shortcut: DEFAULT_TOGGLE_SIDEBAR,
+  },
   // -- Task list shortcuts --
   {
     id: "moveUp",
@@ -254,8 +290,7 @@ export function getDefaultSettingsMap() {
 
 /** Format shortcut label for macOS modifier names when applicable. */
 export function formatLabel(label) {
-  const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-  if (!isMac) return label;
+  if (!isMacPlatform()) return label;
   return label.replace(/Meta/g, "Cmd").replace(/Alt/g, "Opt");
 }
 

@@ -19,6 +19,12 @@ Can be toggled on/off from **Settings → Keyboard Add-ons**.
 
 ## Keyboard shortcuts
 
+### Global
+
+| Shortcut            | Action                                              |
+|---------------------|-----------------------------------------------------|
+| Ctrl+B / Cmd+B      | Toggle the navigation sidebar (alias for `M`)       |
+
 ### Task list
 
 | Shortcut       | Action                                             |

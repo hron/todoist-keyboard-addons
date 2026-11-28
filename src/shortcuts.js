@@ -18,6 +18,7 @@ import {
 import { getShortcuts } from "./storage.js";
 
 let _recordingGuard = () => false;
+let dispatchingSynthetic = false;
 
 export function setRecordingGuard(fn) {
   _recordingGuard = fn;
@@ -50,6 +51,34 @@ function isEditing() {
   return false;
 }
 
+function hasOpenDialog() {
+  return Boolean(
+    document.querySelector(
+      '[role="dialog"], [role="alertdialog"], div[data-testid="task-details-modal"], [data-kbd-settings-modal="1"]',
+    ),
+  );
+}
+
+function dispatchSyntheticKey(key, code, keyCode) {
+  const target = document.activeElement || document.body;
+  if (!target) return;
+  dispatchingSynthetic = true;
+  try {
+    target.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key,
+        code,
+        keyCode,
+        which: keyCode,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  } finally {
+    dispatchingSynthetic = false;
+  }
+}
+
 function maybeClick(event, selector) {
   const element = document.querySelector(selector);
   if (!element) return;
@@ -61,8 +90,27 @@ export function initShortcuts() {
   document.addEventListener(
     "keydown",
     (event) => {
-      // Never fire shortcuts while recording a key binding in settings
-      if (_recordingGuard()) return;
+      // Never fire shortcuts while recording a key binding in settings or
+      // re-entering from our own synthetic key dispatch
+      if (_recordingGuard() || dispatchingSynthetic) return;
+
+      if (matchesShortcut(event, "toggleSidebar")) {
+        if (isEditing() || hasOpenDialog()) return;
+        if (
+          !event.ctrlKey &&
+          !event.altKey &&
+          !event.shiftKey &&
+          !event.metaKey &&
+          event.code === "KeyM"
+        ) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.repeat) return;
+        dispatchSyntheticKey("m", "KeyM", 77);
+        return;
+      }
 
       if (matchesShortcut(event, "moveUp")) {
         event.preventDefault();
